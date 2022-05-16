@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="9.6.5"></a>
+## [9.6.5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.4...v9.6.5) (2022-05-12)
+
+
+### Bug Fixes
+
+* **simulator:** fix rounding issue with progress formula ([e03ff31](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e03ff31))
+* **voyage-tracker:** fix max submarine rank ([c20ae68](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c20ae68)), closes [#2259](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2259)
+
+
+### Features
+
+* **alarms:** location button in sidebar now opens fishing spot ([32cd456](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/32cd456))
+
+
+
+<a name="9.6.4"></a>
+## [9.6.4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.3...v9.6.4) (2022-05-10)
+
+
+### Features
+
+* **db:** support for korean v6.0 update ([6a03e2b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6a03e2b))
+
+
+
+<a name="9.6.3"></a>
+## [9.6.3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.2...v9.6.3) (2022-05-07)
+
+
+### Bug Fixes
+
+* **desktop:** possible fix for autofill notification not ringing ([481eaff](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/481eaff))
+* **layout:** fix icon priority for Althyk Lavender trades ([c25e4a0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c25e4a0))
+* **layout:** fixed IS_FROM_HOUSING_VENDOR filter not working on materials ([95d159c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/95d159c))
+
+
+
 <a name="9.6.2"></a>
 ## [9.6.2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.1...v9.6.2) (2022-05-03)
 

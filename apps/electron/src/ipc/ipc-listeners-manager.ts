@@ -15,6 +15,9 @@ import { existsSync, readFile, writeFileSync } from 'fs';
 import { createFileSync, readFileSync } from 'fs-extra';
 import { Character, CharacterSearch } from '@xivapi/nodestone';
 import { Worker } from 'worker_threads';
+import ua from 'universal-analytics';
+import { v4 as uuidv4 } from 'uuid';
+import fetch from 'electron-fetch';
 
 
 export class IpcListenersManager {
@@ -58,6 +61,8 @@ export class IpcListenersManager {
     this.setupProxyManagerListeners();
     this.setupInventoryListeners();
     this.setupFreeCompanyWorkshopsListeners();
+
+    this.setupAnalyticsListeners();
   }
 
   private setupOauthListeners(): void {
@@ -457,6 +462,31 @@ export class IpcListenersManager {
       this.characterSearchParser.parse({ query: { name, server } } as any).then((res: { List: any[] }) => {
         event.sender.send('lodestone:character:search', res.List);
       });
+    });
+  }
+
+  private sendPageView(ga3user: any, url: string): void {
+    ga3user.pageview(url).send();
+  }
+
+  private setupAnalyticsListeners(): void {
+    let ga3user = null;
+    let key = null;
+    const uuid = this.store.get('analytics:uuid', uuidv4());
+    this.store.set('analytics:uuid', uuid);
+
+    ipcMain.on('analytics:init', async (event, { ga3, ga4, language }) => {
+      ga3user = ua(ga3, uuid, null, { platform: 'electron' });
+      key = await fetch('https://us-central1-ffxivteamcraft.cloudfunctions.net/electron-mp').then(async res => await res.text());
+      this.sendPageView(ga3user, '/');
+      ga3user.set('ds', 'app');
+      ga3user.set('ul', language);
+    });
+
+    ipcMain.on('analytics:pageView', (event, url) => {
+      if (key) {
+        this.sendPageView(ga3user, url);
+      }
     });
   }
 }
