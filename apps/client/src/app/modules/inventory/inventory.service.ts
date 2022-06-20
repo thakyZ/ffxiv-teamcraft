@@ -123,7 +123,7 @@ export class InventoryService {
     let constantsUrl = 'https://raw.githubusercontent.com/karashiiro/FFXIVOpcodes/master/constants.min.json';
 
     if (this.settings.region === Region.China) {
-      constantsUrl = 'https://cdn.jsdelivr.net/gh/karashiiro/FFXIVOpcodes@latest/constants.min.json';
+      constantsUrl = 'https://opcodes.xivcdn.com/constants.min.json';
     }
 
     const inventoryTransactionMessages$ = this.http.get<Record<'CN' | 'KR' | 'Global', Record<string, number>>>(constantsUrl).pipe(
@@ -183,6 +183,9 @@ export class InventoryService {
               if (action.type !== 'SetContentId' && !state.inventory.contentId) {
                 return state;
               }
+              if (!state.inventory) {
+                state.inventory = new UserInventory();
+              }
               switch (action.type) {
                 case 'SetContentId':
                   state.inventory.contentId = action.contentId;
@@ -194,7 +197,7 @@ export class InventoryService {
                   reset.contentId = state.inventory.contentId;
                   return { ...state, inventory: reset };
                 case 'Set':
-                  return { ...state, inventory: action.inventory };
+                  return { ...state, inventory: action.inventory || state.inventory };
                 case 'containerInfo':
                   const itemInfos = state.itemInfoQueue.filter(itemInfo => itemInfo.containerSequence === action.parsedIpcData.sequence);
                   const newQueue = state.itemInfoQueue.filter(itemInfo => itemInfo.containerSequence !== action.parsedIpcData.sequence);
@@ -271,7 +274,7 @@ export class InventoryService {
           );
         }),
         debounceTime(1000),
-        shareReplay(1)
+        shareReplay({ bufferSize: 1, refCount: true })
       );
     }
   }

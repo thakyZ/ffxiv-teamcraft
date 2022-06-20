@@ -2,6 +2,110 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="9.6.12"></a>
+## [9.6.12](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.11...v9.6.12) (2022-06-15)
+
+
+### Bug Fixes
+
+* **db:** added missing recipes and extracts ([4842217](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4842217))
+
+
+
+<a name="9.6.11"></a>
+## [9.6.11](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.10...v9.6.11) (2022-06-15)
+
+
+### Bug Fixes
+
+* **db:** add missing log and gathering data from 6.1 update ([a771a30](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a771a30))
+* **db:** added some missing recipes ([d3ae42a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d3ae42a))
+* **desktop:** tentative fix for inventory tracking stopping suddenly ([b41381d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b41381d))
+* **fishing-overlay:** fixed throw timer not resetting when hooking before bite ([b2cacca](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b2cacca))
+* **gearsets:** fixed etro import skipping ring materias ([4a0a1d2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4a0a1d2))
+* **log:** better save logic for completion data ([68ebe91](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/68ebe91))
+* **search:** fixed korean item search ([5db70c7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5db70c7))
+* **teams:** fixed discord webhook permission issue ([a77582e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a77582e))
+
+
+### Features
+
+* **desktop:** better error handling for wrapper errors ([5086baf](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5086baf))
+
+
+### Performance Improvements
+
+* **core:** better Observable cache management ([4c88fbf](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4c88fbf))
+
+
+
+<a name="9.6.10"></a>
+## [9.6.10](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.9...v9.6.10) (2022-06-12)
+
+
+### Bug Fixes
+
+* **data:** fix missing names on various new items ([ec095d6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ec095d6))
+* **db:** fix bite times chart not loading ([b7b0828](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b7b0828))
+* **db:** fix filters reset in fishing misses popup table ([32fa46b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/32fa46b))
+* **db:** fixed missing translation for deleted comments display ([5e115cb](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5e115cb))
+* **desktop:** support for 6.15 packet capture changes ([9a88cc6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9a88cc6))
+* **fish-log-tracker:** re-sort/add missing areas/spots ([2fa1de9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2fa1de9))
+* **fish-log-tracker:** reverse area order to be more like in-game log ([7e01f59](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7e01f59))
+* **log-tracker:** remove lvl mention from fishing spots ([01239ba](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/01239ba))
+
+
+
+<a name="9.6.9"></a>
+## [9.6.9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.8...v9.6.9) (2022-06-07)
+
+
+### Bug Fixes
+
+* **marketboard-popup:** change shareReplay() calls to prevent observables staying alive ([ea8fdef](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ea8fdef))
+* **packet capture:** prevent world ID updating needlessly ([33481a7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/33481a7))
+
+
+### Features
+
+* **db:** support for 6.15 data ([add20a7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/add20a7))
+* **db:** support for korean v6.01 update ([85d3fa6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/85d3fa6))
+
+
+
+<a name="9.6.8"></a>
+## [9.6.8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.7...v9.6.8) (2022-05-21)
+
+
+### Bug Fixes
+
+* **desktop:** load constants from xivcdn instead of jsdelivr for chinese region ([0ea145a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0ea145a))
+
+
+
+<a name="9.6.7"></a>
+## [9.6.7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.6...v9.6.7) (2022-05-19)
+
+
+### Bug Fixes
+
+* **desktop:** fixed an error with jsdelivr loading in China ([de57eb8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/de57eb8)), closes [#2262](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2262)
+
+
+### Features
+
+* **gearset:** better display for total materia needed ([620e0c2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/620e0c2)), closes [#2270](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2270)
+* **metrics:** better display logic for label column ([297dff2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/297dff2)), closes [#2266](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2266)
+* **metrics:** hide source column when it's not needed ([05a92dd](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/05a92dd)), closes [#2268](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2268)
+* **metrics:** save table sort accross sessions ([c4bd340](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c4bd340)), closes [#2267](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2267)
+
+
+
+<a name="9.6.6"></a>
+## [9.6.6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.5...v9.6.6) (2022-05-18)
+
+
+
 <a name="9.6.5"></a>
 ## [9.6.5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.6.4...v9.6.5) (2022-05-12)
 
