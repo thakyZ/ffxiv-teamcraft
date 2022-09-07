@@ -50,7 +50,8 @@
     "Share_url_copied": "검색URL이 클립보드에 복사되었습니다",
     "Only_craftable": "제작가능한 제작법만 검색",
     "Want_filters": "더 많은 필터가 필요한가요?",
-    "Open_search": "대신 검색 페이지 열기"
+    "Open_search": "대신 검색 페이지 열기",
+    "Island_recipe": "Island Sanctuary recipe"
   },
   "Use_as_default_character": "기본 캐릭터로 사용",
   "Download_desktop_app": "데스크톱 앱 다운로드",
@@ -757,6 +758,9 @@
     "Inventory_cleanup_description": "여기는 목록에 사용되지 않는 소지품 내아이템입니다",
     "Consider_requirements": "재료 포함하기",
     "Ignore_requirements": "재료 무시하기",
+    "SOURCES": {
+      "Gatherable": "Can be gathered, click to see more details"
+    },
     "LAYOUT_DIALOG": {
       "Title": "레이아웃",
       "Add_panel": "패널 추가",
@@ -1185,7 +1189,8 @@
       "MISSING_LEVEL_REQUIREMENT": "이 아이템을 제작하기에는 레벨이 부족합니다",
       "NOT_SPECIALIST": "비전문장인은 사용할 수 없는 전문장인 로테이션",
       "NO_INNER_QUIET": "정신 집중을 사용하지 않고 정신 집중을 요구하는 스킬을 사용함",
-      "MISSING_STATS_REQUIREMENT": "현재 스탯이 제작에 필요한 최저스탯에 도달하지 못했습니다"
+      "MISSING_STATS_REQUIREMENT": "현재 스탯이 제작에 필요한 최저스탯에 도달하지 못했습니다",
+      "QUALITY_TOO_LOW": "Quality doesn't meet the required quality of the recipe"
     },
     "ROTATION_TIPS": {
       "Use_inner_quiet": "거의 모든 로테이션은 HQ제작을 목표로 한다면 '정신집중'이 포함되어야 합니다. 이 스킬은 품질을 향상 시켜주며, '비레고의 축복'과 같은 스킬들을 사용할 수 있게 해줍니다.",
@@ -1214,6 +1219,7 @@
     "Content_copied": "클립보드로 내용이 복사되었습니다.",
     "Cheaper_at_vendor": "NPC 구매시 더 저렴함",
     "Copy_panel_as_text": "이 패널을 텍스트로 복사",
+    "Copy_panel_as_csv": "이 패널을 CSV 파일로 복사",
     "Ignore_completed_items": "완료된 아이템 제외",
     "Price_to_craft": "제작 원가",
     "Price_from_vendor": "상인 판매 가격",
@@ -1638,7 +1644,8 @@
       "Fish_per_tug": "입질당 물고기",
       "Fish_per_hookset": "낚아채기당 물고기",
       "Include_misses": "놓친 수 포함",
-      "Miss": "놓침"
+      "Miss": "놓침",
+      "Position_unknown": "알 수 없는 장소"
     },
     "NODE": {
       "Items": "아이템",
@@ -1755,7 +1762,8 @@
       "No_comments": "댓글 없음",
       "Post": "게시",
       "Editor_tip": "다른 페이지 링크를 생성하기 위해 <page type>:\"<Content Name>\"을 입력하세요. 예시: item:\"Curtana\", action:\"Basic Synthesis\", map:\"The Crystarium\". 지원하는 페이지 종류: item, map, mob, achievement, leve, npc, instance, quest, trait, action, status",
-      "Disclaimer": "데이터베이스의 코멘트는 유용한 정보입니다. 만약 코멘트 기능을 게임의 불만을 작성하기 위해 사용하는 경우에는 팀크래프트 사용에 제한을 받을 수 있습니다."
+      "Disclaimer": "데이터베이스의 코멘트는 유용한 정보입니다. 만약 코멘트 기능을 게임의 불만을 작성하기 위해 사용하는 경우에는 팀크래프트 사용에 제한을 받을 수 있습니다.",
+      "Deleted_comment": "해당 댓글은 삭제되었습니다"
     },
     "PATCH": {
       "Open_patch_page": "데이터베이스내 패치 변경점을 모두 보려면 이곳을 클릭하세요",
@@ -1848,10 +1856,11 @@
     "Disabled_description": "Square Enix에서 장터 정보를 가져오는 것을 막았기 때문에 이에 대한 불만은 Square Enix에 항의해 주세요. 우리는 Square Enix 없이 작업할 수 없습니다.",
     "Loading_data": "선택된 화폐의 데이터 로딩 중",
     "Loading_universalis": "Universalis에서 {{amount}} 개의 장터 가격 가져오기",
-    "X_sold_last_week": "지난 주 {{amount}} 개 판매"
+    "X_sold_last_week": "지난 주 {{amount}} 개 판매",
+    "No_trades": "This currency cannot be traded with something that can be sold on marketboard"
   },
   "FOOD_PICKER": {
-    "Title": "음식 선택기",
+    "Title": "음식 선택 도우미",
     "Description": "어떤 도핑 아이템이 원하는 능력치를 올려주는지 궁금하시나요? 다른 곳에서 찾지말고 이 곳에서 전부 찾아보세요!",
     "Pick_stat": "능력치 선택"
   },
@@ -1975,7 +1984,8 @@
       "Other": "다른 소지품",
       "Armory": "장비함",
       "Current_Gear": "현재 장비",
-      "RetainerMarket": "집사가 판매중"
+      "RetainerMarket": "집사가 판매중",
+      "IslandSanctuaryBag": "Island Sanctuary Bag"
     },
     "CONTENT_ID_POPUP": {
       "Description": "다중 캐릭터 동기화와 다른 멋진 기능들을 사용하고 싶으시다면, 팀크래프트는 현재 플레이중인 캐릭터 또는 동기화를 원하는 캐릭터가 어떤건지 알아야 합니다.",
@@ -2296,7 +2306,8 @@
         "Check": "무결성 검사 실행"
       },
       "INTEGRITY_CHECK": {
-        "All_characters_valid": "이상없음"
+        "All_characters_valid": "이상없음",
+        "All_lists_ok": "All lists are working properly"
       }
     }
   },
@@ -2443,7 +2454,7 @@
       "Tags": "태그",
       "Price": "지불할 금액",
       "Price_tip": "상대방과 가격을 협의하고 싶다면 금액란에 0을 입력하세요",
-      "Only_crafting": "제작직만 가능",
+      "Only_crafting": "제작만",
       "Includes_materials_label": "모든 재료를 제공하며 제작만 의뢰합니다",
       "Only_materials": "재료만",
       "Only_requires_materials": "최종 아이템을 제외한 목록의 재료만 의뢰합니다",
@@ -2809,7 +2820,7 @@
     "Gubal_analysis_suggestion": "데이터 분석을 기반으로 한 제안",
     "Cannot_report_for_this_spot": "해당 물고기의 데이터는 이미 존재하기 때문에 해당 낚시터에 대한 세부정보를 리포트할 수 없습니다",
     "Please_suggest_edit_instead": "기존에 제안했던 리포트를 편집해주세요",
-    "Add_data_sources": "Add/modify data sources for this item",
+    "Add_data_sources": "해당 아이템의 데이터 출처를 추가/수정",
     "Not_applied_yet": "적용되지 않음",
     "Not_applied_yet_explain": "해당 출처는 다음 업데이트에 목록과 데이터베이스 시스템에 추가됩니다",
     "Pending_changes_count": "{{amount}} pending changes to review",
@@ -2870,7 +2881,7 @@
       "SPEARFISHING": "작살 낚시",
       "FATE": "돌발 임무",
       "MOGSTATION": "모그스테이션",
-      "DEPRECATED": "DEPRECATED"
+      "DEPRECATED": "더 이상 사용되지 않음"
     },
     "STATUS": {
       "PROPOSAL": "제안",
@@ -2898,7 +2909,7 @@
     "Spearfishing": "작살"
   },
   "PROFITS": {
-    "Title": "Profits Helper",
+    "Title": "장터 판매 도우미",
     "Description": "캐릭터의 레벨과 Universalis의 장터 데이터를 기반으로 가장 적합한 채집/제작 아이템을 찾습니다.",
     "Self_sufficient": "자급자족",
     "Crafting": "제작",
@@ -2912,5 +2923,12 @@
     "Explain_cost_to_craft": "장터 게시판에서 모든 재료를 구매하여 제작하였을 때 필요한 금액입니다. (크리스탈 제외)",
     "Empty_list": "비어있는 목록, +버튼을 클릭하여 아이템을 여기에 추가할 수 있습니다",
     "Add_to_list": "해당 아이템을 목록에 추가"
+  },
+  "MACHINA_ERRORS": {
+    "Default": "Machina Wrapper 에러",
+    "Wrapper_failed_to_start": "Machina Wrapper 실행 실패",
+    "DESCRIPTION": {
+      "Wrapper_failed_to_start": "게임이 실행 중인지, 그리고 관리자 권한으로 실행되었는지 확인해 주세요 (이 경우에는 팀크래프트앱을 관리자 권한으로 실행해 주세요).<br>만약 이 문제가 계속 지속된다면 팀크래프트 디스코드 #troubleshooting 채널에 오류 메세지와 함께 스크린샷을 올려주세요.<br><br> {{retryDelay}}초 후에 재시도"
+    }
   }
 }

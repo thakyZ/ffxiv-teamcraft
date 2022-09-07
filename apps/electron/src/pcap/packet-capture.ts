@@ -35,6 +35,7 @@ export class PacketCapture {
     'inventoryTransaction',
     'itemInfo',
     'itemMarketBoardInfo',
+    'islandWorkshopSupplyDemand',
     'containerInfo',
     'logout',
     'marketBoardItemListing',
@@ -219,6 +220,9 @@ export class PacketCapture {
           this.start();
         }, 120000);
       });
+    this.captureInterface.on('error', err => {
+      log.error(err);
+    });
     this.captureInterface.on('error', err => {
       this.mainWindow.win.webContents.send('machina:error:raw', {
         message: err
