@@ -12,6 +12,7 @@ import { app, ipcMain } from 'electron';
 import { DatFilesWatcher } from './dat/dat-files-watcher';
 import { MetricsSystem } from './ipc/metrics-system';
 import { AutoUpdater } from './update/auto-updater';
+
 Object.assign(console, log.functions);
 
 const argv = process.argv.slice(1);
@@ -42,20 +43,20 @@ for (let i = 0; i < argv.length; i++) {
   }
 }
 
-if (options.noHA) {
-  app.disableHardwareAcceleration();
-}
-
 
 //Prepare all the managers
 const store = new Store();
-const overlayManager = new OverlayManager(store);
 const proxyManager = new ProxyManager(store);
+const overlayManager = new OverlayManager(store);
 const mainWindow = new MainWindow(store, overlayManager, proxyManager);
 const pcapManager = new PacketCapture(mainWindow, store, options);
 const trayMenu = new TrayMenu(mainWindow, overlayManager, store, pcapManager);
 const metrics = new MetricsSystem(mainWindow, store);
 const datFilesWatcher = new DatFilesWatcher(mainWindow, store);
+
+if (options.noHA || store.get('hardware-acceleration', false)) {
+  app.disableHardwareAcceleration();
+}
 
 // Prepare listeners connector
 const ipcListenersManager = new IpcListenersManager(pcapManager, overlayManager, mainWindow, store, trayMenu, proxyManager);
@@ -70,10 +71,9 @@ const autoUpdater = new AutoUpdater(mainWindow);
 autoUpdater.connectListeners();
 
 // Then, create the Electron application
-const desktopApp = new TeamcraftDesktopApp(mainWindow, trayMenu, store, pcapManager, argv);
+const desktopApp = new TeamcraftDesktopApp(mainWindow, trayMenu, store, pcapManager, metrics, argv);
 desktopApp.start();
 
 // Then start all our ipc listeners and dat files watcher
 ipcListenersManager.init();
 datFilesWatcher.start();
-metrics.start();

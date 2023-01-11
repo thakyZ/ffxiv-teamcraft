@@ -1,9 +1,9 @@
 export interface LazyInstance {
-  en:           null | string;
-  ja:           null | string;
-  de:           null | string;
-  fr:           null | string;
-  icon:         Icon | null;
+  en:           string;
+  ja:           string;
+  de:           string;
+  fr:           string;
+  icon:         Icon;
   contentText?: number[];
 }
 
@@ -21,4 +21,5 @@ export enum Icon {
   I061000061824PNG = "/i/061000/061824.png",
   I061000061832PNG = "/i/061000/061832.png",
   I061000061836PNG = "/i/061000/061836.png",
+  I061000061846PNG = "/i/061000/061846.png",
 }

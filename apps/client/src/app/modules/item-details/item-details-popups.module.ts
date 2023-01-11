@@ -17,7 +17,6 @@ import { FatesComponent } from './fates/fates.component';
 import { RouterModule } from '@angular/router';
 import { DesynthsComponent } from './desynth/desynths.component';
 import { RelationshipsComponent } from './relationships/relationships.component';
-import { IconsModule } from '../../core/icons/icons.module';
 import { ItemIconModule } from '../item-icon/item-icon.module';
 import { AlarmsModule } from '../../core/alarms/alarms.module';
 import { PipesModule } from '../../pipes/pipes.module';
@@ -35,12 +34,13 @@ import { LazyScrollModule } from '../lazy-scroll/lazy-scroll.module';
 import { AchievementsComponent } from './achievements/achievements.component';
 import { PageLoaderModule } from '../page-loader/page-loader.module';
 import { SpearfishingSpeedModule } from '../spearfishing-speed-tooltip/spearfishing-speed.module';
+import { IslandAnimalComponent } from './island-animal/island-animal.component';
+import { IslandCropComponent } from './island-crop/island-crop.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    IconsModule,
 
     CoreModule,
     ItemIconModule,
@@ -79,7 +79,9 @@ import { SpearfishingSpeedModule } from '../spearfishing-speed-tooltip/spearfish
     GardeningComponent,
     MogstationComponent,
     QuestsComponent,
-    AchievementsComponent
+    AchievementsComponent,
+    IslandAnimalComponent,
+    IslandCropComponent
   ],
   exports: [
     GatheredByComponent,
@@ -97,7 +99,9 @@ import { SpearfishingSpeedModule } from '../spearfishing-speed-tooltip/spearfish
     GardeningComponent,
     MogstationComponent,
     QuestsComponent,
-    AchievementsComponent
+    AchievementsComponent,
+    IslandAnimalComponent,
+    IslandCropComponent
   ]
 })
 export class ItemDetailsPopupsModule {

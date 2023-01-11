@@ -64,6 +64,10 @@ export class ListPanelComponent extends TeamcraftComponent {
 
   private list$: ReplaySubject<List> = new ReplaySubject<List>();
 
+  public listIsLarge$ = this.list$.pipe(
+    map(list => ListController.isLarge(list))
+  )
+
   public listTemplate$: Observable<ListTemplate> = combineLatest([this.customLinksFacade.myCustomLinks$, this.list$]).pipe(
     map(([links, list]) => {
       return <ListTemplate>links.find(link => {
@@ -119,14 +123,25 @@ export class ListPanelComponent extends TeamcraftComponent {
           return permissionLevel;
         }),
         distinctUntilChanged(),
-        shareReplay({ bufferSize: 1, refCount: true })
+        shareReplay(1)
       );
     }),
     map(level => {
       return {
         value: level
       };
-    })
+    }),
+    shareReplay(1)
+  );
+
+  isOwner$ = this.permissionLevel$.pipe(
+    map(level => level.value >= PermissionLevel.OWNER),
+    shareReplay(1)
+  );
+
+  isWriter$ = this.permissionLevel$.pipe(
+    map(level => level.value >= PermissionLevel.WRITE),
+    shareReplay(1)
   );
 
   private syncLinkUrl: string;

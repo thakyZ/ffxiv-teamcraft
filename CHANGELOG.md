@@ -2,6 +2,710 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="10.0.2"></a>
+## [10.0.2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.1...v10.0.2) (2023-01-11)
+
+
+### Bug Fixes
+
+* **aggregate:** fixed panels including "/" in their name not being selected properly ([4aebe9f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4aebe9f))
+* **alarms:** fixed weather-related timers derping when alarm is spawned ([ebe994b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ebe994b))
+* **db:** added missing allagan reports to the item sources ([c5babb7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c5babb7))
+* **gearset:** fixed etro import now including null in empty materia slots ([f03346c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f03346c))
+* **list-details:** fixed minimalist rows not scaling properly on smaller screens ([d05b678](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d05b678))
+* **list-details:** new notification message for when list display auto-switches to minimalist ([f031f5c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f031f5c))
+* **mobile:** fixed step by step elements shown above the navigation sidebar ([1e17c34](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1e17c34))
+* **step-by-step:** fixed weird layout scaling with smaller widths ([0434ab4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0434ab4))
+
+
+### Features
+
+* **island:** add data for two of the three new animals ([f16f6fe](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f16f6fe))
+
+
+
+<a name="10.0.1"></a>
+## [10.0.1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.0...v10.0.1) (2023-01-10)
+
+
+### Bug Fixes
+
+* **list:** fixed items addition not updating display ([20eab79](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/20eab79))
+* **metrics:** better display for when metrics data is importing to the new sql format ([acdd8cf](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/acdd8cf))
+
+
+### Performance Improvements
+
+* **list:** various display optimizations ([4df71d7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4df71d7))
+
+
+
+<a name="10.0.0"></a>
+# [10.0.0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.14...v10.0.0) (2023-01-10)
+
+
+### Bug Fixes
+
+* **alarms:** fixed fishing alarms sometimes jumping back and forth ([b6f8f98](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b6f8f98))
+* **db:** brought back gathering information on diadem items ([c3f22dd](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c3f22dd))
+* **desktop:** fixed an issue with machina still trying to start with pcap disabled ([319b88c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/319b88c))
+* **desktop:** fixed character link search infinite loading ([a063183](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a063183))
+* **desktop:** Machina will now only try to start 3 times before stopping until app restart ([953ceb3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/953ceb3))
+* **gearset:** better default ilvl filter values and perf fixes ([d51aa2c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d51aa2c))
+* **list:** fixed island buildings not parsed properly in lists ([5683213](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5683213))
+* **log-tracker:** fixed text formatting ([3cd5895](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3cd5895))
+
+
+### Features
+
+* **db:** 6.3 patch data ([18256f6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/18256f6))
+* Update submarine max level to 105 ([c48b087](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c48b087))
+* **desktop:** step-by-step list overlay ([a1cd329](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a1cd329))
+* **layout:** new filter: IS_GARDENING ([1643e61](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1643e61))
+* **list-details:** new alternate display mode: Compact ([4e96d2b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4e96d2b)), closes [#2400](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2400)
+* **list-details:** new minimalist display mode ([6f23041](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6f23041)), closes [#2400](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2400)
+* **lists:** new list aggregates system ([b04a6a7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b04a6a7)), closes [#2064](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2064)
+* **lists:** new step by step display mode ([a81ea73](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a81ea73))
+* **metrics:** refactored persistence to use sqlite db instead of custom files ([af9fd37](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/af9fd37)), closes [#2407](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2407)
+
+
+### Performance Improvements
+
+* **lists:** no more delay on marking something as done & better reliability ([156f053](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/156f053)), closes [#2377](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2377)
+
+
+
+<a name="9.9.14"></a>
+## [9.9.14](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.13...v9.9.14) (2022-12-30)
+
+
+### Bug Fixes
+
+* **simulator:** fixed an error in icon rendering making it too large for the button ([033b955](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/033b955))
+* **voyage-tracker:** fixed submarine voyages displayed as object object ([b854f4e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b854f4e))
+
+
+
+<a name="9.9.13"></a>
+## [9.9.13](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.12...v9.9.13) (2022-12-30)
+
+
+### Bug Fixes
+
+* **db:** fixed monster positions sometimes vanishing after navigation ([e2fe855](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e2fe855))
+* **db:** fixed Wolf marks sometimes confused with faerie tribe tokens ([95fabe1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/95fabe1))
+* **desktop:** fixed overlay error after closing it from windows ([c4e2630](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c4e2630))
+* **gathering-location:** fixed an issue with search breaking after leaving the page ([2be165b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2be165b))
+* **leveling-equipment:** fixed wrong stat priority for crafting jobs ([a54f45b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a54f45b))
+* **list:** fixed list split sometimes forgetting some materials ([ce97ad6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ce97ad6))
+* **list-details:** better UX for list completion popup ([ee45263](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ee45263))
+* **lists:** fixed FC sharing not working with lists ([3d498e8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3d498e8))
+* **lists:** fixed log completion on crafting rows not being applied ([9f69e08](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9f69e08))
+* **lists:** it's no longer possible to archive an offline list ([5c82974](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5c82974))
+* **simulator:** fixed Tricks of the Trade removing Heart and Soul buff ([6c1dc82](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6c1dc82))
+
+
+### Features
+
+* **data:** update for cn patch-6.18 ([62558d7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/62558d7))
+* **data:** update for cn patch-6.2 ([064968e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/064968e))
+* **db:** 1200+ allagan reports import ([948208b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/948208b))
+* **db:** support for korean v6.15 update ([fcf2f1f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fcf2f1f))
+* **voyage-tracker:** submarine voyages are now using letter name instead of index ([2e9caa9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2e9caa9))
+
+
+
+<a name="9.9.12"></a>
+## [9.9.12](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.11...v9.9.12) (2022-11-13)
+
+
+### Bug Fixes
+
+* **desktop:** fixed island sanctuary inventory not updating properly ([485d668](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/485d668))
+* **desktop:** fixed overlay close breaking the overlay entirely until restart ([68d6960](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/68d6960))
+
+
+### Features
+
+* **desktop:** new setting to disable hardware acceleration ([42098a9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/42098a9))
+* **desktop:** report ignored bites too ([c87fdc9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c87fdc9))
+
+
+
+<a name="9.9.11"></a>
+## [9.9.11](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.10...v9.9.11) (2022-11-10)
+
+
+### Bug Fixes
+
+* **db:** fixed some instance not being parsed properly due to SE hyphens ([db8d8a6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/db8d8a6))
+* **gearset:** fixed absurd result for average ilvl due to operations priority ([e6781fe](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e6781fe))
+
+
+### Features
+
+* **db:** ability for allagan checkers to remove baits from fishing spots ([3c06cab](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3c06cab))
+* **desktop:** many security improvements ([4521c55](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4521c55))
+* **desktop:** update bundled npcap installer to 1.70 ([3440019](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3440019))
+
+
+
+<a name="9.9.10"></a>
+## [9.9.10](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.8...v9.9.10) (2022-11-07)
+
+
+### Bug Fixes
+
+* **allagan-reports:** fixed spawn and duration not handling empty value properly ([e46b5f4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e46b5f4))
+* **db:** remove other data sources when the extract contains DEPRECATED source ([b297432](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b297432))
+* **db:** removed outdated instance sources ([015dae8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/015dae8))
+* **fishing-reporter:** brand new mooch detection, better reliability to reduce bad reports ([058d633](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/058d633))
+* **fishing-reporter:** fixed reports not sent to the server ([7517ec2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7517ec2))
+* **layout:** added many new housing vendor suppliers to the housing filter ([4bf270e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4bf270e))
+* **lists:** fixed list split popup not opening at all ([72e9a75](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/72e9a75))
+* **simulator:** fixed average ilvl formula for jobs without offhand ([c4f2303](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c4f2303))
+
+
+### Features
+
+* **allagan-reports:** new button to mass select proposals ([dd4b15a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/dd4b15a))
+* **db:** import of over 1200 allagan reports ([990264b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/990264b))
+* **db:** support for the new NA datacenter ([f84e100](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f84e100))
+* **metrics:** better pie charts for metrics dashboard ([3e44c10](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3e44c10)), closes [#2401](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2401)
+
+
+
+<a name="9.9.9"></a>
+## [9.9.9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.8...v9.9.9) (2022-11-07)
+
+
+### Bug Fixes
+
+* **allagan-reports:** fixed spawn and duration not handling empty value properly ([e46b5f4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e46b5f4))
+* **db:** remove other data sources when the extract contains DEPRECATED source ([b297432](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b297432))
+* **db:** removed outdated instance sources ([015dae8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/015dae8))
+* **fishing-reporter:** brand new mooch detection, better reliability to reduce bad reports ([058d633](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/058d633))
+* **layout:** added many new housing vendor suppliers to the housing filter ([4bf270e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4bf270e))
+* **lists:** fixed list split popup not opening at all ([72e9a75](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/72e9a75))
+* **simulator:** fixed average ilvl formula for jobs without offhand ([c4f2303](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c4f2303))
+
+
+### Features
+
+* **allagan-reports:** new button to mass select proposals ([dd4b15a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/dd4b15a))
+* **db:** import of over 1200 allagan reports ([990264b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/990264b))
+* **db:** support for the new NA datacenter ([f84e100](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f84e100))
+* **metrics:** better pie charts for metrics dashboard ([3e44c10](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3e44c10)), closes [#2401](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2401)
+
+
+
+<a name="9.9.8"></a>
+## [9.9.8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.7...v9.9.8) (2022-11-01)
+
+
+### Bug Fixes
+
+* **db:** fixed "Show more" button showing when there isn't more to show in trades ([71f455c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/71f455c))
+* **island-workshop:** fixed 20h schedule sometimes happening when no combo found ([7c5c31e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7c5c31e))
+* **log-tracker:** fixed first data updates not working on log state ([18dbc6f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/18dbc6f))
+* **log-tracker:** Housing's Other category is now listed as required for achievement ([d24c622](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d24c622))
+
+
+### Features
+
+* **fishing-overlay:** display when fishing in an unsupported spot ([fe95856](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fe95856))
+
+
+
+<a name="9.9.7"></a>
+## [9.9.7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.6...v9.9.7) (2022-10-28)
+
+
+### Bug Fixes
+
+* **auth:** fixed an issue with log tracking not updating properly ([5236869](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5236869))
+* **core:** better error handling with missing island workshop data ([dc9cfd4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/dc9cfd4))
+* **db:** changed min gathering label and added min gathering data to gathering node details ([fd732a7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fd732a7))
+* **db:** fixed alarm button in gathering details not toggling the alarm properly ([cfcbd5d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/cfcbd5d))
+* **db:** fixed weather chart card too small for fish details pages ([8645893](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/8645893))
+* **island-workshop:** fix for planning changing D2 recommendations on D2 start ([ff80e27](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ff80e27))
+* **lists:** fixed list options menu not showing correct options ([9a1ad69](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9a1ad69))
+* **log-tracking:** fixed marking as done in log not saving properly ([76bfc65](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/76bfc65))
+* **submarine:** fix submarine max rank for kr/cn ([fc74349](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fc74349))
+
+
+### Features
+
+* **core:** new github button and stars count that links to the repo (we ♥ stars) ([9450f9f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9450f9f))
+* **db:** import 54 allagan reports ([7545045](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7545045))
+* **workshops:** complete refactor of the permissions propagation system ([be3ba14](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/be3ba14))
+
+
+
+<a name="9.9.6"></a>
+## [9.9.6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.5...v9.9.6) (2022-10-25)
+
+
+### Bug Fixes
+
+* **db:** fixed gil shops limited to 50 entries ([da15511](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/da15511))
+* **desktop:** fixed an issue locking the app after gathering or crafting an item ingame ([f2ab280](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f2ab280))
+
+
+### Features
+
+* **db:** imported 80+ allagan reports ([6bbf9af](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6bbf9af))
+
+
+
+<a name="9.9.5"></a>
+## [9.9.5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.4...v9.9.5) (2022-10-24)
+
+
+### Bug Fixes
+
+* **core:** fixed app hanging after gathering a new item on unloaded log tracking data ([02bf417](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/02bf417))
+
+
+
+<a name="9.9.4"></a>
+## [9.9.4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.3...v9.9.4) (2022-10-24)
+
+
+### Bug Fixes
+
+* **auth:** fixed infinite reloading with anonymous accounts ([34b9571](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/34b9571))
+
+
+
+<a name="9.9.3"></a>
+## [9.9.3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.2...v9.9.3) (2022-10-24)
+
+
+### Bug Fixes
+
+* **core:** fixed some pages not loading when data folder content was missing ([4c933b6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4c933b6))
+* **desktop:** fixed app lock after gathering or crafting an item ([62ddbd4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/62ddbd4)), closes [#2390](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2390)
+
+
+
+<a name="9.9.2"></a>
+## [9.9.2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.1...v9.9.2) (2022-10-23)
+
+
+### Bug Fixes
+
+* **auth:** fixed new anonymous accounts reloading indefinitely ([9387045](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9387045))
+
+
+
+<a name="9.9.1"></a>
+## [9.9.1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.9.0...v9.9.1) (2022-10-23)
+
+
+### Bug Fixes
+
+* **alarms:** fixed an issue with creating alarm in a group corrupting the entire page ([c850ca3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c850ca3))
+* **core:** fixed permission controller crash on some transitions ([d7d1fcd](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d7d1fcd))
+* **db:** fixed all instance names being displayed as "No Name" ([8c5ef60](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/8c5ef60))
+* **list:** fixed an issue with layout randomly breaking on data update ([345194c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/345194c))
+* **permissions:** fixed disabled menu entries still being clickable ([52002c2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/52002c2))
+
+
+### Performance Improvements
+
+* **db:** more read operations optimizations ([cdd8ce1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/cdd8ce1))
+
+
+
+<a name="9.9.0"></a>
+# [9.9.0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.18...v9.9.0) (2022-10-22)
+
+
+### Bug Fixes
+
+* **db:** fixed missing recipes from 6.25 ([e38f1d3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e38f1d3))
+* **island-workshop:** better planning day availability ([ed05719](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ed05719))
+* **permissions:** fixed an issue preventing permissions from being removed ([c213e1f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c213e1f))
+* **permissions:** fixed list access as team member ([d0bac01](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d0bac01))
+
+
+### Features
+
+* **db:** new charts in fish details page ([4f7ffbe](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4f7ffbe)), closes [#2376](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2376)
+* **db:** new charts in fishing spot details page ([3d14163](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3d14163)), closes [#2376](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2376)
+* **db:** support for korean v6.11 update ([786fe0f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/786fe0f))
+* **island-workshop:** new section to show materials to prepare for next week ([809cc46](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/809cc46))
+
+
+### Performance Improvements
+
+* **core:** better error filter ([9b544e5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9b544e5))
+
+
+
+<a name="9.8.18"></a>
+## [9.8.18](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.17...v9.8.18) (2022-10-19)
+
+
+### Bug Fixes
+
+* **core:** fixed data update failing on gearsets, workshops and other elements ([b7b43af](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b7b43af))
+
+
+
+<a name="9.8.17"></a>
+## [9.8.17](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.16...v9.8.17) (2022-10-19)
+
+
+### Bug Fixes
+
+* **island-workshop:** prevent corrupted states from being pushed as history data ([458166c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/458166c))
+* **lists:** fixed list creation sometimes stuck on checking server state ([e8c65cd](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e8c65cd))
+* **metrics:** remove useless side legend on pie charts ([1d2b84f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1d2b84f))
+
+
+### Features
+
+* **db:** 6.25 data ([c29dfa7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c29dfa7))
+* **db:** revamp of patch details page ([af26d09](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/af26d09))
+
+
+
+<a name="9.8.16"></a>
+## [9.8.16](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.15...v9.8.16) (2022-10-17)
+
+
+### Bug Fixes
+
+* **desktop:** prevent packet capture from locking the game process ([ba153f3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ba153f3))
+
+
+### Performance Improvements
+
+* **core:** improved database interactions to lower usage ([ff9cf7c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ff9cf7c))
+
+
+
+<a name="9.8.15"></a>
+## [9.8.15](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.14...v9.8.15) (2022-10-16)
+
+
+### Bug Fixes
+
+* **currency-spending:** fixed unexpected empty result for some currencies ([2f47593](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2f47593))
+* **list:** fixed layout breaking on npc breakdown with no npcs ([64644ee](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/64644ee))
+* **log-tracker:** fixed log tracking entries not properly saved to database ([3d439f9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3d439f9))
+
+
+### Features
+
+* **metrics:** complete refactor of charts using echarts ([922de02](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/922de02)), closes [#2376](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2376)
+
+
+
+<a name="9.8.14"></a>
+## [9.8.14](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.13...v9.8.14) (2022-10-14)
+
+
+### Bug Fixes
+
+* **allagan-reports:** fixed an issue with INSTANCE source ([0cdef47](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0cdef47))
+* **db:** fix recipe quality for kr/cn ([2e20494](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2e20494))
+* **island-workshop:** fixed an issue with peak days not applied properly in optimizer ([4999a3a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4999a3a))
+* **island-workshop:** fixed solver using the same recipe twice in some cases ([bbd32d9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/bbd32d9))
+* **island-workshop:** new error message when computing planning isn't possible ([d8c06f2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d8c06f2))
+* **lists:** favorite lists are now displayed above other lists ([f0c5b20](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f0c5b20))
+
+
+### Features
+
+* **data:** update for cn patch-6.15 ([600425b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/600425b))
+* **db:** import 300+ allagan reports ([9a18508](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9a18508))
+
+
+
+<a name="9.8.13"></a>
+## [9.8.13](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.12...v9.8.13) (2022-10-09)
+
+
+### Bug Fixes
+
+* **collectables:** fix exp formula for exp nerf level comparison ([fbbf0d7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fbbf0d7))
+* **currency-spending:** fixed cowries and amount sold last week ([4131e27](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4131e27))
+* **desktop:** fixed an issue with fishing reports not sent to the database ([84655a0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/84655a0))
+* **island-workshop:** better planning logic for lower levels ([912f72c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/912f72c))
+* **island-workshop:** fixed pattern recognition for past days and error handling ([7bd46a9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7bd46a9))
+* **island-workshop:** fixed prediction issue and moved planning to the top ([6d878fb](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6d878fb))
+
+
+### Features
+
+* **db:** imported 144 allagan reports ([d09bfae](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d09bfae))
+* **db:** support for korean v6.1 update ([e498668](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e498668))
+* **loader:** new patron: Darn Tarn and Dam Tam ([627d6aa](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/627d6aa))
+
+
+
+<a name="9.8.12"></a>
+## [9.8.12](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.11...v9.8.12) (2022-09-28)
+
+
+
+<a name="9.8.11"></a>
+## [9.8.11](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.10...v9.8.11) (2022-09-28)
+
+
+### Bug Fixes
+
+* **desktop:** fixed packet capture not starting properly ([74383e1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/74383e1))
+
+
+
+<a name="9.8.10"></a>
+## [9.8.10](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.9...v9.8.10) (2022-09-28)
+
+
+### Bug Fixes
+
+* **desktop:** fixed packet capture not starting properly ([cd31579](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/cd31579))
+
+
+
+<a name="9.8.9"></a>
+## [9.8.9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.8...v9.8.9) (2022-09-28)
+
+
+### Bug Fixes
+
+* **metrics:** fix fish layout filter crashing metrics page ([0ecdf9d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0ecdf9d))
+* **metrics-dashboard:** fixed dashboard not loading the second time it's opened ([9a8835b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9a8835b))
+
+
+### Features
+
+* **db:** imported ~200 allagan reports ([74c1dbb](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/74c1dbb))
+* **island-workshop:** new checkbox to exclude crop-based materials ([6c65470](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6c65470))
+* **island-workshop:** new crafting time and categories columns ([a845ec9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a845ec9))
+* **island-workshop:** now displaying when each day will be available ([adbd579](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/adbd579))
+* **list:** add island crop details ([cc80e48](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/cc80e48))
+
+
+
+<a name="9.8.8"></a>
+## [9.8.8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.7...v9.8.8) (2022-09-25)
+
+
+### Bug Fixes
+
+* **island-workshop:** fixed flickering issue on desktop app ([79a909c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/79a909c))
+
+
+
+<a name="9.8.7"></a>
+## [9.8.7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.6...v9.8.7) (2022-09-24)
+
+
+### Bug Fixes
+
+* **island-workshop:** better planning logic for 6-4-6-4 combos ([6325d09](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6325d09))
+* **island-workshop:** removed combo alternatives to prevent optimization issues ([2e95f50](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2e95f50))
+
+
+
+<a name="9.8.6"></a>
+## [9.8.6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.5...v9.8.6) (2022-09-22)
+
+
+### Bug Fixes
+
+* **desktop:** hotfix for pcap not working as of 9.8.5 ([2893ba0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2893ba0))
+
+
+
+<a name="9.8.5"></a>
+## [9.8.5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.4...v9.8.5) (2022-09-22)
+
+
+### Bug Fixes
+
+* **desktop:** TC will no longer prevent the game from applying updates ([9475761](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9475761))
+* **island-workshop:** better logic fod 6-4 combo optimization ([4ccb43c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4ccb43c))
+
+
+### Features
+
+* **island-workshop:** add score per day and date for each day ([46e8ff6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/46e8ff6))
+
+
+
+<a name="9.8.4"></a>
+## [9.8.4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.3...v9.8.4) (2022-09-22)
+
+
+### Bug Fixes
+
+* **island-recipes:** fixed some recipes having ingredients x0 listed in database ([c9135a3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c9135a3))
+* **island-workshop:** better groove formula in cowries prediction ([9a7b3a0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9a7b3a0))
+* **island-workshop:** fixed state import not always importing properly ([d33510e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d33510e))
+
+
+### Features
+
+* **island-animals:** added drops to the animals table ([55b7f4c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/55b7f4c))
+* **island-workshop:** new button to generate a list for the current planning ([29db415](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/29db415))
+* **island-workshop:** new checkbox to exclude items that require pasture materials ([2a0fb2d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2a0fb2d))
+
+
+
+<a name="9.8.3"></a>
+## [9.8.3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.2...v9.8.3) (2022-09-20)
+
+
+### Bug Fixes
+
+* **list:** better npc grouping logic ([a4bbfee](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a4bbfee))
+
+
+### Features
+
+* **island-workshop:** you can now set your second rest day (first one stays hardcoded to D1) ([761ffbb](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/761ffbb))
+
+
+
+<a name="9.8.2"></a>
+## [9.8.2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.1...v9.8.2) (2022-09-20)
+
+
+### Bug Fixes
+
+* **island-workshop:** fixed planning trying to compute result on first day ([7bd2684](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7bd2684))
+
+
+
+<a name="9.8.1"></a>
+## [9.8.1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.8.0...v9.8.1) (2022-09-20)
+
+
+### Bug Fixes
+
+* **island-workshop:** fixed table edit mode on page > 3 ([80027c7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/80027c7))
+* **island-workshop:** fixed workshop not loading on tuesday morning ([feecb7d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/feecb7d))
+
+
+
+<a name="9.8.0"></a>
+# [9.8.0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.7.12...v9.8.0) (2022-09-19)
+
+
+### Bug Fixes
+
+* **alarms:** fix island animals alarms in compact and picker display ([bf2646c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/bf2646c))
+* **gathering-location:** fix missing alarm timer in results ([0b0a191](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0b0a191))
+* **layout:** fix order by ingame log not working as expected ([3db88df](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3db88df))
+* **lists:** support for more housing items ([28e1a97](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/28e1a97))
+* **simulator:** fixed consumables input search box not working properly ([c159cc1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c159cc1))
+
+
+### Features
+
+* **island-animals:** better tooltips on alarm buttons ([506f507](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/506f507))
+* **island-sanctuary:** added kudos and donation link to the poking paradise team ([999fd2f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/999fd2f))
+* **island-workshop:** full week planning solver ([2a9f45f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2a9f45f))
+
+
+
+<a name="9.7.12"></a>
+## [9.7.12](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.7.11...v9.7.12) (2022-09-14)
+
+
+### Bug Fixes
+
+* **island-animals:** fixed alarm button adding more alarms instead of removing existing one ([3c5fcce](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3c5fcce))
+* **island-animals:** fixed alarm button switching timers randomly ([6ddad0a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6ddad0a))
+* **voyage-tracker:** fixed new servers shown as undefined ([c3b8465](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c3b8465)), closes [#2332](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2332)
+
+
+### Features
+
+* **island-animals:** add animal size to the display table ([fa997e0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fa997e0))
+* **island-workshop:** best items to craft for tomorrow ([eb2cb0a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/eb2cb0a))
+
+
+
+<a name="9.7.11"></a>
+## [9.7.11](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.7.10...v9.7.11) (2022-09-13)
+
+
+### Bug Fixes
+
+* **alarms:** fixed island animals alarms not displayed in sidebar ([c97a1cc](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c97a1cc))
+* **island-animals:** fixed alarm button shown as "remove alarm" for inexistant alarms ([4c8ad23](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4c8ad23))
+* **island-animals:** fixed coords and alarms associated with wrong animal ([ec2bc4f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ec2bc4f))
+
+
+
+<a name="9.7.10"></a>
+## [9.7.10](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.7.9...v9.7.10) (2022-09-13)
+
+
+### Bug Fixes
+
+* **i18n:** fixed wrong label for workshop edit mode ([00cc8fd](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/00cc8fd))
+* **vendors:** fixed housing vendors priority system ([1d38ef4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1d38ef4))
+
+
+### Features
+
+* **db:** support for all island pasture drops ([49e8a8f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/49e8a8f))
+* **island:** new animals tracking page ([2fb411e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2fb411e))
+
+
+
+<a name="9.7.9"></a>
+## [9.7.9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.7.8...v9.7.9) (2022-09-11)
+
+
+### Performance Improvements
+
+* **desktop:** fixed a big performance issue on app startup ([69b1b8a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/69b1b8a))
+
+
+
+<a name="9.7.8"></a>
+## [9.7.8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.7.7...v9.7.8) (2022-09-11)
+
+
+### Features
+
+* **island-workshop:** optimizer configuration & island level filter ([4527dd0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4527dd0))
+
+
+### Performance Improvements
+
+* **core:** removed recent changes that made the app slower ([e6bc2ae](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e6bc2ae))
+
+
+
+<a name="9.7.7"></a>
+## [9.7.7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.7.6...v9.7.7) (2022-09-09)
+
+
+### Bug Fixes
+
+* **collectables:** fix alarm buttons not showing on timed items ([49b95dd](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/49b95dd))
+* **db:** fix Islekeep's Stone Hatchet recipe ([b1d5909](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b1d5909))
+* **island-workshop:** display error message when no plannings are found ([d183d1c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d183d1c))
+* **log-tracker:** fixed selected recipes not resetting on page change ([6f191a8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6f191a8))
+
+
+### Features
+
+* **allagan-reports:** support for island pasture animal source ([0c267ab](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0c267ab))
+* **lists:** add support for landmark recipes ([4607389](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4607389))
+
+
+
 <a name="9.7.6"></a>
 ## [9.7.6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v9.7.5...v9.7.6) (2022-09-06)
 

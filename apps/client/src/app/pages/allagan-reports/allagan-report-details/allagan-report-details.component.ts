@@ -9,12 +9,11 @@ import { I18nToolsService } from '../../../core/tools/i18n-tools.service';
 import { AllaganReport } from '../model/allagan-report';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { TranslateService } from '@ngx-translate/core';
-import * as _ from 'lodash';
 import { pickBy, uniq } from 'lodash';
 import { AuthFacade } from '../../../+state/auth.facade';
 import { AllaganReportQueueEntry } from '../model/allagan-report-queue-entry';
 import { AllaganReportStatus } from '../model/allagan-report-status';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Hookset } from '../../../core/data/model/hookset';
 import { Tug } from '../../../core/data/model/tug';
 import { weatherIndex } from '../../../core/data/sources/weather-index';
@@ -32,7 +31,8 @@ import { SpearfishingShadowSize } from '../../../core/data/model/spearfishing-sh
 
 
 function durationRequired(control: AbstractControl) {
-  if (control.parent?.get('spawn').value !== null) {
+  const spawn = control.parent?.get('spawn').value;
+  if (spawn !== null && spawn !== '') {
     return Validators.required(control);
   }
   return null;
@@ -172,13 +172,14 @@ export class AllaganReportDetailsComponent extends ReportsManagementComponent {
   };
 
   // tslint:disable-next-line:member-ordering
-  form: FormGroup = this.fb.group({
+  form: UntypedFormGroup = this.fb.group({
     source: [null, Validators.required],
     item: [null, this.requiredIfSource([AllaganReportSource.DESYNTH, AllaganReportSource.REDUCTION, AllaganReportSource.GARDENING, AllaganReportSource.LOOT], 'items$')],
     instance: [null, this.requiredIfSource([AllaganReportSource.INSTANCE], 'instances$')],
     venture: [null, this.requiredIfSource([AllaganReportSource.VENTURE], 'ventures$')],
     fate: [null, this.requiredIfSource([AllaganReportSource.FATE], 'fates$')],
     mob: [null, this.requiredIfSource([AllaganReportSource.DROP], 'mobs$')],
+    islandAnimal: [false],
     voyageType: [null, this.requiredIfSource([AllaganReportSource.VOYAGE])],
     voyage: [null, this.requiredIfSource([AllaganReportSource.VOYAGE])],
     rarity: [null],
@@ -234,7 +235,7 @@ export class AllaganReportDetailsComponent extends ReportsManagementComponent {
   public mapWeathers$ = this.fishingSpot$.pipe(
     filter(spot => !!spot),
     map((spot) => {
-      return _.uniq(weatherIndex[mapIds.find(m => m.id === spot.mapId).weatherRate].map(row => +row.weatherId)) as number[];
+      return uniq((weatherIndex[mapIds.find(m => m.id === spot.mapId).weatherRate] || []).map(row => +row.weatherId)) as number[];
     }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
@@ -330,7 +331,7 @@ export class AllaganReportDetailsComponent extends ReportsManagementComponent {
               protected lazyData: LazyDataFacade, private i18n: I18nToolsService,
               private message: NzMessageService, private translate: TranslateService,
               private authFacade: AuthFacade, private cd: ChangeDetectorRef,
-              private xivapi: XivapiService, private fb: FormBuilder,
+              private xivapi: XivapiService, private fb: UntypedFormBuilder,
               private fishCtx: FishContextService, private itemCtx: ItemContextService,
               private router: Router) {
     super(lazyData);
@@ -624,7 +625,7 @@ export class AllaganReportDetailsComponent extends ReportsManagementComponent {
           predators: formState.predators,
           oceanFishingTime: this.isOceanFishingSpot(formState.spot) ? formState.oceanFishingTime : null,
           minGathering: formState.minGathering
-        }, value => value !== undefined && value !== null));
+        }, value => value !== undefined && value !== null && value !== ''));
     }
   }
 

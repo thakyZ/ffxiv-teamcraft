@@ -1,20 +1,15 @@
 export const patchNotes = `### Bug Fixes
 
-* **alarms:** reuse generic alarm button in more places.
-* **db:** fix create alarm button icon on node pages.
-* **db:** fixed trades not loading on NPC pages.
-* **desktop:** remove currencies from Island Sanctuary inventory tracking.
-* **island-sanctuary:** better gathering location for Island Vine.
-* **list:** fix item names not showing in list panel.
-* **list:** fixed requirements popup showing wrong numbers.
-* **lists:** fixed panel mark as done not checking as done in log.
-* **log-tracker:** fixed fish eyes not showing in fishing log tracker.
-* **search:** removed island buildings from query-less search.
-* **sumbarine:** fix max submarine rank.
-* **universalis:** better query for item entries count.
-* **voyages:** add missing voyages from 6.2 update.
+* **aggregate:** fixed panels including "/" in their name not being selected properly.
+* **alarms:** fixed weather-related timers derping when alarm is spawned.
+* **db:** added missing allagan reports to the item sources.
+* **gearset:** fixed etro import now including null in empty materia slots.
+* **list-details:** fixed minimalist rows not scaling properly on smaller screens.
+* **list-details:** new notification message for when list display auto-switches to minimalist.
+* **mobile:** fixed step by step elements shown above the navigation sidebar.
+* **step-by-step:** fixed weird layout scaling with smaller widths.
 
 
 ### Features
 
-* **island:** new in-app workshop table with daily optimizer.`;
+* **island:** add data for two of the three new animals.`;

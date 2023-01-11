@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { AlarmsModule } from '../../core/alarms/alarms.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FullpageMessageModule } from '../../modules/fullpage-message/fullpage-message.module';
-import { IconsModule } from '../../core/icons/icons.module';
 import { ListHistoryPopupComponent } from './list-history-popup/list-history-popup.component';
 import { LayoutEditorModule } from '../../modules/layout-editor/layout-editor.module';
 import { ProgressPopupModule } from '../../modules/progress-popup/progress-popup.module';
@@ -42,6 +41,7 @@ import { InventoryModule } from '../../modules/inventory/inventory.module';
 import { ListPricingComponent } from './list-pricing/list-pricing.component';
 import { ListPricingRowComponent } from './list-pricing/list-pricing-row/list-pricing-row.component';
 import { LazyScrollModule } from '../../modules/lazy-scroll/lazy-scroll.module';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 const routes: Routes = [
   {
@@ -60,7 +60,6 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    IconsModule,
 
     RouterModule.forChild(routes),
 
@@ -95,7 +94,8 @@ const routes: Routes = [
 
     CommissionBoardModule,
     InventoryModule,
-    LazyScrollModule
+    LazyScrollModule,
+    NzRadioModule
   ],
   declarations: [
     ListDetailsComponent,

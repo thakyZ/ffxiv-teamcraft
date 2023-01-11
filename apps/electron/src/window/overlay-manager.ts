@@ -1,6 +1,7 @@
 import { Store } from '../store';
 import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron';
 import { Constants } from '../constants';
+import { join } from 'path';
 
 export class OverlayManager {
 
@@ -28,9 +29,8 @@ export class OverlayManager {
       width: dimensions.x,
       height: dimensions.y,
       webPreferences: {
-        nodeIntegration: true,
         backgroundThrottling: false,
-        contextIsolation: false
+        preload: join(__dirname, '../preload.js')
       }
     };
     Object.assign(opts, this.store.get(`overlay:${url}:bounds`, {}));
@@ -48,7 +48,6 @@ export class OverlayManager {
     overlay.on('close', () => {
       this.afterOverlayClose(url);
     });
-
 
     overlay.loadURL(`file://${Constants.BASE_APP_PATH}/index.html#${url}?overlay=true`);
     this.openedOverlays[url] = overlay;
@@ -75,9 +74,18 @@ export class OverlayManager {
   }
 
   sendToOverlay(uri: string, channel: string, payload: any): void {
-    if (this.openedOverlays[uri] !== undefined) {
+    if (this.openedOverlays[uri] !== undefined && !this.openedOverlays[uri].isDestroyed()) {
       this.openedOverlays[uri].webContents.send(channel, payload);
     }
+  }
+
+  closeOverlay(url: string): void {
+    const overlay = this.openedOverlays[url];
+    if (!overlay) {
+      return;
+    }
+    overlay.close();
+    this.afterOverlayClose(url);
   }
 
   persistOverlays(): void {
@@ -93,6 +101,7 @@ export class OverlayManager {
       '/fishing-reporter-overlay',
       '/alarms-overlay',
       '/list-panel-overlay',
+      '/step-by-step-list-overlay',
       '/rotation-overlay',
       '/mappy-overlay'
     ].forEach(uri => {

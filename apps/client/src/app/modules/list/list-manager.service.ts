@@ -20,7 +20,7 @@ import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { safeCombineLatest } from '../../core/rxjs/safe-combine-latest';
 import { ListController } from './list-controller';
 import { Team } from '../../model/team/team';
-import { LazyIslandBuilding } from '../../lazy-data/model/lazy-island-building';
+import { CraftedBySource } from './model/item-source';
 
 export interface ListAdditionParams {
   itemId: number | string;
@@ -79,6 +79,8 @@ export class ListManagerService {
       itemSource$ = this.lazyData.getRow('extracts', itemId);
     } else if (itemId.startsWith('mjibuilding')) {
       itemSource$ = this.lazyData.getRow('extracts', +itemId.replace('mjibuilding-', ''));
+    } else if (itemId.startsWith('mjilandmark')) {
+      itemSource$ = this.lazyData.getRow('extracts', +itemId.replace('mjilandmark-', ''));
     } else {
       itemSource$ = this.customItems$.pipe(map(items => items.find(i => i.$key === itemId)));
     }
@@ -117,11 +119,7 @@ export class ListManagerService {
           return of(new List());
         }
         // If it's a standard item, add it with the classic implementation.
-        if (isListRow(data)) {
-          return this.processItemAddition(data, amount, collectable, recipeId, gearsets, list.ignoreRequirementsRegistry);
-        } else {
-          return this.processCustomItemAddition(data as CustomItem, amount, list.ignoreRequirementsRegistry);
-        }
+        return this.processItemAddition(data, amount, collectable, recipeId, gearsets, list.ignoreRequirementsRegistry);
       }),
       // merge the addition list with the list we want to add items in.
       map(addition => ListController.clean(ListController.merge(list, addition)))
@@ -327,7 +325,7 @@ export class ListManagerService {
         map(extract => {
           const newItem = { ...item, ...extract };
           if (getItemSource<CraftedBy[]>(extract, DataType.CRAFTED_BY).length > 0) {
-            const craftedBy = { ...newItem.sources.find(s => s.type === DataType.CRAFTED_BY) };
+            const craftedBy: CraftedBySource = { ...newItem.sources.find(s => s.type === DataType.CRAFTED_BY) as CraftedBySource };
             if (recipeId !== undefined && craftedBy.data.some(row => row.id.toString() === recipeId.toString())) {
               craftedBy.data = craftedBy.data.filter(row => {
                 return row.id.toString() === recipeId.toString();

@@ -5,6 +5,11 @@
         <div class="error" *ngFor="let error of errors">- {{error | translate}}</div>
       </div>
     </ng-container>
+    <nz-alert nzType="info"
+              *ngIf="isIgnoredSpot$ | async"
+              nzCloseable
+              [nzMessage]="'DB.FISH.OVERLAY.Ignored_spot' | translate"
+              [nzDescription]="'DB.FISH.OVERLAY.Ignored_spot_description' | translate"></nz-alert>
     <ng-template #unknown>
       <span class="error-text">{{'COMMON.Unknown' | translate}}</span>
     </ng-template>
@@ -15,9 +20,9 @@
       </div>
       <div fxLayout="row" fxLayoutAlign="space-between center">
         <div>{{'DB.FISH.OVERLAY.Bait' | translate}}</div>
-        <div *ngIf="state.baitId; else unknown" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="flex-end center">
-          <img class="fish-icon" src="{{(state.mooch ? (state.moochId || state.baitId) : state.baitId) | lazyIcon | xivapiIcon}}">
-          <div>{{(state.mooch ? (state.moochId || state.baitId) : state.baitId) | itemName | i18n}}</div>
+        <div *ngIf="(state.baitId || state.mooch); else unknown" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="flex-end center">
+          <img class="fish-icon" src="{{(state.mooch || state.baitId) | lazyIcon | xivapiIcon}}">
+          <div>{{(state.mooch || state.baitId) | itemName | i18n}}</div>
         </div>
       </div>
       <div fxLayout="row" fxLayoutAlign="space-between center">
@@ -63,7 +68,8 @@
       <div fxLayout="row" fxLayoutAlign="space-between center">
         <div>{{'DB.FISH.OVERLAY.Statuses' | translate}}</div>
         <div *ngIf="state.statuses; else unknown" fxLayout="row" fxLayoutGap="5px">
-          <img *ngFor="let status of state.statuses; trackBy: trackByValue" src="{{status | lazyRow:'statuses':'icon' | async | xivapiIcon}}" nz-tooltip [nzTooltipTitle]="status | i18nRow:'statuses' | async | i18n"
+          <img *ngFor="let status of state.statuses; trackBy: trackByValue" src="{{status | lazyRow:'statuses':'icon' | async | xivapiIcon}}" nz-tooltip
+               [nzTooltipTitle]="status | i18nRow:'statuses' | async | i18n"
                alt="{{status}}">
           <span *ngIf="state.statuses.length === 0">
             {{'DB.FISH.OVERLAY.No_statuses' | translate}}
@@ -96,7 +102,7 @@
             <div *ngIf="report.biteTime; else unknown">{{(report.biteTime / 10) | number: '1.0-1'}} s</div>
           </div>
           <div fxLayout="row" fxLayoutAlign="space-between center">
-            <div>{{'Hq' | translate}}</div>
+            <div>{{'DB.FISH.OVERLAY.Large' | translate}}</div>
             <div>{{(report.hq ? 'Yes' : 'No') | translate}}</div>
           </div>
           <div fxLayout="row" fxLayoutAlign="space-between center">
@@ -111,7 +117,7 @@
             <div>{{(report.snagging ? 'Yes' : 'No') | translate}}</div>
           </div>
           <div fxLayout="row" fxLayoutAlign="space-between center">
-            <div>{{735 | i18nRow:'statuses' | async | i18n}}</div>
+            <div>{{568 | i18nRow:'statuses' | async | i18n}}</div>
             <div>{{(report.intuition ? 'Yes' : 'No') | translate}}</div>
           </div>
           <div fxLayout="row" fxLayoutAlign="space-between center">

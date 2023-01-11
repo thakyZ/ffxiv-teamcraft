@@ -28,14 +28,11 @@ import { AuthModule } from './core/auth/auth.module';
 import { AlarmsSidebarModule } from './modules/alarms-sidebar/alarms-sidebar.module';
 import { AlarmsModule } from './core/alarms/alarms.module';
 import { ListModule } from './modules/list/list.module';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { XivapiClientModule } from '@xivapi/angular-client';
 import { NgxDnDModule } from '@swimlane/ngx-dnd';
 import { TranslationsLoaderFactory } from './translations-loader';
 import { IconDefinition } from '@ant-design/icons-angular';
+import { NgxEchartsModule } from 'ngx-echarts';
 import {
   AppstoreOutline,
   ArrowRightOutline,
@@ -97,7 +94,6 @@ import hr from '@angular/common/locales/hr';
 import ko from '@angular/common/locales/ko';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { EorzeaModule } from './modules/eorzea/eorzea.module';
-import { AngularFireFunctionsModule } from '@angular/fire/compat/functions';
 import { GraphQLModule } from './graphql.module';
 import { ApolloInterceptor } from './apollo-interceptor';
 import { QuickSearchModule } from './modules/quick-search/quick-search.module';
@@ -116,7 +112,6 @@ import { NavigationSidebarModule } from './modules/navigation-sidebar/navigation
 import { APP_INITIALIZERS } from './app-initializers';
 import { FreeCompanyWorkshopsModule } from './modules/free-company-workshops/free-company-workshops.module';
 import { AdsModule } from './modules/ads/ads.module';
-import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 import { NzNoAnimationModule } from 'ng-zorro-antd/core/no-animation';
 import * as AllaganReportsGQLProviders from './pages/allagan-reports/allagan-reports.gql';
 import { LazyDataModule } from './lazy-data/lazy-data.module';
@@ -124,6 +119,13 @@ import { initialState as listsInitialState, listsReducer } from './modules/list/
 import { ListsEffects } from './modules/list/+state/lists.effects';
 import { ListsActionTypes, SetItemDone } from './modules/list/+state/lists.actions';
 import { GOOGLE_ANALYTICS_ROUTER_INITIALIZER_PROVIDER } from './core/analytics/analytics-router-initializer';
+import { enableMultiTabIndexedDbPersistence, getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getDatabase, provideDatabase } from '@angular/fire/database';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFunctions, provideFunctions } from '@angular/fire/functions';
+import { getPerformance, providePerformance } from '@angular/fire/performance';
+import { ListAggregateModule } from './modules/list-aggregate/list-aggregate.module';
 
 const icons: IconDefinition[] = [
   SettingOutline,
@@ -213,14 +215,16 @@ const nzConfig: NzConfig = {
       }
     }),
 
-    AngularFireModule.initializeApp(environment.firebase),
-
-    AngularFireDatabaseModule,
-    AngularFireAuthModule,
-    AngularFirestoreModule.enablePersistence({
-      synchronizeTabs: true
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => {
+      const firestore = getFirestore();
+      enableMultiTabIndexedDbPersistence(firestore);
+      return firestore;
     }),
-    AngularFireFunctionsModule,
+    provideDatabase(() => getDatabase()),
+    provideFunctions(() => getFunctions()),
+    providePerformance(() => getPerformance()),
 
     XivapiClientModule.forRoot(),
 
@@ -294,7 +298,7 @@ const nzConfig: NzConfig = {
       },
       actionSanitizer: (action) => {
         if (action.type.includes('LazyData')) {
-          return { type: action.type, key: (action as any).key };
+          return { type: action.type, key: (action as any).key, entity: (action as any).entity, id: (action as any).id };
         }
         if (action.type === ListsActionTypes.SetItemDone) {
           const { settings, ...sanitized } = (action as SetItemDone);
@@ -310,6 +314,8 @@ const nzConfig: NzConfig = {
     StoreModule.forFeature('lists', listsReducer, { initialState: listsInitialState }),
     EffectsModule.forFeature([ListsEffects]),
 
+    ListAggregateModule,
+
     GraphQLModule,
 
     PlayerMetricsModule,
@@ -320,7 +326,10 @@ const nzConfig: NzConfig = {
     NzAlertModule,
     NavigationSidebarModule,
     AdsModule,
-    LazyDataModule
+    LazyDataModule,
+    NgxEchartsModule.forRoot({
+      echarts: () => import('echarts')
+    })
   ],
   bootstrap: [AppComponent]
 })

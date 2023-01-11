@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, protocol } from 'electron';
+import { app, BrowserWindow, ipcMain, protocol, session } from 'electron';
 import { createServer as createHttpServer, Server } from 'http';
 import request from 'request';
 import { MainWindow } from './window/main-window';
@@ -9,6 +9,7 @@ import log from 'electron-log';
 import { Constants } from './constants';
 import { join } from 'path';
 import { parse } from 'url';
+import { MetricsSystem } from './ipc/metrics-system';
 
 export class TeamcraftDesktopApp {
 
@@ -17,7 +18,7 @@ export class TeamcraftDesktopApp {
   private httpServer: Server;
 
   public constructor(private mainWindow: MainWindow, private tray: TrayMenu, private store: Store,
-                     private pcap: PacketCapture, private argv: any[]) {
+                     private pcap: PacketCapture, private metrics: MetricsSystem, private argv: any[]) {
   }
 
   start(): void {
@@ -26,6 +27,23 @@ export class TeamcraftDesktopApp {
     let deepLink = '';
 
     app.whenReady().then(() => {
+      session.defaultSession
+        .setPermissionRequestHandler((webContents, permission, callback) => {
+          const parsedUrl = new URL(webContents.getURL());
+
+          if (permission === 'notifications') {
+            // Approves the permissions request
+            callback(true);
+          }
+
+          // Verify URL
+          if (parsedUrl.protocol !== 'file:') {
+            // Denies the permissions request
+            return callback(false);
+          }
+        });
+
+
       protocol.registerFileProtocol('teamcraft', (req) => {
         deepLink = req.url.substr(12);
         if (deepLink.endsWith('/')) {
@@ -92,7 +110,7 @@ export class TeamcraftDesktopApp {
       backgroundColor: '#2f3237',
       icon: `file://${Constants.BASE_APP_PATH}/assets/app-icon.png`,
       webPreferences: {
-        contextIsolation: false
+        preload: join(__dirname, 'preload.js')
       }
     });
 
@@ -137,6 +155,7 @@ export class TeamcraftDesktopApp {
           this.mainWindow.win.focus();
           this.mainWindow.win.webContents.send('displayed', true);
         }, 200);
+        this.metrics.start();
       });
     });
 

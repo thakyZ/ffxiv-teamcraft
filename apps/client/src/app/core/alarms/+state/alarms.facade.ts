@@ -204,6 +204,8 @@ export class AlarmsFacade {
             && a.type === alarm.type
             && a.fishEyes === alarm.fishEyes
             && a.nodeId === alarm.nodeId;
+        } else if (alarm.type === -10) {
+          return a.bnpcName === alarm.bnpcName;
         } else {
           // If it's a custom alarm
           return a.name === alarm.name && a.duration === alarm.duration && a.type === alarm.type;
@@ -267,9 +269,9 @@ export class AlarmsFacade {
   }
 
   public getNextSpawn(alarm: Alarm, etime: Date): NextSpawn {
-    const cacheKey = `${alarm.itemId}-${alarm.zoneId}-${(alarm.spawns || []).join(',')}`;
+    const cacheKey = `${alarm.itemId}-${alarm.bnpcName}-${alarm.zoneId}-${(alarm.spawns || []).join(',')}-${(alarm.weathers || []).join(',')}`;
     if (this.nextSpawnCache[cacheKey] === undefined || this.nextSpawnCache[cacheKey].expires.getTime() < Date.now()) {
-      const sortedSpawns = (alarm.spawns || []).sort((a, b) => {
+      const sortedSpawns = [...(alarm.spawns || [])].sort((a, b) => {
         const timeBeforeA = this.getMinutesBefore(etime, { hours: a, days: 0 });
         const timeBeforeADespawns = this.getMinutesBefore(etime, { hours: (a + alarm.duration) % 24, days: 0 });
         const timeBeforeB = this.getMinutesBefore(etime, { hours: b, days: 0 });
@@ -315,6 +317,12 @@ export class AlarmsFacade {
    * @param minutes
    */
   public getMinutesBefore(currentTime: Date, spawn: NextSpawn, minutes = 0): number {
+    if (spawn.date) {
+      const durationSeconds = Math.floor((spawn.date.getTime() - currentTime.getTime()) / 1000);
+      if (durationSeconds >= 0) {
+        return durationSeconds / 60;
+      }
+    }
     let hours = spawn.hours;
     // Convert 0 to 24 for spawn timers
     if (hours === 0) {
@@ -427,7 +435,7 @@ export class AlarmsFacade {
             }
           }
           // If custom alarm, return it
-          if (alarm.name) {
+          if (alarm.name || alarm.type === -10) {
             alarm.appVersion = environment.version;
             return of(alarm);
           }

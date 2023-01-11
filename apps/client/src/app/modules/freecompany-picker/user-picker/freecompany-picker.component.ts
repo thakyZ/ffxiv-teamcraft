@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
-import { FormControl, Validators } from '@angular/forms';
-import { CharacterSearchResult, CharacterSearchResultRow, XivapiService } from '@xivapi/angular-client';
+import { UntypedFormControl, Validators } from '@angular/forms';
+import { CharacterSearchResult, XivapiService } from '@xivapi/angular-client';
 import { NzModalRef } from 'ng-zorro-antd/modal';
-import { debounceTime, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
-import { UserService } from '../../../core/database/user.service';
+import { debounceTime, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { AuthFacade } from '../../../+state/auth.facade';
 
 @Component({
   selector: 'app-freecompany-picker',
@@ -17,17 +17,23 @@ export class FreecompanyPickerComponent {
 
   public autoCompleteRows$: Observable<string[]>;
 
-  public selectedServer = new FormControl('', [Validators.required]);
+  public selectedServer = new UntypedFormControl('', [Validators.required]);
 
-  public fcName = new FormControl('');
+  public fcName = new UntypedFormControl('');
 
-  public lodestoneId = new FormControl(null);
+  public lodestoneId = new UntypedFormControl(null);
 
   public result$: Observable<any[]>;
 
   public loadingResults = false;
 
-  constructor(private xivapi: XivapiService, private modalRef: NzModalRef) {
+  public currentUserFc$ = this.authFacade.fcId$.pipe(
+    filter(Boolean),
+    switchMap(fcId => this.xivapi.getFreeCompany(fcId)),
+    map(res => res.FreeCompany)
+  );
+
+  constructor(private xivapi: XivapiService, private modalRef: NzModalRef, private authFacade: AuthFacade) {
     this.servers$ = this.xivapi.getServerList().pipe(shareReplay({ bufferSize: 1, refCount: true }));
 
     this.autoCompleteRows$ = combineLatest([this.servers$, this.selectedServer.valueChanges])
@@ -41,8 +47,8 @@ export class FreecompanyPickerComponent {
       .pipe(
         tap(() => this.loadingResults = true),
         debounceTime(500),
-        switchMap(([selectedServer, characterName]) => {
-          return this.xivapi.searchFreeCompany(characterName, selectedServer);
+        switchMap(([selectedServer, fcName]) => {
+          return this.xivapi.searchFreeCompany(fcName, selectedServer);
         }),
         map((result: CharacterSearchResult) => result.Results || []),
         tap(() => this.loadingResults = false),

@@ -34,7 +34,7 @@ export interface Fish {
   level:      number;
   icon?:      string;
   data:       Datum[];
-  timed:      boolean | number;
+  timed?:     boolean | number;
   weathered?: number;
 }
 
@@ -95,8 +95,8 @@ export interface GatheringNode {
   ephemeral:         boolean;
   zoneId:            number;
   map:               number;
-  x?:                number;
-  y?:                number;
+  x:                 number;
+  y:                 number;
   z:                 number;
   spawns:            number[];
   duration:          number;
@@ -106,6 +106,7 @@ export interface GatheringNode {
   snagging?:         boolean;
   baits?:            Bait[];
   oceanFishingTime?: number | null;
+  minGathering?:     number;
   matchingItemId:    number;
   weathers?:         number[];
   weathersFrom?:     number[];

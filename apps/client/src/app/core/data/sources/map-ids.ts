@@ -226,7 +226,7 @@ export const mapIds = [
   {
     "id": 29,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 22,
     "scale": 200,
     "weatherRate": 0
@@ -602,16 +602,16 @@ export const mapIds = [
   {
     "id": 76,
     "zone": 0,
-    "name": null,
-    "territory": 0,
+    "name": "",
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
   {
     "id": 77,
     "zone": 0,
-    "name": null,
-    "territory": 0,
+    "name": "",
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -626,8 +626,8 @@ export const mapIds = [
   {
     "id": 79,
     "zone": 0,
-    "name": null,
-    "territory": 0,
+    "name": "",
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -691,7 +691,7 @@ export const mapIds = [
     "id": 87,
     "zone": 22,
     "name": "La Noscea",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -699,7 +699,7 @@ export const mapIds = [
     "id": 88,
     "zone": 24,
     "name": "Thanalan",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -707,7 +707,7 @@ export const mapIds = [
     "id": 89,
     "zone": 23,
     "name": "The Black Shroud",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -715,7 +715,7 @@ export const mapIds = [
     "id": 90,
     "zone": 25,
     "name": "Coerthas",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -723,7 +723,7 @@ export const mapIds = [
     "id": 91,
     "zone": 26,
     "name": "Mor Dhona",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -731,7 +731,7 @@ export const mapIds = [
     "id": 92,
     "zone": 21,
     "name": "Eorzea",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -755,7 +755,7 @@ export const mapIds = [
     "id": 95,
     "zone": 462,
     "name": "Rhotano Sea",
-    "territory": 0,
+    "territory": null,
     "scale": 400,
     "weatherRate": null
   },
@@ -1843,7 +1843,7 @@ export const mapIds = [
     "id": 231,
     "zone": 2147,
     "name": "Aetherochemical Research Facility",
-    "territory": 438,
+    "territory": 1110,
     "scale": 200,
     "weatherRate": 0
   },
@@ -1851,7 +1851,7 @@ export const mapIds = [
     "id": 232,
     "zone": 2147,
     "name": "Aetherochemical Research Facility",
-    "territory": 438,
+    "territory": 1110,
     "scale": 200,
     "weatherRate": 0
   },
@@ -1859,7 +1859,7 @@ export const mapIds = [
     "id": 233,
     "zone": 2147,
     "name": "Aetherochemical Research Facility",
-    "territory": 438,
+    "territory": 1110,
     "scale": 200,
     "weatherRate": 0
   },
@@ -1867,7 +1867,7 @@ export const mapIds = [
     "id": 234,
     "zone": 2147,
     "name": "Aetherochemical Research Facility",
-    "territory": 438,
+    "territory": 1110,
     "scale": 200,
     "weatherRate": 0
   },
@@ -1923,7 +1923,7 @@ export const mapIds = [
     "id": 241,
     "zone": 2038,
     "name": "The Great Gubal Library",
-    "territory": 416,
+    "territory": 1109,
     "scale": 200,
     "weatherRate": 0
   },
@@ -2027,7 +2027,7 @@ export const mapIds = [
     "id": 254,
     "zone": 2147,
     "name": "Aetherochemical Research Facility",
-    "territory": 438,
+    "territory": 1110,
     "scale": 200,
     "weatherRate": 0
   },
@@ -2059,7 +2059,7 @@ export const mapIds = [
     "id": 258,
     "zone": 497,
     "name": "Abalathia's Spine",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -2067,7 +2067,7 @@ export const mapIds = [
     "id": 259,
     "zone": 498,
     "name": "Dravania",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -2186,7 +2186,7 @@ export const mapIds = [
   {
     "id": 274,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 515,
     "scale": 100,
     "weatherRate": 62
@@ -2194,7 +2194,7 @@ export const mapIds = [
   {
     "id": 275,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 514,
     "scale": 100,
     "weatherRate": 61
@@ -2202,7 +2202,7 @@ export const mapIds = [
   {
     "id": 276,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 512,
     "scale": 100,
     "weatherRate": 60
@@ -2211,7 +2211,7 @@ export const mapIds = [
     "id": 277,
     "zone": 2088,
     "name": "The Antitower",
-    "territory": 516,
+    "territory": 1111,
     "scale": 200,
     "weatherRate": 0
   },
@@ -2219,7 +2219,7 @@ export const mapIds = [
     "id": 278,
     "zone": 2088,
     "name": "The Antitower",
-    "territory": 516,
+    "territory": 1111,
     "scale": 200,
     "weatherRate": 0
   },
@@ -2227,7 +2227,7 @@ export const mapIds = [
     "id": 279,
     "zone": 2088,
     "name": "The Antitower",
-    "territory": 516,
+    "territory": 1111,
     "scale": 200,
     "weatherRate": 0
   },
@@ -2331,7 +2331,7 @@ export const mapIds = [
     "id": 292,
     "zone": 2090,
     "name": "Sohr Khai",
-    "territory": 555,
+    "territory": 1112,
     "scale": 200,
     "weatherRate": 0
   },
@@ -2339,7 +2339,7 @@ export const mapIds = [
     "id": 293,
     "zone": 2090,
     "name": "Sohr Khai",
-    "territory": 555,
+    "territory": 1112,
     "scale": 200,
     "weatherRate": 0
   },
@@ -2347,7 +2347,7 @@ export const mapIds = [
     "id": 294,
     "zone": 2090,
     "name": "Sohr Khai",
-    "territory": 555,
+    "territory": 1112,
     "scale": 200,
     "weatherRate": 0
   },
@@ -2410,7 +2410,7 @@ export const mapIds = [
   {
     "id": 302,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 556,
     "scale": 200,
     "weatherRate": 0
@@ -2499,7 +2499,7 @@ export const mapIds = [
     "id": 313,
     "zone": 1792,
     "name": "Xelphatol",
-    "territory": 572,
+    "territory": 1113,
     "scale": 200,
     "weatherRate": 40
   },
@@ -2691,7 +2691,7 @@ export const mapIds = [
     "id": 337,
     "zone": 1857,
     "name": "Baelsar's Wall",
-    "territory": 615,
+    "territory": 1114,
     "scale": 200,
     "weatherRate": 40
   },
@@ -2699,7 +2699,7 @@ export const mapIds = [
     "id": 338,
     "zone": 1857,
     "name": "Baelsar's Wall",
-    "territory": 615,
+    "territory": 1114,
     "scale": 200,
     "weatherRate": 40
   },
@@ -2707,7 +2707,7 @@ export const mapIds = [
     "id": 339,
     "zone": 1857,
     "name": "Baelsar's Wall",
-    "territory": 615,
+    "territory": 1114,
     "scale": 200,
     "weatherRate": 40
   },
@@ -2715,7 +2715,7 @@ export const mapIds = [
     "id": 340,
     "zone": 1857,
     "name": "Baelsar's Wall",
-    "territory": 615,
+    "territory": 1114,
     "scale": 200,
     "weatherRate": 40
   },
@@ -2762,7 +2762,7 @@ export const mapIds = [
   {
     "id": 346,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 627,
     "scale": 200,
     "weatherRate": 58
@@ -2770,7 +2770,7 @@ export const mapIds = [
   {
     "id": 347,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 627,
     "scale": 200,
     "weatherRate": 58
@@ -2842,7 +2842,7 @@ export const mapIds = [
   {
     "id": 356,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 656,
     "scale": 100,
     "weatherRate": 71
@@ -3002,7 +3002,7 @@ export const mapIds = [
   {
     "id": 376,
     "zone": 1960,
-    "name": "The Misery",
+    "name": "The <i>Misery</i>",
     "territory": 680,
     "scale": 400,
     "weatherRate": 36
@@ -3067,7 +3067,7 @@ export const mapIds = [
     "id": 384,
     "zone": 3700,
     "name": "The Source",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -3075,7 +3075,7 @@ export const mapIds = [
     "id": 385,
     "zone": 2400,
     "name": "Gyr Abania",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -3083,7 +3083,7 @@ export const mapIds = [
     "id": 386,
     "zone": 2401,
     "name": "Othard",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -3091,7 +3091,7 @@ export const mapIds = [
     "id": 387,
     "zone": 2402,
     "name": "Hingashi",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -3339,7 +3339,7 @@ export const mapIds = [
     "id": 418,
     "zone": 2405,
     "name": "???",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -3354,7 +3354,7 @@ export const mapIds = [
   {
     "id": 420,
     "zone": 2370,
-    "name": "The Prima Vista Tiring Room",
+    "name": "The <i>Prima Vista</i> Tiring Room",
     "territory": 735,
     "scale": 400,
     "weatherRate": 0
@@ -3362,7 +3362,7 @@ export const mapIds = [
   {
     "id": 421,
     "zone": 2371,
-    "name": "The Prima Vista Bridge",
+    "name": "The <i>Prima Vista</i> Bridge",
     "territory": 736,
     "scale": 400,
     "weatherRate": 0
@@ -4266,8 +4266,8 @@ export const mapIds = [
   {
     "id": 534,
     "zone": 0,
-    "name": null,
-    "territory": 0,
+    "name": "",
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -4275,7 +4275,7 @@ export const mapIds = [
     "id": 535,
     "zone": 3701,
     "name": "The First",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -4339,7 +4339,7 @@ export const mapIds = [
     "id": 543,
     "zone": 2950,
     "name": "Norvrandt",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -4826,7 +4826,7 @@ export const mapIds = [
   {
     "id": 604,
     "zone": 3477,
-    "name": "The Endeavor",
+    "name": "The <i>Endeavor</i>",
     "territory": 900,
     "scale": 400,
     "weatherRate": 14
@@ -5378,7 +5378,7 @@ export const mapIds = [
   {
     "id": 673,
     "zone": 3682,
-    "name": "The Dalriada",
+    "name": "The <i>Dalriada</i>",
     "territory": 975,
     "scale": 200,
     "weatherRate": 130
@@ -5386,7 +5386,7 @@ export const mapIds = [
   {
     "id": 674,
     "zone": 3682,
-    "name": "The Dalriada",
+    "name": "The <i>Dalriada</i>",
     "territory": 975,
     "scale": 200,
     "weatherRate": 130
@@ -5394,7 +5394,7 @@ export const mapIds = [
   {
     "id": 675,
     "zone": 3682,
-    "name": "The Dalriada",
+    "name": "The <i>Dalriada</i>",
     "territory": 975,
     "scale": 200,
     "weatherRate": 130
@@ -5851,7 +5851,7 @@ export const mapIds = [
     "id": 732,
     "zone": 3702,
     "name": "The Northern Empty",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -5859,7 +5859,7 @@ export const mapIds = [
     "id": 733,
     "zone": 3703,
     "name": "Ilsabard",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -5867,7 +5867,7 @@ export const mapIds = [
     "id": 734,
     "zone": 3704,
     "name": "The Sea of Stars",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -5875,7 +5875,7 @@ export const mapIds = [
     "id": 735,
     "zone": 3705,
     "name": "The World Unsundered",
-    "territory": 0,
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -6090,8 +6090,8 @@ export const mapIds = [
   {
     "id": 762,
     "zone": 0,
-    "name": null,
-    "territory": 0,
+    "name": "",
+    "territory": null,
     "scale": 100,
     "weatherRate": null
   },
@@ -6242,7 +6242,7 @@ export const mapIds = [
   {
     "id": 781,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 1055,
     "scale": 100,
     "weatherRate": 148
@@ -6322,8 +6322,8 @@ export const mapIds = [
   {
     "id": 791,
     "zone": 0,
-    "name": null,
-    "territory": 0,
+    "name": "",
+    "territory": null,
     "scale": 400,
     "weatherRate": null
   },
@@ -6338,7 +6338,7 @@ export const mapIds = [
   {
     "id": 793,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 1055,
     "scale": 100,
     "weatherRate": 148
@@ -6346,7 +6346,7 @@ export const mapIds = [
   {
     "id": 794,
     "zone": 0,
-    "name": null,
+    "name": "",
     "territory": 1055,
     "scale": 100,
     "weatherRate": 148
@@ -6354,58 +6354,58 @@ export const mapIds = [
   {
     "id": 795,
     "zone": 4251,
-    "name": "",
+    "name": "Elysion",
     "territory": 1073,
     "scale": 400,
-    "weatherRate": 0
+    "weatherRate": 136
   },
   {
     "id": 796,
     "zone": 4252,
-    "name": "",
+    "name": "Elysion",
     "territory": 1073,
     "scale": 400,
-    "weatherRate": 0
+    "weatherRate": 136
   },
   {
     "id": 797,
     "zone": 4253,
-    "name": "",
+    "name": "Elysion",
     "territory": 1073,
     "scale": 400,
-    "weatherRate": 0
+    "weatherRate": 136
   },
   {
     "id": 798,
     "zone": 4254,
-    "name": "",
+    "name": "Elysion",
     "territory": 1073,
     "scale": 400,
-    "weatherRate": 0
+    "weatherRate": 136
   },
   {
     "id": 799,
     "zone": 4255,
-    "name": "",
+    "name": "Elysion",
     "territory": 1073,
     "scale": 400,
-    "weatherRate": 0
+    "weatherRate": 136
   },
   {
     "id": 800,
     "zone": 4256,
-    "name": "",
+    "name": "Elysion",
     "territory": 1073,
     "scale": 400,
-    "weatherRate": 0
+    "weatherRate": 136
   },
   {
     "id": 801,
     "zone": 4042,
-    "name": "",
+    "name": "Elysion",
     "territory": 1073,
     "scale": 400,
-    "weatherRate": 0
+    "weatherRate": 136
   },
   {
     "id": 802,
@@ -6418,7 +6418,7 @@ export const mapIds = [
   {
     "id": 803,
     "zone": 4199,
-    "name": "",
+    "name": "The Sil'dihn Subterrane",
     "territory": 1069,
     "scale": 200,
     "weatherRate": 0
@@ -6426,7 +6426,7 @@ export const mapIds = [
   {
     "id": 804,
     "zone": 4227,
-    "name": "",
+    "name": "Another Sil'dihn Subterrane",
     "territory": 1075,
     "scale": 200,
     "weatherRate": 0
@@ -6434,7 +6434,7 @@ export const mapIds = [
   {
     "id": 805,
     "zone": 4227,
-    "name": "",
+    "name": "Another Sil'dihn Subterrane",
     "territory": 1075,
     "scale": 200,
     "weatherRate": 0
@@ -6442,7 +6442,7 @@ export const mapIds = [
   {
     "id": 806,
     "zone": 4227,
-    "name": "",
+    "name": "Another Sil'dihn Subterrane",
     "territory": 1075,
     "scale": 200,
     "weatherRate": 0
@@ -6469,7 +6469,7 @@ export const mapIds = [
     "name": "Stygian Insenescence Cells",
     "territory": 1093,
     "scale": 400,
-    "weatherRate": 0
+    "weatherRate": 145
   },
   {
     "id": 810,
@@ -6478,5 +6478,165 @@ export const mapIds = [
     "territory": 1085,
     "scale": 400,
     "weatherRate": 145
+  },
+  {
+    "id": 811,
+    "zone": 4258,
+    "name": "Euphrosyne",
+    "territory": 1118,
+    "scale": 200,
+    "weatherRate": 147
+  },
+  {
+    "id": 812,
+    "zone": 4258,
+    "name": "Euphrosyne",
+    "territory": 1118,
+    "scale": 200,
+    "weatherRate": 147
+  },
+  {
+    "id": 813,
+    "zone": 4258,
+    "name": "Euphrosyne",
+    "territory": 1118,
+    "scale": 200,
+    "weatherRate": 147
+  },
+  {
+    "id": 814,
+    "zone": 4258,
+    "name": "Euphrosyne",
+    "territory": 1118,
+    "scale": 200,
+    "weatherRate": 147
+  },
+  {
+    "id": 815,
+    "zone": 4270,
+    "name": "Lapis Manalis",
+    "territory": 1097,
+    "scale": 200,
+    "weatherRate": 42
+  },
+  {
+    "id": 816,
+    "zone": 4270,
+    "name": "Lapis Manalis",
+    "territory": 1097,
+    "scale": 200,
+    "weatherRate": 42
+  },
+  {
+    "id": 817,
+    "zone": 4270,
+    "name": "Lapis Manalis",
+    "territory": 1097,
+    "scale": 200,
+    "weatherRate": 42
+  },
+  {
+    "id": 818,
+    "zone": 4287,
+    "name": "The Shifting Gymnasion Agonon",
+    "territory": 1123,
+    "scale": 400,
+    "weatherRate": 0
+  },
+  {
+    "id": 819,
+    "zone": 2528,
+    "name": "Sylphstep",
+    "territory": 1098,
+    "scale": 400,
+    "weatherRate": 0
+  },
+  {
+    "id": 820,
+    "zone": 0,
+    "name": "",
+    "territory": null,
+    "scale": 0,
+    "weatherRate": null
+  },
+  {
+    "id": 821,
+    "zone": 0,
+    "name": "",
+    "territory": null,
+    "scale": 0,
+    "weatherRate": null
+  },
+  {
+    "id": 822,
+    "zone": 4093,
+    "name": "The Clockwork Castletown",
+    "territory": 1116,
+    "scale": 400,
+    "weatherRate": 0
+  },
+  {
+    "id": 823,
+    "zone": 4289,
+    "name": "Mount Ordeals",
+    "territory": 1095,
+    "scale": 400,
+    "weatherRate": 0
+  },
+  {
+    "id": 824,
+    "zone": 4270,
+    "name": "Lapis Manalis",
+    "territory": 1097,
+    "scale": 200,
+    "weatherRate": 42
+  },
+  {
+    "id": 825,
+    "zone": 4293,
+    "name": "Khadga",
+    "territory": 1125,
+    "scale": 400,
+    "weatherRate": 0
+  },
+  {
+    "id": 826,
+    "zone": 4295,
+    "name": "Lapis Manalis",
+    "territory": 1119,
+    "scale": 200,
+    "weatherRate": 0
+  },
+  {
+    "id": 827,
+    "zone": 4295,
+    "name": "Lapis Manalis",
+    "territory": 1119,
+    "scale": 200,
+    "weatherRate": 0
+  },
+  {
+    "id": 828,
+    "zone": 4295,
+    "name": "Lapis Manalis",
+    "territory": 1119,
+    "scale": 200,
+    "weatherRate": 0
+  },
+  {
+    "id": 829,
+    "zone": 4295,
+    "name": "Lapis Manalis",
+    "territory": 1119,
+    "scale": 200,
+    "weatherRate": 0
+  },
+  {
+    "id": 830,
+    "zone": 0,
+    "name": "",
+    "territory": null,
+    "scale": 100,
+    "weatherRate": null
   }
 ];

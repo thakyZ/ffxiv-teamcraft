@@ -3,7 +3,6 @@ import { SettingsService } from '../settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { PlatformService } from '../../../core/tools/platform.service';
 import { AuthFacade } from '../../../+state/auth.facade';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
@@ -16,9 +15,9 @@ import { CustomLinksFacade } from '../../custom-links/+state/custom-links.facade
 import { CustomLink } from '../../../core/database/custom-links/custom-link';
 import { Theme } from '../theme';
 import { NameQuestionPopupComponent } from '../../name-question-popup/name-question-popup/name-question-popup.component';
-import { uniq } from 'lodash';
+import { uniq, uniqBy } from 'lodash';
 import { MappyReporterService } from '../../../core/electron/mappy/mappy-reporter';
-import { from, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { NavigationSidebarService } from '../../navigation-sidebar/navigation-sidebar.service';
 import { SidebarItem } from '../../navigation-sidebar/sidebar-entry';
 import { saveAs } from 'file-saver';
@@ -28,6 +27,7 @@ import { NotificationSettings } from '../notification-settings';
 import { SoundNotificationType } from '../../../core/sound-notification/sound-notification-type';
 import { SoundNotificationService } from '../../../core/sound-notification/sound-notification.service';
 import { LazyDataFacade } from '../../../lazy-data/+state/lazy-data.facade';
+import { Auth, sendPasswordResetEmail } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-settings-popup',
@@ -58,13 +58,13 @@ export class SettingsPopupComponent {
 
   startMinimized = false;
 
+  noHA = false;
+
   alwaysQuit = true;
 
   enableMinimizeReduceButton = false;
 
   noShortcut = false;
-
-  metricsPath = '';
 
   watchFilesPath = '';
 
@@ -119,6 +119,10 @@ export class SettingsPopupComponent {
     }
   ];
 
+  housingMaps$ = this.lazyData.getEntry('maps').pipe(
+    map(maps => uniqBy(Object.values(maps).filter(v => v.housing), v => v.placename_id))
+  );
+
   public sidebarItems$: Observable<SidebarItem[]> = this.navigationSidebarService.allLinks$.pipe(first());
 
   public allAetherytes$ = this.lazyData.getEntry('aetherytes').pipe(
@@ -158,7 +162,7 @@ export class SettingsPopupComponent {
 
   constructor(public settings: SettingsService, public translate: TranslateService,
               public platform: PlatformService, private authFacade: AuthFacade,
-              private af: AngularFireAuth, private message: NzMessageService,
+              private auth: Auth, private message: NzMessageService,
               public ipc: IpcService, private router: Router, private http: HttpClient,
               private userService: UserService, private customLinksFacade: CustomLinksFacade,
               private dialog: NzModalService, private inventoryFacade: InventoryService,
@@ -177,6 +181,9 @@ export class SettingsPopupComponent {
     this.ipc.once('start-minimized:value', (event, value) => {
       this.startMinimized = value;
     });
+    this.ipc.once('hardware-acceleration:value', (event, value) => {
+      this.noHA = value;
+    });
     this.ipc.once('always-quit:value', (event, value) => {
       this.alwaysQuit = value;
     });
@@ -185,9 +192,6 @@ export class SettingsPopupComponent {
     });
     this.ipc.once('no-shortcut:value', (event, value) => {
       this.noShortcut = value;
-    });
-    this.ipc.on('metrics:path:value', (event, value) => {
-      this.metricsPath = value;
     });
     this.ipc.on('dat:path:value', (event, value) => {
       this.watchFilesPath = value;
@@ -239,12 +243,12 @@ export class SettingsPopupComponent {
     this.ipc.send('no-shortcut:get');
     this.ipc.send('toggle-machina:get');
     this.ipc.send('start-minimized:get');
+    this.ipc.send('hardware-acceleration:get');
     this.ipc.send('always-quit:get');
     this.ipc.send('enable-minimize-reduction-button:get');
     this.ipc.send('proxy-rule:get');
     this.ipc.send('proxy-bypass:get');
     this.ipc.send('proxy-pac:get');
-    this.ipc.send('metrics:path:get');
     this.ipc.send('dat:path:get');
     this.ipc.send('rawsock:get');
     this.customTheme = this.settings.customTheme;
@@ -265,15 +269,10 @@ export class SettingsPopupComponent {
       case 'pac':
         return 'http://127.0.0.1:1080/pac';
       case 'custom':
-        const help = 'https://www.electronjs.org/docs/api/session#sessetproxyconfig';
-        return `<a href="${help}" target="_blank">${help}</a>`;
+        return `<a href="https://www.electronjs.org/docs/api/session#sessetproxyconfig" target="_blank">https://www.electronjs.org/docs/api/session#sessetproxyconfig</a>`;
       default:
         return '127.0.0.1:8080';
     }
-  }
-
-  changeMetricsPath(): void {
-    this.ipc.send('metrics:path:set');
   }
 
   changeWatchFilesPath(): void {
@@ -329,6 +328,10 @@ export class SettingsPopupComponent {
 
   startMinimizedChange(value: boolean): void {
     this.ipc.send('start-minimized', value);
+  }
+
+  noHAChange(value: boolean): void {
+    this.ipc.send('hardware-acceleration', value);
   }
 
   alwaysQuitChange(value: boolean): void {
@@ -429,30 +432,25 @@ export class SettingsPopupComponent {
   }
 
   resetPassword(): void {
-    this.af.user.pipe(
-      switchMap(user => {
-        return from(this.af.sendPasswordResetEmail(user.email));
-      })).subscribe(() => {
+    sendPasswordResetEmail(this.auth, this.auth.currentUser.email).then(() => {
       this.message.success(this.translate.instant('SETTINGS.Password_reset_mail_sent'));
     });
   }
 
   updateEmail(): void {
-    this.af.user.pipe(
-      switchMap(user => {
-        return this.dialog.create({
-          nzContent: NameQuestionPopupComponent,
-          nzComponentParams: {
-            type: 'email',
-            baseName: user.email
-          },
-          nzFooter: null,
-          nzTitle: this.translate.instant('SETTINGS.Change_email')
-        }).afterClose;
-      }),
-      filter(email => email !== undefined),
-      switchMap(email => this.authFacade.changeEmail(email))
-    ).subscribe(() => {
+    this.dialog.create({
+      nzContent: NameQuestionPopupComponent,
+      nzComponentParams: {
+        type: 'email',
+        baseName: this.auth.currentUser.email
+      },
+      nzFooter: null,
+      nzTitle: this.translate.instant('SETTINGS.Change_email')
+    }).afterClose
+      .pipe(
+        filter(email => email !== undefined),
+        switchMap(email => this.authFacade.changeEmail(email))
+      ).subscribe(() => {
       this.message.success(this.translate.instant('SETTINGS.Change_email_success'));
     });
   }

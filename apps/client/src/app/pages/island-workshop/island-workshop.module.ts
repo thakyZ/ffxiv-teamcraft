@@ -13,6 +13,13 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { FormsModule } from '@angular/forms';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { WorkshopPlanningComponent } from './workshop-planning/workshop-planning.component';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 
 const routes: Routes = [
   {
@@ -24,7 +31,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    IslandWorkshopComponent
+    IslandWorkshopComponent,
+    WorkshopPlanningComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +47,13 @@ const routes: Routes = [
     FlexModule,
     NzCheckboxModule,
     NzSelectModule,
-    NzCardModule
+    NzCardModule,
+    NzInputModule,
+    NzInputNumberModule,
+    NzDividerModule,
+    NzEmptyModule,
+    NzSwitchModule,
+    NzGridModule
   ]
 })
 export class IslandWorkshopModule { }

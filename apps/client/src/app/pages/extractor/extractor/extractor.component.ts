@@ -4,7 +4,7 @@ import { NgSerializerService } from '@kaiu/ng-serializer';
 import { bufferCount, bufferTime, filter, map, mergeMap, scan, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { saveAs } from 'file-saver';
 import { DataExtractorService } from '../../../modules/list/data/data-extractor.service';
-import { uniqBy } from 'lodash';
+import { uniq, uniqBy } from 'lodash';
 import { BehaviorSubject, combineLatest, from, Observable, of, ReplaySubject } from 'rxjs';
 import { LazyDataWithExtracts } from '../../../lazy-data/lazy-data-types';
 import { LazyDataFacade } from '../../../lazy-data/+state/lazy-data.facade';
@@ -104,15 +104,17 @@ export class ExtractorComponent {
         return pages.map(page => {
           this.done$.next(this.done$.value + 1);
           return page.map(tab => {
-            (tab as any).divisionId = +Object.keys(notebookDivision).find(key => {
+            const divisionId = +Object.keys(notebookDivision).find(key => {
               return notebookDivision[key].pages.includes(tab.id);
             });
-            const division = notebookDivision[(tab as any).divisionId];
+            (tab as any).divisionId = divisionId;
+            const division = notebookDivision[divisionId];
             (tab as any).requiredForAchievement = /\d{1,2}-\d{1,2}/.test(division.name.en)
               || division.name.en.startsWith('Fixtures') ||
               division.name.en.indexOf('Furnishings') > -1 || division.name.en.startsWith('Table') ||
-              division.name.en.startsWith('Wall-mounted') || division.name.en.startsWith('Ornaments');
-            if ((tab as any).divisionId === 1039) {
+              division.name.en.startsWith('Wall-mounted') || division.name.en.startsWith('Ornaments')
+              || divisionId === 1049;
+            if (divisionId === 1039) {
               (tab as any).requiredForAchievement = false;
             }
             tab.recipes = tab.recipes.map(entry => {
@@ -306,15 +308,26 @@ export class ExtractorComponent {
     const res$ = new ReplaySubject<LazyDataWithExtracts['extracts']>();
     combineLatest([
       this.lazyData.getEntry('items'),
-      this.lazyData.getEntry('islandBuildings')
+      this.lazyData.getEntry('islandBuildings'),
+      this.lazyData.getEntry('islandLandmarks')
     ]).pipe(
-      switchMap(([lazyItems, islandBuildings]) => {
-        const itemIds = onlyUpdatedItems ? updatedItemIds : Object.keys({ ...islandBuildings, ...lazyItems }).sort((a, b) => +a - +b);
+      switchMap(([lazyItems, islandBuildings, islandLandmarks]) => {
+        const itemIds = onlyUpdatedItems ? uniq(updatedItemIds) : Object.keys({ ...islandBuildings, ...islandLandmarks, ...lazyItems }).sort((a, b) => +a - +b);
         this.totalTodo$.next(itemIds.length);
         return from(itemIds).pipe(
           mergeMap(itemId => {
             let row$: Observable<ListRow> = of({ id: +itemId } as ListRow);
-            if (itemId <= -10000) {
+            if (itemId <= -11000) {
+              row$ = this.lazyData.getRow('islandLandmarks', +itemId).pipe(
+                map(landmark => {
+                  return {
+                    id: +itemId,
+                    contentType: 'islandLandmarks',
+                    xivapiIcon: landmark.icon
+                  } as ListRow;
+                })
+              );
+            } else if (itemId <= -10000) {
               row$ = this.lazyData.getRow('islandBuildings', +itemId).pipe(
                 map(building => {
                   return {
@@ -426,8 +439,8 @@ export class ExtractorComponent {
   private getExp(collectable: any, ratio: number): Observable<number[]> {
     return combineLatest(new Array(this.environment.maxLevel).fill(null).map((ignored, index) => {
       const level = index + 1;
-      const firstCollectableDigit = Math.floor(collectable.levelMax / 10);
-      const firstLevelDigit = Math.floor(level / 10);
+      const firstCollectableDigit = Math.ceil(collectable.levelMax / 10);
+      const firstLevelDigit = Math.ceil(level / 10);
       let nerfedExp = firstCollectableDigit < firstLevelDigit;
       if (level % 10 === 0 && level > collectable.levelMax) {
         nerfedExp = nerfedExp && (firstCollectableDigit + 1) < firstLevelDigit

@@ -3,7 +3,7 @@ import { Observable, Subject } from 'rxjs';
 import { Theme } from './theme';
 import { IpcService } from '../../core/electron/ipc.service';
 import { Region } from './region.enum';
-import { filter, map, startWith } from 'rxjs/operators';
+import { debounceTime, filter, map, startWith } from 'rxjs/operators';
 import { CommissionTag } from '../commission-board/model/commission-tag';
 import { Language } from '../../core/data/language';
 import { NotificationSettings } from './notification-settings';
@@ -230,6 +230,14 @@ export class SettingsService {
     this.setSetting('commissions:minPrice', price.toString());
   }
 
+  public get islandWorkshopRestDay(): number {
+    return +this.getSetting('island-workshop:rest-day', '1');
+  }
+
+  public set islandWorkshopRestDay(day: number) {
+    this.setSetting('island-workshop:rest-day', day.toString());
+  }
+
   public get materiaConfidenceRate(): number {
     return +this.getSetting('materias:confidence', '0.5');
   }
@@ -332,6 +340,14 @@ export class SettingsService {
 
   public set startingPlace(startingPlace: number) {
     this.setSetting('startingPlace', startingPlace.toString());
+  }
+
+  public get housingMap(): number {
+    return +this.getSetting('housingMap', '72');
+  }
+
+  public set housingMap(housingMap: number) {
+    this.setSetting('housingMap', housingMap.toString());
   }
 
   public get freeAetheryte(): number {
@@ -452,6 +468,14 @@ export class SettingsService {
 
   public set compactAlarms(compact: boolean) {
     this.setSetting('compact-alarms', compact.toString());
+  }
+
+  public get autoMinimalistOnLargeLists(): boolean {
+    return this.getBoolean('auto-minimalist-large-lists', true);
+  }
+
+  public set autoMinimalistOnLargeLists(compact: boolean) {
+    this.setSetting('auto-minimalist-large-lists', compact.toString());
   }
 
   public get performanceMode(): boolean {
@@ -905,7 +929,7 @@ export class SettingsService {
 
   public getNotificationSettings(type: SoundNotificationType): NotificationSettings {
     const raw = this.getString(`alarm-settings:${type}`, '');
-    if (!!raw) {
+    if (raw) {
       return JSON.parse(raw);
     } else {
       return {
@@ -923,11 +947,14 @@ export class SettingsService {
         switch (typeof defaultValue) {
           case 'string':
             return this._cache[change];
+          case 'number':
+            return +this._cache[change];
           default:
             return JSON.parse(this._cache[change]);
         }
       }),
-      startWith(defaultValue)
+      startWith(defaultValue),
+      debounceTime(10)
     );
   }
 

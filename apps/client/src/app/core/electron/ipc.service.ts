@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { PlatformService } from '../tools/platform.service';
-import { IpcRenderer, IpcRendererEvent } from 'electron';
+import { IpcRendererEvent } from 'electron';
 import { Router } from '@angular/router';
 import { Vector2 } from '../tools/vector2';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
@@ -15,8 +15,28 @@ import { FreeCompanyDialog, Message } from '@ffxiv-teamcraft/pcap-ffxiv';
 import { toIpcData } from '../rxjs/to-ipc-data';
 import { UpdateInstallPopupComponent } from '../../modules/ipc-popups/update-install-popup/update-install-popup.component';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { NzMessageRef, NzMessageService } from 'ng-zorro-antd/message';
 
 type EventCallback = (event: IpcRendererEvent, ...args: any[]) => void;
+
+interface IPC {
+  send(channel: string, ...data: any[]): void;
+
+  on(channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void): void;
+
+  once(channel: string, listener: (event: IpcRendererEvent, ...args: any[]) => void): void;
+
+
+  removeAllListeners(channel: string): void;
+
+  init(): void;
+}
+
+declare global {
+  interface Window {
+    ipc: IPC;
+  }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +62,7 @@ export class IpcService {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  private readonly _ipc: IpcRenderer | undefined = undefined;
+  private readonly _ipc: IPC | undefined = undefined;
 
   private totalPacketsHandled = 0;
 
@@ -52,17 +72,14 @@ export class IpcService {
 
   constructor(private platformService: PlatformService, private router: Router,
               private store: Store<any>, private zone: NgZone, private dialog: NzModalService,
-              private translate: TranslateService, private notification: NzNotificationService) {
+              private translate: TranslateService, private notification: NzNotificationService,
+              private message: NzMessageService) {
     // Only load ipc if we're running inside electron
     if (platformService.isDesktop()) {
-      if (window.require) {
-        try {
-          this._ipc = window.require('electron').ipcRenderer;
-          this._ipc.setMaxListeners(0);
-          this.connectListeners();
-        } catch (e) {
-          throw e;
-        }
+      if (window.ipc) {
+        this._ipc = window.ipc;
+        this._ipc.init();
+        this.connectListeners();
       } else {
         console.warn('Electron\'s IPC was not loaded');
       }
@@ -357,9 +374,20 @@ export class IpcService {
     this.on('machina:error:raw', (event, error: { message: string, retryDelay: number }) => {
       console.log(error.message);
     });
+    this.on('metrics:importing', () => {
+      this.message.info(this.translate.instant('METRICS.Importing'), {
+        nzDuration: 0
+      });
+    });
+    this.on('metrics:imported', () => {
+      this.message.remove()
+      this.message.info(this.translate.instant('METRICS.Imported'), {
+        nzDuration: 10000
+      });
+    });
     this.on('navigate', (event, url: string) => {
       console.log('NAVIGATE', url);
-      // tslint:disable-next-line:prefer-const
+      // eslint-disable-next-line prefer-const
       let [path, params] = url.split('?');
       if (path.endsWith('/')) {
         path = path.substr(0, url.length - 1);
@@ -474,7 +502,8 @@ export class IpcService {
         .subscribe(state => {
           this.send('app-state:set', {
             lists: JSON.parse(JSON.stringify(state.lists)),
-            layouts: JSON.parse(JSON.stringify(state.layouts))
+            layouts: JSON.parse(JSON.stringify(state.layouts)),
+            eorzea: JSON.parse(JSON.stringify(state.eorzea))
           });
         });
     }
@@ -482,14 +511,12 @@ export class IpcService {
 
   private handleMessage(packet: Message): void {
     // If we're inside an overlay, don't do anything with the packet, we don't care.
-    if (!this.overlayUri) {
-      this.totalPacketsHandled++;
-      this.packets$.next(packet);
-      const debugPackets = (<any>window).debugPackets;
-      if (debugPackets === true || (typeof debugPackets === 'function' && debugPackets(packet))) {
-        // tslint:disable-next-line:no-console
-        console.info(packet.type, packet);
-      }
+    this.totalPacketsHandled++;
+    this.packets$.next(packet);
+    const debugPackets = (<any>window).debugPackets;
+    if (debugPackets === true || (typeof debugPackets === 'function' && debugPackets(packet))) {
+      // eslint-disable-next-line no-restricted-syntax
+      console.info(packet.type, packet);
     }
   }
 

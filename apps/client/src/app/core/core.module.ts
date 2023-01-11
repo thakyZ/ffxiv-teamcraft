@@ -14,10 +14,6 @@ import { MathToolsService } from './tools/math-tools';
 import { EorzeanTimeService } from './eorzea/eorzean-time.service';
 import { TimerPipe } from './eorzea/timer.pipe';
 import { HtmlToolsService } from './tools/html-tools.service';
-import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
-import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
-import { AngularFireModule } from '@angular/fire/compat';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { LinkToolsService } from './tools/link-tools.service';
 import { DiscordWebhookService } from './discord/discord-webhook.service';
 import { ListItemCommentNotification } from '../model/notification/list-item-comment-notification';
@@ -48,7 +44,6 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
-import { AngularFireFunctionsModule } from '@angular/fire/compat/functions';
 import { CommissionNotification } from '../model/notification/commission-notification';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { IpcPopupsModule } from '../modules/ipc-popups/ipc-popups.module';
@@ -58,6 +53,8 @@ import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { CommonModule } from '@angular/common';
 import { I18nRowPipe } from './i18n/i18n-row.pipe';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { NgForTrackByIdDirective } from './track-by/ng-for-track-by-id.directive';
+import { NgForTrackByKeyDirective } from './track-by/ng-for-track-by-key.directive';
 
 
 @NgModule({
@@ -84,9 +81,6 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
         }
       }
     ]),
-    AngularFirestoreModule,
-    AngularFireDatabaseModule,
-    AngularFireFunctionsModule,
     PushNotificationsModule,
     MaintenanceModule,
     VersionLockModule,
@@ -116,8 +110,7 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
     AdminGuard,
     ModeratorGuard,
     DevGuard,
-    ...DATA_REPORTERS,
-    { provide: ErrorHandler, useClass: TeamcraftErrorHandler }
+    ...DATA_REPORTERS
   ],
   declarations: [
     I18nPipe,
@@ -130,14 +123,13 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
     ClipboardDirective,
     ItemNameClipboardDirective,
     I18nNameComponent,
-    I18nRowPipe
+    I18nRowPipe,
+    NgForTrackByIdDirective,
+    NgForTrackByKeyDirective
   ],
   exports: [
     I18nPipe,
     TranslateModule,
-    AngularFireModule,
-    AngularFireDatabaseModule,
-    AngularFireAuthModule,
     PushNotificationsModule,
     MaintenanceModule,
     TimerPipe,
@@ -153,7 +145,9 @@ import { NzNotificationModule } from 'ng-zorro-antd/notification';
     NzButtonModule,
     NzToolTipModule,
     NzIconModule,
-    I18nRowPipe
+    I18nRowPipe,
+    NgForTrackByIdDirective,
+    NgForTrackByKeyDirective
   ]
 })
 export class CoreModule {
@@ -163,7 +157,8 @@ export class CoreModule {
       providers: [
         GarlandToolsService,
         EorzeanTimeService,
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: ErrorHandler, useClass: TeamcraftErrorHandler }
       ]
     };
   }

@@ -14,7 +14,6 @@ import { ProxyManager } from '../tools/proxy-manager';
 import { existsSync, readFile, writeFileSync } from 'fs';
 import { createFileSync, readFileSync } from 'fs-extra';
 import { Character, CharacterSearch } from '@xivapi/nodestone';
-import { Worker } from 'worker_threads';
 import ua from 'universal-analytics';
 import { v4 as uuidv4 } from 'uuid';
 import fetch from 'electron-fetch';
@@ -100,10 +99,27 @@ export class IpcListenersManager {
     });
   }
 
+  private forwardToMain(channel: string): void {
+    ipcMain.on(channel, (e, data) => this.mainWindow.win.webContents.send(channel, data));
+  }
+
   private setupOverlayListeners(): void {
     ipcMain.on('overlay', (event, data) => {
       this.overlayManager.toggleOverlay(data);
     });
+
+    ipcMain.on('overlay:pcap', (event, { url, enabled }) => {
+      if (enabled) {
+        this.pcap.registerOverlayListener(url, packet => {
+          this.overlayManager.sendToOverlay(url, 'packet', packet);
+        });
+      } else {
+        this.pcap.unregisterOverlayListener(url);
+      }
+    });
+
+    this.forwardToMain('list:setItemDone');
+    this.forwardToMain('list:setListItemDone');
 
     ipcMain.on('overlay:set-opacity', (event, data) => {
       const overlayWindow = this.overlayManager.getOverlay(data.uri);
@@ -138,11 +154,8 @@ export class IpcListenersManager {
       }
     });
 
-    ipcMain.on('overlay-close', (event, url) => {
-      const overlay = this.overlayManager.getOverlay(url);
-      if (overlay) {
-        overlay.close();
-      }
+    ipcMain.on('overlay:close', (event, url) => {
+      this.overlayManager.closeOverlay(url);
     });
   }
 
@@ -151,7 +164,8 @@ export class IpcListenersManager {
       '/fishing-reporter-overlay'
     ];
     const overlaysNeedingState = [
-      '/list-panel-overlay'
+      '/list-panel-overlay',
+      '/step-by-step-list-overlay'
     ];
 
     ipcMain.on('fishing-state:set', (_, data) => {
@@ -244,6 +258,7 @@ export class IpcListenersManager {
     this.twoWayBinding('disable-initial-navigation', 'disable-initial-navigation');
     this.twoWayBinding('no-shortcut', 'setup:noShortcut');
     this.twoWayBinding('start-minimized', 'start-minimized');
+    this.twoWayBinding('hardware-acceleration', 'hardware-acceleration');
     this.twoWayBinding('always-quit', 'always-quit', null, true);
     this.twoWayBinding('enable-minimize-reduction-button', 'enable-minimize-reduction-button');
 
@@ -329,9 +344,9 @@ export class IpcListenersManager {
         }
       };
       if (isDev) {
-        exec(`"${join(__dirname, '../../../../../desktop/npcap-1.50.exe')}"`, postInstallCallback);
+        exec(`"${join(__dirname, '../../../../../desktop/npcap-1.70.exe')}"`, postInstallCallback);
       } else {
-        exec(`"${join(app.getAppPath(), '../../resources/MachinaWrapper/', 'npcap-1.50.exe')}"`, postInstallCallback);
+        exec(`"${join(app.getAppPath(), '../../resources/MachinaWrapper/', 'npcap-1.70.exe')}"`, postInstallCallback);
       }
     });
   }
@@ -458,11 +473,11 @@ export class IpcListenersManager {
     //       worker.terminate();
     //   });
     // });
-    // ipcMain.on('lodestone:searchCharacter', (event, { name, server }) => {
-    //   this.characterSearchParser.parse({ query: { name, server } } as any).then((res: { List: any[] }) => {
-    //     event.sender.send('lodestone:character:search', res.List);
-    //   });
-    // });
+    ipcMain.on('lodestone:searchCharacter', (event, { name, server }) => {
+      this.characterSearchParser.parse({ query: { name, server } } as any).then((res: { List: any[] }) => {
+        event.sender.send('lodestone:character:search', res.List);
+      });
+    });
   }
 
   private sendPageView(ga3user: any, url: string): void {

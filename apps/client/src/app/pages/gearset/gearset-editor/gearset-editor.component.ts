@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { GearsetsFacade } from '../../../modules/gearsets/+state/gearsets.facade';
 import { distinctUntilChanged, expand, filter, first, last, map, shareReplay, switchMap, switchMapTo, takeUntil, tap } from 'rxjs/operators';
 import { TeamcraftComponent } from '../../../core/component/teamcraft-component';
@@ -38,8 +38,8 @@ export class GearsetEditorComponent extends TeamcraftComponent implements OnInit
 
   public machinaToggle = false;
 
-  itemFiltersform: FormGroup = this.fb.group({
-    ilvlMin: [540],
+  itemFiltersform: UntypedFormGroup = this.fb.group({
+    ilvlMin: [this.environment.maxIlvl - 30],
     ilvlMax: [999],
     elvlMin: [1],
     elvlMax: [this.environment.maxLevel]
@@ -301,7 +301,7 @@ export class GearsetEditorComponent extends TeamcraftComponent implements OnInit
                   return b.item.ID - a.item.Id;
                 }
                 return aIlvl - bIlvl;
-              });
+              }).slice(0, 10); // Max 10 items per category to avoid rendering issues.
               return category;
             })
             .sort((a, b) => {
@@ -334,7 +334,7 @@ export class GearsetEditorComponent extends TeamcraftComponent implements OnInit
     })
   );
 
-  constructor(private fb: FormBuilder, private gearsetsFacade: GearsetsFacade,
+  constructor(private fb: UntypedFormBuilder, private gearsetsFacade: GearsetsFacade,
               private activatedRoute: ActivatedRoute, private xivapi: XivapiService,
               private lazyData: LazyDataFacade, private cd: ChangeDetectorRef,
               public translate: TranslateService, private dialog: NzModalService,
@@ -361,7 +361,7 @@ export class GearsetEditorComponent extends TeamcraftComponent implements OnInit
       let highestIlvl = Math.max(...ilvls) + 30;
       let usedDefaultValues = false;
       if (lowestIlvl === Infinity) {
-        lowestIlvl = 460;
+        lowestIlvl = this.environment.maxIlvl - 30;
         usedDefaultValues = true;
       }
       if (highestIlvl === -Infinity) {
@@ -375,15 +375,6 @@ export class GearsetEditorComponent extends TeamcraftComponent implements OnInit
           this.itemFiltersform.controls.ilvlMin.patchValue(lowestIlvl);
         }
         didChange = true;
-      } else if (!usedDefaultValues) {
-        if (this.itemFiltersform.value.ilvlMin > lowestIlvl) {
-          this.itemFiltersform.controls.ilvlMin.patchValue(lowestIlvl);
-          didChange = true;
-        }
-        if (this.itemFiltersform.value.ilvlMax < highestIlvl) {
-          this.itemFiltersform.controls.ilvlMax.patchValue(highestIlvl);
-          didChange = true;
-        }
       }
       if (didChange) {
         this.submitFilters();
@@ -547,7 +538,7 @@ export class GearsetEditorComponent extends TeamcraftComponent implements OnInit
       }
       if (res && gearset[propertyName] && gearset[propertyName].itemId === res.itemId) {
         this.setGearsetPiece(gearset, propertyName, { ...res });
-      } else if (!!res) {
+      } else if (res) {
         category.items = category.items.map(item => {
           if (item.equipmentPiece.itemId === equipmentPiece.itemId) {
             return {

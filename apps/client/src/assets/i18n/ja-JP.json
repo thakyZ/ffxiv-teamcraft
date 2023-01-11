@@ -51,13 +51,13 @@
     "Only_craftable": "レシピのみ",
     "Want_filters": "さらにフィルターが必要ですか？",
     "Open_search": "代わりに検索ページを開く",
-    "Island_recipe": "Island Sanctuary recipe"
+    "Island_recipe": "無人島レシピ"
   },
   "Use_as_default_character": "デフォルトキャラとして使う",
   "Download_desktop_app": "デスクトップアプリをダウンロード",
   "Find_us_on_twitter": "公式ツイッター",
   "Join_discord_server": "Discord サーバーに参加する",
-  "See_code_github": "Githubでコードを見る",
+  "See_code_github": "Star the project on Github",
   "Support_on_patreon": "Patreonで支援する",
   "Access_patreon_page": "Patreon ページへ移動",
   "Like_the_tool": "ツールを楽しく使ってもらえていますか？",
@@ -196,7 +196,17 @@
     "Instance": "ダンジョン",
     "Fate": "F. A. T. E",
     "Reload": "再読み込み",
-    "Click_to_apply": "クリックして適用する"
+    "Click_to_apply": "クリックして適用する",
+    "Recommended": "Recommended",
+    "DAYS": {
+      "Monday": "月曜日",
+      "Tuesday": "火曜日",
+      "Wednesday": "水曜日",
+      "Thursday": "木曜日",
+      "Friday": "金曜日",
+      "Saturday": "土曜日",
+      "Sunday": "日曜日"
+    }
   },
   "ALARMS": {
     "Title": "アラーム",
@@ -238,7 +248,7 @@
       "WEEKLY_RESETS": "週制限",
       "WEEKLY_RESETS_DESCRIPTION": "お得意様取引、クロの空想帳、週制限報酬（アライアンスレイド、レイド：零式、ノーマルレイド）、ジャンボくじテンダー、攻略手帳、ファッションチェック、リスキーモブ手配書",
       "ROULETTES_RESET": "コンテンツルーレット & 蛮族デイリークエスト",
-      "ROULETTES_RESET_DESCRIPTION": "Reset of all the roulettes, beast tribe quests, daily hunts and mini Cactpot.",
+      "ROULETTES_RESET_DESCRIPTION": "デイリーコンテンツ（コンテンツルーレット、友好部族クエスト、モブハント、ミニくじテンダー）をリセット",
       "DELIVERIES_RESET": "調達依頼",
       "DELIVERIES_RESET_DESCRIPTION": "調達任務リセット",
       "LEVE_ALLOWANCES": "リーヴ受注権",
@@ -304,6 +314,8 @@
   "Reset_progression": "進行状況を初期化する",
   "Gardening": "ガーデニング",
   "Hunting": "モブハン",
+  "Island_animal": "無人島動物",
+  "Island_crop": "無人島作物",
   "Desynth": "分解",
   "Vendors": "NPC",
   "Open": "開",
@@ -369,7 +381,7 @@
   "Forgot_password": "パスワードを忘れた場合はこちら",
   "Email_enter": "メールアドレッス",
   "Email_not_found": "メールアドレスを見付け出しません",
-  "Email_sent": "An email has been sent with instructions on how to change your password.",
+  "Email_sent": "パスワード変更メールを送信しました",
   "Copy_current_link": "Copy a link to the current page on website to your clipboard",
   "ALARM": {
     "Spawned": "{{itemName}} 出現予定",
@@ -506,6 +518,7 @@
     "Reload_auth_token": "認証トークンを再読み込みする",
     "Materia_confidence_rate": "Melding confidence rate",
     "Materia_confidence_rate_explain": "Confidence rate for materia estimate. Higher means that more materias will be suggested to be more confident that with this amount, your melds will succeed",
+    "Disable_hardware_acceleration": "Disable hardware acceleration",
     "COLORS": {
       "Background": "背景色",
       "Primary": "デフォルトカラー",
@@ -1587,6 +1600,8 @@
       "Bite_time": "フッキング時間",
       "Spots": "釣り場スポット",
       "Min_gathering": "最小獲得力",
+      "Min_observed_gathering": "Min. observed gathering",
+      "Min_observed_gathering_explain": "The minimum value among all the automated reports we have so far. Doesn't mean it's the minimum gathering required, just the one we observed.",
       "Min_size": "最小サイズ",
       "Max_size": "最大サイズ",
       "Avg_size": "平均サイズ",
@@ -1628,7 +1643,10 @@
         "Last_report": "最近報告",
         "Fish": "魚",
         "Size": "サイズ",
+        "Large": "Large",
         "Time_since_thrown": "キャスティング使用後時間",
+        "Ignored_spot": "This spot is not supported by the reporter, expect weird values to show.",
+        "Ignored_spot_description": "None of your fish caught will be reported by the fishing reporter.",
         "ERRORS": {
           "No_bait": "No bait detected. Switch bait once to fix.",
           "No_stats": "No stats detected. Switch to Fisher again to fix."
@@ -1645,6 +1663,8 @@
       "Fish_per_hookset": "Fish per hookset",
       "Include_misses": "Include misses",
       "Miss": "Miss",
+      "Remove_this_bait": "Remove this bait",
+      "Bait_removed": "Bait removed from this spot",
       "Position_unknown": "Unknown location"
     },
     "NODE": {
@@ -1926,7 +1946,8 @@
     "Leveling": "レベリング",
     "Currencies": "スクリップ",
     "Add_to_favorites": "お気に入りに追加",
-    "Remove_from_favorites": "お気に入りから排除"
+    "Remove_from_favorites": "お気に入りから排除",
+    "Island_Sanctuary": "無人島"
   },
   "PACKET_CAPTURE": {
     "Banner_title": "パケットキャプチャを使用することができます",
@@ -1985,7 +2006,7 @@
       "Armory": "アーマリーチェスト",
       "Current_Gear": "現在の装備",
       "RetainerMarket": "リテイナーが出品中",
-      "IslandSanctuaryBag": "Island Sanctuary Bag"
+      "IslandSanctuaryBag": "開拓ポーチ"
     },
     "CONTENT_ID_POPUP": {
       "Description": "マルチキャラクター同期化と他の素敵な機能を使いたいのでしたら、TCは現在プレイ中のキャラクターまたは同期化を望むキャラクターがどれかを知る必要があります",
@@ -2855,6 +2876,7 @@
     "Speed": "Speed",
     "Shadow_size": "Shadow size",
     "Deprecated": "This item cannot be obtained anymore",
+    "Select_all": "Select all proposals",
     "SPEEDS": {
       "VERY_SLOW": "Very slow",
       "SLOW": "Slow",
@@ -2881,7 +2903,8 @@
       "SPEARFISHING": "SPEARFISHING",
       "FATE": "FATE",
       "MOGSTATION": "MOGSTATION",
-      "DEPRECATED": "DEPRECATED"
+      "DEPRECATED": "DEPRECATED",
+      "ISLAND_ANIMAL": "ISLAND_ANIMAL"
     },
     "STATUS": {
       "PROPOSAL": "PROPOSAL",
@@ -2929,6 +2952,86 @@
     "Wrapper_failed_to_start": "Machina Wrapper failed to start",
     "DESCRIPTION": {
       "Wrapper_failed_to_start": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.<br><br> Retrying in {{retryDelay}}s"
+    }
+  },
+  "ISLAND_SANCTUARY": {
+    "Animal_source": "以下の飼育動物から採取してください",
+    "Island_level": "開拓ランク",
+    "Landmarks": "ランドマーク",
+    "Workshop_rank": "工房改築",
+    "WORKSHOP": {
+      "Title": "開拓工房",
+      "Subtitle": "工房スケジュール管理",
+      "Out_of_sync": "週リセット以降に更新されていません",
+      "Out_of_sync_explain": "無人島で島産品の人気・需要画面を開いてアップデートしてください。パケットキャプチャを有効にしていない場合、他のユーザーがエクスポートしたデータをインポートしてください。",
+      "Export_state": "人気・需要データをエクスポート",
+      "State_copied": "クリップボードにコピーされました",
+      "Import_state": "人気・需要データをインポート",
+      "Import_online_state": "人気・需要をデータベースからインポート",
+      "Online_state_missing": "Nobody updated their state yet, this button will enable itself once it's done",
+      "State_imported": "State properly imported",
+      "Product": "島産品",
+      "Popularity": "人気度",
+      "Supply": "需要",
+      "Demand_shift": "需要変化",
+      "Predicted_popularity": "予測人気度",
+      "Edit_mode": "編集モード",
+      "Best_items_to_craft": "Best items to craft",
+      "Total_value": "合計",
+      "Run_optimizer": "Find best planning for the rest of the week",
+      "No_schedule_found": "No planning found",
+      "No_schedule_found_explain": "次のリセットまで4時間以上あることを確認してください",
+      "Possible_peak_days": "予測ピーク日",
+      "Peak_days_explain": "需要のピークが予測されている日。太字は大人気",
+      "Items_to_prepare": "Best items to prepare for tomorrow",
+      "Rest": "休み",
+      "Unknown_day_planning": "Available on {{day}}",
+      "Set_rest_day": "休み（2日目）として設定する",
+      "Import_explain": "パケットキャプチャが有効になっている状態でゲーム内で需要調査画面を開くことでテーブルを更新できます。",
+      "Amount_of_workshops": "工房数",
+      "Create_list": "このスケジュールでリストを作成",
+      "Exclude_pasture_materials": "畜産物資を使わない",
+      "Exclude_crop_materials": "耕作物資を使わない",
+      "Groove_tooltip": "1日の終わりのやる気",
+      "Crafting_time": "製作時間",
+      "Categories": "特性",
+      "No_planning": "No planning available",
+      "No_planning_explain": " Teamcraft is not able to compute a planning because there's too few recipes available, try to change your island level or uncheck some material exclusions.",
+      "Next_week_prep": "Materials you should prepare for next week",
+      "Crop_materials": "Crops",
+      "Pasture_materials": "Pasture",
+      "POPULARITY": {
+        "Very_high": "大人気",
+        "High": "人気",
+        "Average": "普通",
+        "Low": "不人気"
+      },
+      "SUPPLY": {
+        "Non_existant": "超供給不足",
+        "Insufficient": "供給不足",
+        "Sufficient": "普通",
+        "Surplus": "供給過多",
+        "Overflowing": "超供給過多"
+      },
+      "DEMAND_SHIFT": {
+        "Skyrocketing": "需要が大きく増加",
+        "Increasing": "需要が増加",
+        "None": "変化なし",
+        "Decreasing": "需要が低下",
+        "Plummeting": "需要が大きく低下"
+      }
+    },
+    "ANIMALS": {
+      "Title": "動物",
+      "Subtitle": "飼育動物の一覧。湧き時間アラームの設定もできます",
+      "Name": "名前",
+      "Size": "大きさ",
+      "Coords": "位置",
+      "Spawn_time": "出現時間",
+      "Weather": "天気",
+      "Alarm": "アラーム",
+      "Main_drop": "確定素材",
+      "Rare_drop": "レア素材"
     }
   }
 }

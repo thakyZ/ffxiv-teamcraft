@@ -28,6 +28,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/list-details/list-details.module').then(m => m.ListDetailsModule)
   },
   {
+    path: 'list-aggregate',
+    loadChildren: () => import('./pages/list-aggregate/list-aggregate-pages.module').then(m => m.ListAggregatePagesModule)
+  },
+  {
     path: 'workshop',
     loadChildren: () => import('./pages/workshop-details/workshop-details.module').then(m => m.WorkshopDetailsModule)
   },
@@ -84,6 +88,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/list-panel-overlay/list-panel-overlay.module').then(m => m.ListPanelOverlayModule)
   },
   {
+    path: 'step-by-step-list-overlay',
+    loadComponent: () => import('./pages/step-by-step-list-overlay/step-by-step-list-overlay.component').then(m => m.StepByStepListOverlayComponent)
+  },
+  {
     path: 'rotation-overlay',
     loadChildren: () => import('./pages/rotation-overlay/rotation-overlay.module').then(m => m.RotationOverlayModule)
   },
@@ -124,6 +132,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/island-workshop/island-workshop.module').then(m => m.IslandWorkshopModule)
   },
   {
+    path: 'island-animals',
+    loadChildren: () => import('./pages/island-animals/island-animals.module').then(m => m.IslandAnimalsModule)
+  },
+  {
     path: 'about',
     loadChildren: () => import('./pages/about/about.module').then(m => m.AboutModule)
   },
@@ -150,10 +162,6 @@ const routes: Routes = [
   {
     path: 'template',
     loadChildren: () => import('./pages/template/template.module').then(m => m.TemplateModule)
-  },
-  {
-    path: 'custom-items',
-    loadChildren: () => import('./pages/custom-items/custom-items-page.module').then(m => m.CustomItemsPageModule)
   },
   {
     path: 'desynth',
@@ -190,10 +198,6 @@ const routes: Routes = [
   {
     path: 'leveling-equipment',
     loadChildren: () => import('./pages/leveling-equipment/leveling-equipment.module').then(m => m.LevelingEquipmentModule)
-  },
-  {
-    path: 'blog',
-    loadChildren: () => import('./pages/blog/blog.module').then(m => m.BlogModule)
   },
   {
     path: 'reset-timers',

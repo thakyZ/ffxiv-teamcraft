@@ -51,13 +51,13 @@
     "Only_craftable": "Nur Rezepte",
     "Want_filters": "Brauchen Sie mehr Filter?",
     "Open_search": "Suchseite stattdessen öffnen",
-    "Island_recipe": "Island Sanctuary recipe"
+    "Island_recipe": "Inselparadiesrezept"
   },
   "Use_as_default_character": "Als Standard-Charakter setzen",
   "Download_desktop_app": "Desktopanwendung herunterladen",
   "Find_us_on_twitter": "Finde uns auf Twitter",
   "Join_discord_server": "Tritt unserem Discord Server bei",
-  "See_code_github": "Quellcode auf Github ansehen",
+  "See_code_github": "Das Projekt auf GitHub mit Stern favorisieren",
   "Support_on_patreon": "Unterstütze das Projekt auf Patreon",
   "Access_patreon_page": "Gehe zu unserer Patreon-Seite",
   "Like_the_tool": "Gefällt dir das Programm soweit?",
@@ -196,7 +196,17 @@
     "Instance": "Inhalt",
     "Fate": "FATE",
     "Reload": "Neu laden",
-    "Click_to_apply": "Klicken zum anwenden"
+    "Click_to_apply": "Klicken zum anwenden",
+    "Recommended": "Empfohlen",
+    "DAYS": {
+      "Monday": "Montag",
+      "Tuesday": "Dienstag",
+      "Wednesday": "Mittwoch",
+      "Thursday": "Donnerstag",
+      "Friday": "Freitag",
+      "Saturday": "Samstag",
+      "Sunday": "Sonntag"
+    }
   },
   "ALARMS": {
     "Title": "Alarme",
@@ -304,6 +314,8 @@
   "Reset_progression": "Fortschritt zurücksetzen",
   "Gardening": "Haus/Wohnungs-Gärtnerei",
   "Hunting": "Monsterjagd",
+  "Island_animal": "Inseltier",
+  "Island_crop": "Inselernte",
   "Desynth": "Materialverwertung",
   "Vendors": "Verkäufer",
   "Open": "Offen",
@@ -506,6 +518,7 @@
     "Reload_auth_token": "Authentifizierungs-Token neu laden",
     "Materia_confidence_rate": "Erfolgsrate fürs Materia einsetzen",
     "Materia_confidence_rate_explain": "Zuversichtsrate für Materiaschätzungen. Höher bedeutet, dass mehr Materia vorgeschlagen wird, damit der Wert für erfolgreiche Verschmelzungen verlässlicher wird",
+    "Disable_hardware_acceleration": "Hardwarebeschleunigung deaktivieren",
     "COLORS": {
       "Background": "Hintergrundfarbe",
       "Primary": "Hauptfarbe",
@@ -756,10 +769,10 @@
     "Commission_list": "Auftragsliste",
     "Inventory_cleanup": "Inventar bereinigen",
     "Inventory_cleanup_description": "Hier sind die Gegenstände aus deinem Inventar, die nicht für die Liste verwendet werden",
-    "Consider_requirements": "Consider requirements",
+    "Consider_requirements": "Anforderungen berücksichtigen",
     "Ignore_requirements": "Anforderungen ignorieren",
     "SOURCES": {
-      "Gatherable": "Can be gathered, click to see more details"
+      "Gatherable": "Kann gesammelt werden, klicke um mehr Details zu sehen"
     },
     "LAYOUT_DIALOG": {
       "Title": "Layout",
@@ -1587,6 +1600,8 @@
       "Bite_time": "Zeit zum Anbeißen",
       "Spots": "Orte",
       "Min_gathering": "Min. Sammeln",
+      "Min_observed_gathering": "Min. observed gathering",
+      "Min_observed_gathering_explain": "The minimum value among all the automated reports we have so far. Doesn't mean it's the minimum gathering required, just the one we observed.",
       "Min_size": "Min. Größe",
       "Max_size": "Max. Größe",
       "Avg_size": "Ø Größe",
@@ -1628,7 +1643,10 @@
         "Last_report": "Letzte Meldung",
         "Fish": "Fisch",
         "Size": "Größe",
+        "Large": "Groß",
         "Time_since_thrown": "Zeit seit Wurf",
+        "Ignored_spot": "This spot is not supported by the reporter, expect weird values to show.",
+        "Ignored_spot_description": "None of your fish caught will be reported by the fishing reporter.",
         "ERRORS": {
           "No_bait": "Kein Köder erkannt. Zur Behebung Köder einmal wechseln.",
           "No_stats": "Keine Attribute gefunden. Wechsel erneut zum Fischer, um dies zu beheben."
@@ -1645,6 +1663,8 @@
       "Fish_per_hookset": "Fish per hookset",
       "Include_misses": "Fehlschläge einbeziehen",
       "Miss": "Fehlschlag",
+      "Remove_this_bait": "Diesen Köder entfernen",
+      "Bait_removed": "Bait removed from this spot",
       "Position_unknown": "Unbekannter Ort"
     },
     "NODE": {
@@ -1926,7 +1946,8 @@
     "Leveling": "Leveln",
     "Currencies": "Währungen",
     "Add_to_favorites": "Zu Favoriten hinzufügen",
-    "Remove_from_favorites": "Aus Favoriten entfernen"
+    "Remove_from_favorites": "Aus Favoriten entfernen",
+    "Island_Sanctuary": "Inselparadies"
   },
   "PACKET_CAPTURE": {
     "Banner_title": "Die Paketerfassung ist verfügbar",
@@ -1985,7 +2006,7 @@
       "Armory": "Arsenal",
       "Current_Gear": "Aktuelle Ausrüstung",
       "RetainerMarket": "Im Verkauf bei Gehilfen",
-      "IslandSanctuaryBag": "Island Sanctuary Bag"
+      "IslandSanctuaryBag": "Inselbeutel"
     },
     "CONTENT_ID_POPUP": {
       "Description": "Um mehrere Charaktere und andere nützliche Funktionen zu unterstützen, muss Teamcraft wissen, welchen Charakter du momentan spielst oder zumindest welcher Charakter mit dem aktuellem Ingame Charakter verknüpft werden soll.",
@@ -2127,8 +2148,8 @@
     "Copied_as_string": "Ausrüstungsset als Zeichenfolge kopiert",
     "Mark_as_done": "Als erledigt markieren",
     "Create_commission": "Einen Auftrag für dieses Ausrüstungsset erstellen",
-    "Value_for_next": "Next breakpoint",
-    "Value_for_previous": "Previous breakpoint",
+    "Value_for_next": "Nächster Haltepunkt",
+    "Value_for_previous": "Vorheriger Haltepunkt",
     "Editing_others_gearset": "Lokaler Bearbeitungsmodus",
     "Editing_others_gearset_description": "Du bearbeitest gerade das Ausrüstungsset eines anderen Benutzers. Es wird nichts gespeichert, solange du nicht oben auf die Schaltfläche \"Speichern\" klickst, um deine eigene Kopie zu erstellen.",
     "Empty_materias": "Alle Materia aus der ausgewählten Ausrüstung entfernen",
@@ -2307,7 +2328,7 @@
       },
       "INTEGRITY_CHECK": {
         "All_characters_valid": "Alle verlinkten Charaktere sind gültig",
-        "All_lists_ok": "All lists are working properly"
+        "All_lists_ok": "Alle Listen funktionieren einwandfrei"
       }
     }
   },
@@ -2855,6 +2876,7 @@
     "Speed": "Geschwindigkeit",
     "Shadow_size": "Schattengröße",
     "Deprecated": "Dieser Gegenstand kann nicht mehr erhalten werden",
+    "Select_all": "Alle Vorschläge auswählen",
     "SPEEDS": {
       "VERY_SLOW": "Sehr langsam",
       "SLOW": "Langsam",
@@ -2881,7 +2903,8 @@
       "SPEARFISHING": "SPEERFISCHEN",
       "FATE": "FATE",
       "MOGSTATION": "ONLINE-SHOP",
-      "DEPRECATED": "VERALTET"
+      "DEPRECATED": "VERALTET",
+      "ISLAND_ANIMAL": "INSELPARADIES_WEIDETIER"
     },
     "STATUS": {
       "PROPOSAL": "VORSCHLAG",
@@ -2925,10 +2948,90 @@
     "Add_to_list": "Diese Gegenstände zu einer Liste hinzufügen"
   },
   "MACHINA_ERRORS": {
-    "Default": "Machina Wrapper error",
-    "Wrapper_failed_to_start": "Machina Wrapper failed to start",
+    "Default": "Machina-Wrapper Fehler",
+    "Wrapper_failed_to_start": "Machina-Wrapper konnte nicht gestartet werden",
     "DESCRIPTION": {
       "Wrapper_failed_to_start": "Bitte stelle sicher, dass das Spiel läuft und nicht als Admininstrator ausgeführt wird (oder, in diesem Fall, TC als Administrator starten).<br>Wenn dieses Problem weiterhin besteht, melde dich bitte an Discords Fehlerbehebungskanal #troubleshooting mit einem Screenshot der obigen Nachrichten.<br><br> Wiederholung in {{retryDelay}}s"
+    }
+  },
+  "ISLAND_SANCTUARY": {
+    "Animal_source": "Du musst diesen Gegenstand von einem der folgenden Tiere in der Weide deines Inselparadieses sammeln",
+    "Island_level": "Insel Level",
+    "Landmarks": "Wahrzeichen",
+    "Workshop_rank": "Atelierrang",
+    "WORKSHOP": {
+      "Title": "Atelier",
+      "Subtitle": "Verfolge und verwalte dein Atelier",
+      "Out_of_sync": "Status wurde seit dem letzten Reset nicht aktualisiert",
+      "Out_of_sync_explain": "Bitte öffne das Angebot-/Nachfrage-Fenster auf deinem Inselparadies um den Status zu aktualisieren. Wenn du keine Paketerfassung verwendest, bitten einen anderen Benutzer, deinen Status zu aktualisieren und ihn dann zu exportieren, damit du den Import-Button verwenden kannst oder importiere von der Datenbank.",
+      "Export_state": "Exportiere Angebot-/Nachfrage-Status",
+      "State_copied": "Status wurde in die Zwischenablage kopiert",
+      "Import_state": "Importiere Status",
+      "Import_online_state": "Importiere Status aus der Datenbank",
+      "Online_state_missing": "Niemand hat seinen Status bisher aktualisiert, diese Schaltfläche wird sich aktivieren, sobald es jemand getan hat",
+      "State_imported": "Status korrekt importiert",
+      "Product": "Produkt",
+      "Popularity": "Beliebtheit",
+      "Supply": "Angebot",
+      "Demand_shift": "Nachfrage",
+      "Predicted_popularity": "Künftige Beliebtheit",
+      "Edit_mode": "Bearbeitungsmodus",
+      "Best_items_to_craft": "Beste Gegenstände zum Herstellen",
+      "Total_value": "Gesamtwert",
+      "Run_optimizer": "Finde die beste Planung für den Rest der Woche",
+      "No_schedule_found": "Keine Pläne gefunden",
+      "No_schedule_found_explain": "Vergewissere dich, dass die Rücksetzung in weniger als 4 Stunden ist",
+      "Possible_peak_days": "Mögliche Spitzen",
+      "Peak_days_explain": "Die Tage, an denen es wahrscheinlicher ist, dass dieser Gegenstand seinen Höchstwert erreichen wird. Fett = starker Gipfel.",
+      "Items_to_prepare": "Beste Gegenstände zum Vorbereiten für morgen",
+      "Rest": "Ruhetag",
+      "Unknown_day_planning": "Verfügbar am {{day}}",
+      "Set_rest_day": "Als zweiten Ruhetag festlegen",
+      "Import_explain": "Du kannst die Angebots-/Nachfragetabelle aktualisieren, indem du sie mit der Desktop-App und der aktivierten Paketerfassung ingame öffnest.",
+      "Amount_of_workshops": "# der Ateliere:",
+      "Create_list": "Eine Liste für diese Planung erstellen",
+      "Exclude_pasture_materials": "Weidematerial ausschließen",
+      "Exclude_crop_materials": "Erntematerial ausschließen",
+      "Groove_tooltip": "Groove at the end of the day",
+      "Crafting_time": "Herstellungszeit",
+      "Categories": "Kategorien",
+      "No_planning": "Keine Planung verfügbar",
+      "No_planning_explain": " Teamcraft ist nicht in der Lage, eine Planung zu berechnen, da es zu wenige Rezepte gibt. Versuche deine Inselstufe zu erhöhen oder überprüfe einige Materialausnahmen.",
+      "Next_week_prep": "Materialien, die du für nächste Woche vorbereiten solltest",
+      "Crop_materials": "Ackerbau",
+      "Pasture_materials": "Weide",
+      "POPULARITY": {
+        "Very_high": "Riesig",
+        "High": "Groß",
+        "Average": "Normal",
+        "Low": "Kaum"
+      },
+      "SUPPLY": {
+        "Non_existant": "Nicht vorhanden",
+        "Insufficient": "Wenig",
+        "Sufficient": "Normal",
+        "Surplus": "Viel",
+        "Overflowing": "Überschuss"
+      },
+      "DEMAND_SHIFT": {
+        "Skyrocketing": "steigt stark",
+        "Increasing": "steigt",
+        "None": "bleibt gleich",
+        "Decreasing": "sinkt",
+        "Plummeting": "sinkt stark"
+      }
+    },
+    "ANIMALS": {
+      "Title": "Tiere",
+      "Subtitle": "Eine umfassende Liste der Tiere, wo und wann sie zu finden sind, mit Alarm-Integration",
+      "Name": "Name",
+      "Size": "Größe",
+      "Coords": "Position",
+      "Spawn_time": "Spawnzeit",
+      "Weather": "Wetter",
+      "Alarm": "Alarm",
+      "Main_drop": "Hauptbeute",
+      "Rare_drop": "Seltene Beute"
     }
   }
 }

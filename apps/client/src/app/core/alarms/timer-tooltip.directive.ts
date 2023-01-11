@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[timerTooltip]'
 })
 export class TimerTooltipDirective extends NzTooltipDirective implements OnChanges {
@@ -17,7 +18,11 @@ export class TimerTooltipDirective extends NzTooltipDirective implements OnChang
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.title = this.datePipe.transform(new Date(Date.now() + this.timerSeconds * 1000), 'medium', null, this.translate.currentLang);
+    if (this.timerSeconds === null) {
+      this.title = null;
+    } else {
+      this.title = this.datePipe.transform(new Date(Date.now() + this.timerSeconds * 1000), 'medium', null, this.translate.currentLang);
+    }
     super.ngOnChanges(changes);
   }
 }

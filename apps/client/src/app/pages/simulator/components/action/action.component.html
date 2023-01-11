@@ -8,7 +8,7 @@
          [appXivdbActionStateColor]="getColor(state)"
          [ngClass]="{'wasted': wasted, 'disabled': disabled || notEnoughCp || !safe, 'not-enough-cp': notEnoughCp}"
          class="action">
-      <img alt="{{getAlt()}}" src="{{action.getId(getJobId()) | actionIcon | xivapiIcon}}">
+      <img alt="{{getAlt()}}" src="{{action.getId(getJobId()) | actionIcon | xivapiIcon}}" class="action-icon">
       <div *ngIf="notEnoughCp || disabled" class="red-overlay"></div>
       <i *ngIf="failed || !safe" class="material-icons failed">close</i>
       <span *ngIf="!hideCost && action.getBaseCPCost(simulation) > 0 && (cpCost === undefined || cpCost !== 0)"
@@ -19,7 +19,7 @@
   </div>
 </nz-badge>
 <nz-dropdown-menu #template="nzDropdownMenu">
-  <ul (nzClick)="close()" nz-menu *ngIf="simulation">
+  <ul (click)="close()" nz-menu *ngIf="simulation">
     <li *ngFor="let condition of availableConditions" (click)="setState(condition.condition)" [nzSelected]="state === condition.condition"
         nz-menu-item>{{('SIMULATOR.STATE.' + condition.name) | translate}}</li>
     <li (click)="failChange.next(!failed)" [nzSelected]="failed"

@@ -52,8 +52,9 @@ export class AllaganReportsExtractor extends AbstractExtractor {
           if (duty.category !== 'dungeon') {
             return;
           }
-          const instanceId = +Object.keys(instances).find(k => instances[k].en?.toLowerCase() === duty.name.toLowerCase());
+          const instanceId = +Object.keys(instances).find(k => this.cleanupString(instances[k].en?.toLowerCase()) === this.cleanupString(duty.name.toLowerCase()));
           if (isNaN(instanceId)) {
+            console.log(duty.name);
             return;
           }
           const itemDrops = [
@@ -143,7 +144,8 @@ export class AllaganReportsExtractor extends AbstractExtractor {
                     weathersFrom: report.data.weathersFrom,
                     snagging: report.data.snagging,
                     predators: report.data.predators,
-                    oceanFishingTime: report.data.oceanFishingTime
+                    oceanFishingTime: report.data.oceanFishingTime,
+                    minGathering: report.data.minGathering || 0
                   }, this.identity), false, !report.applied);
               }
             });
@@ -158,6 +160,7 @@ export class AllaganReportsExtractor extends AbstractExtractor {
             this.persistToJsonAsset('venture-sources', ventures);
             this.persistToJsonAsset('drop-sources', drops);
             this.persistToJsonAsset('instance-sources', instanceDrops);
+            this.persistToJsonAsset('reverse-instance-sources', this.reverseRecord(instanceDrops));
             this.persistToJsonAsset('fate-sources', fateSources);
             this.persistToJsonAsset('mogstation-sources', mogstation);
             this.persistToJsonAsset('gardening-sources', gardening);
@@ -179,10 +182,20 @@ export class AllaganReportsExtractor extends AbstractExtractor {
     });
   }
 
+  private reverseRecord(input: Record<number, number[]>): Record<number, number[]> {
+    return Object.entries(input)
+      .reduce((acc, [key, value]) => {
+        value.forEach(v => {
+          acc[v] = [...(acc[v] || []), +key];
+        });
+        return acc;
+      }, {});
+  }
+
   private addItemAsSource(targetObject: Object, targetItem: number, sourceDetails: any, isObject: boolean, isNew: boolean): void {
     if (isObject) {
       if (targetObject[targetItem] !== undefined) {
-        console.warn(`Overriding source for ${targetItem} with ${JSON.stringify(sourceDetails)}`);
+        // console.warn(`Overriding source for ${targetItem} with ${JSON.stringify(sourceDetails)}`);
       }
       targetObject[targetItem] = sourceDetails;
     } else if (!!sourceDetails) {

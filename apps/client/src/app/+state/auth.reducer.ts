@@ -20,7 +20,6 @@ export interface AuthState {
   linkingCharacter: boolean;
   commissionProfile: CommissionProfile;
   logTracking: LogTracking;
-  serverLogTracking?: LogTracking;
 }
 
 export const initialState: AuthState = {
@@ -267,11 +266,13 @@ export function authReducer(state = initialState, action: AuthActions): AuthStat
     case AuthActionTypes.LogTrackingLoaded:
       return {
         ...state,
-        logTracking: action.payload,
-        serverLogTracking: action.payload
+        logTracking: action.payload
       };
 
     case AuthActionTypes.MarkAsDoneInLog:
+      if (!state.logTracking) {
+        return state;
+      }
       return {
         ...state,
         logTracking: {

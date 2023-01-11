@@ -50,12 +50,12 @@ import { ItemPickerService } from '../../item-picker/item-picker.service';
 import { ListManagerService } from '../list-manager.service';
 import { ProgressPopupService } from '../../progress-popup/progress-popup.service';
 import { InventoryService } from '../../inventory/inventory.service';
-import { FirestoreListStorage } from '../../../core/database/storage/list/firestore-list-storage';
 import { ModificationEntry } from '../model/modification-entry';
 import { PermissionsController } from '../../../core/database/permissions-controller';
 import { ListController } from '../list-controller';
+import { IpcService } from '../../../core/electron/ipc.service';
 
-declare const gtag: Function;
+declare const gtag: (...args: any[]) => void;
 declare const fathom: any;
 
 @Injectable({
@@ -73,23 +73,24 @@ export class ListsFacade {
           return list.finalItems !== undefined
             && list.items !== undefined;
         });
-      })
+      }),
+      shareReplay(1)
     );
 
-  myLists$ = combineLatest([this.store.select(listsQuery.getAllListDetails), this.authFacade.userId$]).pipe(
+  myLists$ = combineLatest([this.allListDetails$, this.authFacade.userId$]).pipe(
     map(([compacts, userId]) => {
       return compacts.filter(c => c.authorId === userId);
     }),
     map(lists => {
       return this.sortLists(lists);
     }),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay(1)
   );
 
   sharedLists$ = this.authFacade.loggedIn$.pipe(
     switchMap(loggedIn => {
       if (!loggedIn) {
-        return combineLatest([this.store.select(listsQuery.getAllListDetails), this.authFacade.userId$]).pipe(
+        return combineLatest([this.allListDetails$, this.authFacade.userId$]).pipe(
           map(([compacts, userId]) => {
             return compacts.filter(c => {
               return !c.notFound
@@ -100,7 +101,7 @@ export class ListsFacade {
           })
         );
       }
-      return combineLatest([this.store.select(listsQuery.getAllListDetails), this.authFacade.user$, this.authFacade.userId$, this.authFacade.fcId$]).pipe(
+      return combineLatest([this.allListDetails$, this.authFacade.user$, this.authFacade.userId$, this.authFacade.fcId$]).pipe(
         map(([compacts, user, userId, fcId]) => {
           if (user !== null) {
             const idEntry = user.lodestoneIds.find(l => l.id === user.defaultLodestoneId);
@@ -120,7 +121,7 @@ export class ListsFacade {
         })
       );
     }),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay(1)
   );
 
   public listsWithWriteAccess$ = combineLatest([this.allListDetails$, this.authFacade.user$, this.authFacade.userId$, this.authFacade.fcId$, this.teamsFacade.myTeams$]).pipe(
@@ -150,7 +151,7 @@ export class ListsFacade {
 
   selectedList$ = this.store.select(listsQuery.getSelectedList()).pipe(
     filter(list => list !== undefined),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay(1)
   );
 
   selectedListPermissionLevel$ = this.authFacade.loggedIn$.pipe(
@@ -182,7 +183,7 @@ export class ListsFacade {
       return Math.max(PermissionsController.getPermissionLevel(list, userId), PermissionsController.getPermissionLevel(list, fcId), teamPermissionLevel);
     }),
     distinctUntilChanged(),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay(1)
   );
 
   needsVerification$ = this.store.select(listsQuery.getNeedsVerification);
@@ -198,8 +199,7 @@ export class ListsFacade {
   constructor(private store: Store<{ lists: ListsState }>, private dialog: NzModalService, private translate: TranslateService, private authFacade: AuthFacade,
               private teamsFacade: TeamsFacade, private settings: SettingsService, private userInventoryService: InventoryService,
               private router: Router, private serializer: NgSerializerService, private itemPicker: ItemPickerService,
-              private listManager: ListManagerService, private progress: ProgressPopupService,
-              private listService: FirestoreListStorage) {
+              private listManager: ListManagerService, private progress: ProgressPopupService, private ipc: IpcService) {
     router.events
       .pipe(
         distinctUntilChanged((previous: any, current: any) => {
@@ -211,10 +211,18 @@ export class ListsFacade {
       ).subscribe((event: any) => {
       this.overlay = event.url.indexOf('?overlay') > -1;
     });
+
+    this.ipc.on('list:setItemDone', (event, {
+      itemId, itemIcon, finalItem, delta, recipeId, totalNeeded, external, fromPacket, hq
+    }) => this.setItemDone(itemId, itemIcon, finalItem, delta, recipeId, totalNeeded, external, fromPacket, hq));
+
+    this.ipc.on('list:setListItemDone', (event, {
+      listId, itemId, itemIcon, finalItem, delta, recipeId, totalNeeded, external, fromPacket, hq
+    }) => this.setListItemDone(listId, itemId, itemIcon, finalItem, delta, recipeId, totalNeeded, external, fromPacket, hq));
   }
 
   removeModificationsHistoryEntry(key: string, entryId: string): Observable<void> {
-    return this.listService.removeModificationsHistoryEntry(key, entryId);
+    return of(null);
   }
 
   getTeamLists(team: Team): Observable<List[]> {
@@ -283,10 +291,33 @@ export class ListsFacade {
   }
 
   setItemDone(itemId: number, itemIcon: number, finalItem: boolean, delta: number, recipeId: string, totalNeeded: number, external = false, fromPacket = false, hq = false): void {
+    if (this.settings.autoMarkAsCompleted && delta > 0) {
+      this.authFacade.markAsDoneInLog(recipeId ? 'crafting' : 'gathering', +(recipeId || itemId), true);
+    }
+    if (this.ipc.overlayUri) {
+      this.ipc.send('list:setItemDone', {
+        itemId, itemIcon, finalItem, delta, recipeId, totalNeeded, external, fromPacket, hq
+      });
+    }
     this.store.dispatch(new SetItemDone(itemId, itemIcon, finalItem, delta, recipeId, totalNeeded, {
       enableAutofillHQFilter: this.settings.enableAutofillHQFilter,
       enableAutofillNQFilter: this.settings.enableAutofillNQFilter
     }, external, fromPacket, hq));
+  }
+
+  setListItemDone(listId: string, itemId: number, itemIcon: number, finalItem: boolean, delta: number, recipeId: string, totalNeeded: number, external = false, fromPacket = false, hq = false): void {
+    if (this.settings.autoMarkAsCompleted && delta > 0) {
+      this.authFacade.markAsDoneInLog(recipeId ? 'crafting' : 'gathering', +(recipeId || itemId), true);
+    }
+    if (this.ipc.overlayUri) {
+      this.ipc.send('list:setListItemDone', {
+        listId, itemId, itemIcon, finalItem, delta, recipeId, totalNeeded, external, fromPacket, hq
+      });
+    }
+    this.store.dispatch(new SetItemDone(itemId, itemIcon, finalItem, delta, recipeId, totalNeeded, {
+      enableAutofillHQFilter: this.settings.enableAutofillHQFilter,
+      enableAutofillNQFilter: this.settings.enableAutofillNQFilter
+    }, external, fromPacket, hq, listId));
   }
 
   markAsHq(itemIds: number[], hq: boolean): void {
@@ -446,7 +477,7 @@ export class ListsFacade {
   overlayListsLoaded(data: List[]): void {
     const lists = this.serializer.deserialize<List>(data, [List]);
     lists.filter(l => !l.offline).forEach(list => {
-      this.store.dispatch(new ListDetailsLoaded(list));
+      this.store.dispatch(new ListDetailsLoaded(list, true));
     });
     const offline = lists.filter(l => l.offline);
     if (offline.length > 0) {

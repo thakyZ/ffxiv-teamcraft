@@ -3,14 +3,14 @@ import { PlatformService } from '../tools/platform.service';
 import { IpcService } from '../electron/ipc.service';
 import { TranslateService } from '@ngx-translate/core';
 
-declare const gtag: Function;
+declare const gtag: (...args: any[]) => void;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnalyticsService {
 
-  private static readonly GA4_ID = 'G-RNVD9NJW4N';
+  public static readonly GA4_ID = 'G-RNVD9NJW4N';
 
   private static readonly GA3_ID = 'UA-104948571-1';
 
