@@ -121,8 +121,6 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
 
   public editMode = false;
 
-  public startOptimizer$ = new Subject<void>();
-
   public state$ = new LocalStorageBehaviorSubject('island:state', {
     popularity: -1,
     predictedPopularity: -1,
@@ -284,7 +282,7 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
       const popularityEntry = islandPopularity[state.popularity];
       const predictedPopularityEntry = islandPopularity[state.predictedPopularity];
       return state.supplyDemand
-        .filter(row => row.id > 0 && islandCraftworks[row.id].itemId > 0)
+        .filter(row => row.id > 0 && islandCraftworks[row.id]?.itemId > 0)
         .filter(row => {
           let matches = true;
           if (excludePasture || excludeCrops) {

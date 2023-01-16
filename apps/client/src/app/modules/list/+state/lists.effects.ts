@@ -65,8 +65,9 @@ import { withLazyRow } from '../../../core/rxjs/with-lazy-row';
 import { ListPricingService } from '../../../pages/list-details/list-pricing/list-pricing.service';
 import { PermissionsController } from '../../../core/database/permissions-controller';
 import { onlyIfNotConnected } from '../../../core/rxjs/only-if-not-connected';
-import { UpdateData, where } from '@angular/fire/firestore';
+import { increment, UpdateData, where } from '@angular/fire/firestore';
 import { debounceBufferTime } from '../../../core/rxjs/debounce-buffer-time';
+import { safeCombineLatest } from '../../../core/rxjs/safe-combine-latest';
 
 // noinspection JSUnusedGlobalSymbols
 @Injectable()
@@ -273,7 +274,6 @@ export class ListsEffects {
         }
         return i;
       });
-      list.etag++;
       return new UpdateList(list);
     })
   ));
@@ -316,10 +316,6 @@ export class ListsEffects {
     ofType<UpdateList>(ListsActionTypes.UpdateList),
     debounceTime(1000),
     switchMap((action) => {
-      if (isNaN(action.payload.etag)) {
-        action.payload.etag = 0;
-      }
-      action.payload.etag++;
       if (action.payload.offline) {
         this.saveToLocalstorage(action.payload, false);
         return of(null);
@@ -464,32 +460,34 @@ export class ListsEffects {
         listEntry.actions.push(entry[0]);
         return acc;
       }, []);
-      return combineLatest(groupedByList.map(({ list, actions }) => {
-        if (list.offline) {
-          actions.forEach(action => {
-            ListController.updateAllStatuses(list, action.itemId);
-          });
-          this.saveToLocalstorage(list, false);
-          return of(null);
-        } else {
-          if (list.hasCommission) {
-            this.updateCommission(list);
-          }
-          return this.listService.runTransaction(list.$key, (transaction, serverCopy) => {
-            const serverList = serverCopy.data() as List;
+      return safeCombineLatest(groupedByList
+        .filter(({ list }) => list !== undefined)
+        .map(({ list, actions }) => {
+          if (list.offline) {
             actions.forEach(action => {
-              ListController.setDone(serverList, action.itemId, action.doneDelta, !action.finalItem, action.finalItem, false, action.recipeId, action.external);
-              ListController.updateAllStatuses(serverList, action.itemId);
+              ListController.updateAllStatuses(list, action.itemId);
             });
-            if (isNaN(serverList.etag)) {
-              serverList.etag = 0;
+            this.saveToLocalstorage(list, false);
+            return of(null);
+          } else {
+            if (list.hasCommission) {
+              this.updateCommission(list);
             }
-            serverList.etag++;
-            this.listService.recordOperation('write');
-            transaction.set(serverCopy.ref, serverList);
-          });
-        }
-      }));
+            return this.listService.runTransaction(list.$key, (transaction, serverCopy) => {
+              const serverList = serverCopy.data() as List;
+              actions.forEach(action => {
+                ListController.setDone(serverList, action.itemId, action.doneDelta, !action.finalItem, action.finalItem, false, action.recipeId, action.external);
+                ListController.updateAllStatuses(serverList, action.itemId);
+              });
+              if (isNaN(serverList.etag)) {
+                serverList.etag = 0;
+              }
+              serverList.etag++;
+              this.listService.recordOperation('write');
+              transaction.set(serverCopy.ref, serverList);
+            });
+          }
+        }));
     }, 1)
   ), { dispatch: false });
 
@@ -497,10 +495,6 @@ export class ListsEffects {
     ofType<UpdateItem>(ListsActionTypes.UpdateItem),
     withLatestFrom(this.selectedListClone$),
     map(([action, list]) => {
-      if (isNaN(list.etag)) {
-        list.etag = 0;
-      }
-      list.etag++;
       const items = action.finalItem ? list.finalItems : list.items;
       const updatedItems = items.map(item => item.id === action.item.id ? action.item : item);
       if (action.finalItem) {
@@ -519,7 +513,6 @@ export class ListsEffects {
   pureListUpdate$ = createEffect(() => this.actions$.pipe(
     ofType<PureUpdateList>(ListsActionTypes.PureUpdateList),
     mergeMap(action => {
-      action.payload.etag++;
       const localList = this.localStore.find(l => l.$key === action.$key);
       if (localList) {
         Object.assign(localList, action.payload);
@@ -527,7 +520,10 @@ export class ListsEffects {
         return EMPTY;
       }
       // Yikes, we're forced to cast as unknown first because the types should probably be more accurate
-      return this.listService.pureUpdate(action.$key, action.payload as unknown as UpdateData<List>);
+      return this.listService.pureUpdate(action.$key, {
+        ...action.payload as unknown as UpdateData<List>,
+        etag: increment(1)
+      });
     })
   ), { dispatch: false });
 
