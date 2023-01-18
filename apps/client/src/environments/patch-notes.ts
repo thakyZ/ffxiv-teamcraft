@@ -1,12 +1,14 @@
 export const patchNotes = `### Bug Fixes
 
-* **desktop:** fixed step-by-step overlay not loading.
-* **gathering-location:** fixed type filter not working as intended.
-* **island-workshop:** updated state import message with 6.3 changes.
-* **list:** fixed possible crash after opening a list for too long.
+* **gathering-location:** fixed search not finding anything with "Any" node type filter.
+* **metrics:** fixed histogram component not loading.
 
 
 ### Features
 
-* **db:** more allagan reports import.
-* **step-by-step:** better layout and inventory button.`;
+* **db:** allagan reports improt.
+
+
+### Performance Improvements
+
+* **lists:** first step of update system refactoring.`;

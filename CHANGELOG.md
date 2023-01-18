@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="10.0.6"></a>
+## [10.0.6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.5...v10.0.6) (2023-01-18)
+
+
+### Bug Fixes
+
+* **gathering-location:** fixed search not finding anything with "Any" node type filter ([9e9d188](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9e9d188))
+* **metrics:** fixed histogram component not loading ([19cfb0c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/19cfb0c))
+
+
+### Features
+
+* **db:** allagan reports improt ([b8db815](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b8db815))
+
+
+### Performance Improvements
+
+* **lists:** first step of update system refactoring ([65404dd](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/65404dd))
+
+
+
+<a name="10.0.5"></a>
+## [10.0.5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.4...v10.0.5) (2023-01-17)
+
+
+### Bug Fixes
+
+* **desktop:** fixed state import sometimes breaking workshop table entirely ([6c91e34](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6c91e34))
+* **metrics:** fixed histogram chart sometimes not sorting entries ([766a0a8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/766a0a8)), closes [#2442](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2442)
+
+
+### Features
+
+* **desktop:** Notification feedback on profile validation start ([#2443](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2443)) ([fca50ec](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fca50ec))
+
+
+### Performance Improvements
+
+* **list:** improvements to concurrency system for list updates ([e03f05a](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e03f05a))
+
+
+
 <a name="10.0.4"></a>
 ## [10.0.4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.3...v10.0.4) (2023-01-15)
 
