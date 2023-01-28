@@ -8,6 +8,7 @@ import { LazyData } from '../../../../lazy-data/lazy-data';
 import { getTiers } from '../../../../core/tools/get-tiers';
 import { NodeTypeIconPipe } from '../../../../pipes/pipes/node-type-icon.pipe';
 import { NavigationObjective } from '../../../map/navigation-objective';
+import structuredClone from '@ungap/structured-clone';
 
 export class StepByStepList {
   public alarms: ListRow[] = [];
@@ -45,14 +46,26 @@ export class StepByStepList {
     this.display.rows.forEach(panel => {
       panel.rows.forEach(row => {
         let hasCoords = false;
-        const matchingSources = row.sources.filter(s => panel.layoutRow.filter.matchingSources.includes(s.type) || s.type === DataType.ALARMS);
+        let matchingSources = row.sources.filter(s => panel.layoutRow.filter.matchingSources.includes(s.type) || [DataType.ALARMS].includes(s.type));
+        if (matchingSources.length === 0) {
+          matchingSources = row.sources;
+        }
         matchingSources.forEach(source => {
           const positions = this.getPositions(source).filter(p => !!p.mapId);
           if (!hasCoords && positions.length > 0) {
             hasCoords = true;
             positions.forEach(position => {
               if (this.shouldAddMap(position.mapId)) {
-                this.addToMapIndex(position.mapId, row, [source], position.coords, position.icon, position.type);
+                const preparedSource = structuredClone(source);
+                if (source.type === DataType.TRADE_SOURCES) {
+                  // If it's a trade, we want to filter to make sure it's on this map, to avoid showing wrong currency and details.
+                  preparedSource.data = preparedSource.data.filter(ts => {
+                    return ts.npcs.some(npc => npc.mapId === position.mapId);
+                  });
+                }
+                const sourcesToTransfer = row.sources.filter(s => [DataType.MASTERBOOKS, DataType.DEPRECATED].includes(s.type));
+                const sources = [...sourcesToTransfer, preparedSource];
+                this.addToMapIndex(position.mapId, row, sources, position.coords, position.icon, position.type);
               }
             });
           }

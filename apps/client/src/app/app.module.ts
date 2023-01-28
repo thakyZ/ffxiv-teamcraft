@@ -90,6 +90,7 @@ import zh from '@angular/common/locales/zh';
 import ru from '@angular/common/locales/ru';
 import es from '@angular/common/locales/es';
 import pt from '@angular/common/locales/pt';
+import br from '@angular/common/locales/br';
 import hr from '@angular/common/locales/hr';
 import ko from '@angular/common/locales/ko';
 import { InventoryModule } from './modules/inventory/inventory.module';
@@ -126,6 +127,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFunctions, provideFunctions } from '@angular/fire/functions';
 import { getPerformance, providePerformance } from '@angular/fire/performance';
 import { ListAggregateModule } from './modules/list-aggregate/list-aggregate.module';
+import { BreakpointDebugComponent } from './tools/breakpoint-debug/breakpoint-debug.component';
 
 const icons: IconDefinition[] = [
   SettingOutline,
@@ -172,6 +174,7 @@ registerLocaleData(pt);
 registerLocaleData(hr);
 registerLocaleData(ru);
 registerLocaleData(ko);
+registerLocaleData(br);
 
 const nzConfig: NzConfig = {
   message: {
@@ -298,7 +301,12 @@ const nzConfig: NzConfig = {
       },
       actionSanitizer: (action) => {
         if (action.type.includes('LazyData')) {
-          return { type: action.type, key: (action as any).key, entity: (action as any).entity, id: (action as any).id };
+          return {
+            type: action.type,
+            key: (action as any).key,
+            entity: (action as any).entity,
+            id: (action as any).id
+          };
         }
         if (action.type === ListsActionTypes.SetItemDone) {
           const { settings, ...sanitized } = (action as SetItemDone);
@@ -329,7 +337,8 @@ const nzConfig: NzConfig = {
     LazyDataModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
-    })
+    }),
+    BreakpointDebugComponent
   ],
   bootstrap: [AppComponent]
 })

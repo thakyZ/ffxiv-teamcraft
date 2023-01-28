@@ -12,6 +12,7 @@ import { LazyDataFacade } from '../../../../lazy-data/+state/lazy-data.facade';
 import { ListController } from '../../../../modules/list/list-controller';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Firestore, QueryConstraint, Timestamp, where } from '@angular/fire/firestore';
+import structuredClone from '@ungap/structured-clone';
 
 @Injectable({
   providedIn: 'root'
@@ -28,13 +29,14 @@ export class FirestoreListStorage extends FirestoreRelationalStorage<List> {
     'recipeId',
     'yield',
     'workingOnIt',
-    'requiredAsHQ',
+    'forceRequiredHQ',
     'custom',
     'attachedRotation',
     'requires',
     'canBeCrafted',
     'hasAllBaseIngredients',
-    'craftableAmount'
+    'craftableAmount',
+    'requiredHQ'
   ];
 
   constructor(protected firestore: Firestore, protected serializer: NgSerializerService, protected zone: NgZone,
@@ -76,15 +78,12 @@ export class FirestoreListStorage extends FirestoreRelationalStorage<List> {
         return cleanedItem;
       }, {}) as ListRow;
     });
-    clone.etag = (list.etag || 0) + 1;
-    return clone;
+    return ListController.updateEtag(clone);
   }
 
   public completeListData(list: List): Observable<List> {
-    return combineLatest([
-      this.lazyData.getEntry('extracts')
-    ]).pipe(
-      map(([extracts]) => {
+    return this.lazyData.getEntry('extracts').pipe(
+      map((extracts) => {
         list.items = list.items.map(item => {
           if (!(item.requires instanceof Array)) {
             item.requires = [];
@@ -114,27 +113,11 @@ export class FirestoreListStorage extends FirestoreRelationalStorage<List> {
     return super.getByForeignKey(foreignEntityClass, foreignKeyValue, additionalFilters, cacheSuffix);
   }
 
-  deepFreeze<T extends object>(object: T): T {
-    // Retrieve the property names defined on object
-    const propNames = Reflect.ownKeys(object);
-
-    // Freeze properties before freezing self
-    for (const name of propNames) {
-      const value = object[name];
-
-      if ((value && typeof value === 'object') || typeof value === 'function') {
-        this.deepFreeze(value);
-      }
-    }
-
-    return Object.freeze(object);
-  }
-
   get(uid: string): Observable<List> {
     return super.get(uid)
       .pipe(
         switchMap(list => {
-          return this.completeListData(list);
+          return this.completeListData(structuredClone(list));
         })
       );
   }

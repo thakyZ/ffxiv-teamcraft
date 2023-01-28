@@ -2,6 +2,147 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="10.1.4"></a>
+## [10.1.4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.1.3...v10.1.4) (2023-01-27)
+
+
+### Bug Fixes
+
+* **core:** add structuredClone polyfill for older browsers ([01cadb0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/01cadb0))
+* **db:** fixed some content not being accessible due to italic characters in their name ([9f41642](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9f41642))
+* **desktop:** fixed omicron tokens listed in island inventory ([e4ec069](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e4ec069))
+* **food-picker:** now sorting results by picked stat(s) value ([1385f91](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1385f91))
+* **lists:** possible fix for final items sometimes not updating ([0d94205](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0d94205))
+* **step-by-step:** added masterbook icon next to input when required ([27de40d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/27de40d))
+* **step-by-step:** fixed arrows not accurate at all on ultrawide displays ([7d91dfb](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7d91dfb))
+* **teams:** fixed discord webhook often sending wrong values in notification ([db3c268](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/db3c268))
+* **workshop:** improvements on list deletion workshop update ([e9060c4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e9060c4))
+
+
+### Features
+
+* **db:** import of ~500 allagan reports ([599c750](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/599c750))
+* **gearset:** new button to reset materia and item progression ([214396b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/214396b))
+* **gearset:** you can now switch from a class to its job on a gearset ([b21063d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b21063d))
+
+
+
+<a name="10.1.3"></a>
+## [10.1.3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.1.2...v10.1.3) (2023-01-25)
+
+
+### Bug Fixes
+
+* **core:** fixed some numbers not showing when using PT_BR locale ([07716b7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/07716b7))
+* **desktop:** rollback of recent packet capture changes to fix inventory tracking issues ([bfe469f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/bfe469f))
+
+
+
+<a name="10.1.2"></a>
+## [10.1.2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.1.1...v10.1.2) (2023-01-25)
+
+
+### Bug Fixes
+
+* **desktop:** fixed inventory tracking and autofill stability ([57ca3be](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/57ca3be))
+* **desktop:** fixed pcap status staying yellow after long cutscenes ([c819f25](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c819f25))
+
+
+
+<a name="10.1.1"></a>
+## [10.1.1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.1.0...v10.1.1) (2023-01-24)
+
+
+### Bug Fixes
+
+* **crafting-replay:** fixed crafting replays not recording properly ([4151220](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4151220))
+* **db:** fixed instance rewards sometimes not being listed in details page ([7bfd08b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7bfd08b))
+* **desktop:** better universalis GCF for better reporting and timeout management ([3ba76b4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3ba76b4))
+* **desktop:** prevent autofill crafting/gathering message from showing in overlays ([b38f592](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b38f592))
+* **gearset:** fixed currency total not updating on last materia done ([a113bdf](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a113bdf))
+* **leveling-equipment:** fixed wrong suggestions for lower level crafting gear ([cdec71e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/cdec71e))
+* **lists:** fixed offline lists sometimes not updated properly ([4cf8ce5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4cf8ce5))
+* **search:** removed sort selectors when they cannot be applied to the results ([2f4dad5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2f4dad5))
+* **step-by-step:** fixed Other sources not being displayed ([b71a214](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b71a214))
+* **tooltip:** fixed line break in description not processed properly ([c18bf5b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c18bf5b))
+
+
+### Features
+
+* **db:** 6.31 data update ([8452f57](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/8452f57))
+* **desktop:** added a start button in packet capture status tooltip ([1ceb95c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1ceb95c))
+* **island-workshop:** new checkbox to display item metadata in planning ([#2456](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2456)) ([b972c05](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b972c05))
+* **step-by-step:** added HQ flag on step-by-step display (requires list update) ([e89b781](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e89b781))
+
+
+### Performance Improvements
+
+* **alarms:** done checkbox is now saved offline to lower database usage ([23bc5b4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/23bc5b4))
+* **desktop:** packet queue optimizations for lower memory usage ([da1f5fd](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/da1f5fd))
+
+
+
+<a name="10.1.0"></a>
+# [10.1.0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.8...v10.1.0) (2023-01-22)
+
+
+### Bug Fixes
+
+* **desktop:** fixed autofill completion notification triggered before item is done ([0797857](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0797857))
+* **gearsets:** bump max results per slot to 20 ([4af0eac](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4af0eac))
+* **list:** fixed a possible sync bug after navigating out of a list and coming back ([dbc2821](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/dbc2821))
+* **step-by-step:** better layout and responsive design ([4e7f285](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4e7f285))
+* **step-by-step:** fixed trades sometimes showing wrong currency ([c8b961f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c8b961f))
+* **step-by-step:** larger details panel when there's space for it ([56bcc82](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/56bcc82))
+
+
+### Features
+
+* **alarms:** you can now mark individual spawns as done to push them last ([722b007](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/722b007))
+* **desktop:** packet capture status icon in top-right corner ([be6829e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/be6829e))
+* **gearsets:** now displaying total currencies needed for materias ([ed306ca](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ed306ca))
+
+
+
+<a name="10.0.8"></a>
+## [10.0.8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.6...v10.0.8) (2023-01-20)
+
+
+### Bug Fixes
+
+* **alarms:** add small timer comparison margin to prevent alarms order from jumping ([5cbbd75](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5cbbd75))
+* **lists:** fixed autofill not saving list to database after first item done ([b743e08](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b743e08))
+* **lists:** fixed progress bar display on smaller screen sizes ([1026d34](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1026d34))
+* **lists:** improvements to overlay sync and general list saving method ([3d11be6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3d11be6))
+* **simulator:** fixed rotations not opening properly in simulator page ([479c9e0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/479c9e0))
+* **step-by-step:** fixed display being empty when only crafts are remaining ([530fb1b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/530fb1b))
+
+
+### Performance Improvements
+
+* **list:** better concurrency management with time-based etag ([2129179](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2129179))
+
+
+
+<a name="10.0.7"></a>
+## [10.0.7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.6...v10.0.7) (2023-01-20)
+
+
+### Bug Fixes
+
+* **alarms:** add small timer comparison margin to prevent alarms order from jumping ([5cbbd75](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5cbbd75))
+* **lists:** fixed autofill not saving list to database after first item done ([b743e08](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/b743e08))
+* **lists:** fixed progress bar display on smaller screen sizes ([1026d34](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1026d34))
+* **lists:** improvements to overlay sync and general list saving method ([3d11be6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/3d11be6))
+* **step-by-step:** fixed display being empty when only crafts are remaining ([530fb1b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/530fb1b))
+
+
+### Performance Improvements
+
+* **list:** better concurrency management with time-based etag ([2129179](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2129179))
+
+
+
 <a name="10.0.6"></a>
 ## [10.0.6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.0.5...v10.0.6) (2023-01-18)
 

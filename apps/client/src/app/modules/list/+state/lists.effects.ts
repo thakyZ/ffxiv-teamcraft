@@ -387,11 +387,10 @@ export class ListsEffects {
     }),
     filter(([action, list, , , , autofillEnabled, _]) => {
       const item = ListController.getItemById(list, action.itemId, !action.finalItem, action.finalItem);
-      const requiredHq = ListController.requiredAsHQ(list, item) > 0;
-      if (autofillEnabled && this.settings.enableAutofillHQFilter && requiredHq) {
+      if (autofillEnabled && this.settings.enableAutofillHQFilter && item.requiredHQ) {
         return !action.fromPacket || action.hq;
       }
-      if (autofillEnabled && this.settings.enableAutofillNQFilter && !requiredHq) {
+      if (autofillEnabled && this.settings.enableAutofillNQFilter && !item.requiredHQ) {
         return !action.fromPacket || !action.hq;
       }
       return true;
@@ -402,12 +401,17 @@ export class ListsEffects {
       if (team && list.teamId === team.$key && action.doneDelta > 0) {
         this.discordWebhookService.notifyItemChecked(team, list, userId, fcId, action.doneDelta, action.itemId, action.totalNeeded, action.finalItem);
       }
+      const withList$ = of(action).pipe(
+        withLatestFrom(action.listId ? this.listsFacade.allListDetails$.pipe(map(lists => lists.find(l => l.$key === action.listId))) : this.selectedListClone$),
+        filter(([, list]) => list !== undefined),
+        first()
+      );
       if (autofillEnabled && completionNotificationEnabled && action.fromPacket) {
-        const itemDone = item.done + action.doneDelta >= item.amount;
+        const itemDone = item.done >= item.amount;
         const played = localStorage.getItem('autofill:completion');
-        if (itemDone && (!played || +played < Date.now() - 10000)) {
+        if (itemDone && (!played || +played < Date.now() - 1000)) {
           return this.i18n.getNameObservable('items', action.itemId).pipe(
-            map(itemName => {
+            switchMap(itemName => {
               const notificationTitle = this.translate.instant('LIST_DETAILS.Autofill_notification_title');
               const notificationBody = this.translate.instant('LIST_DETAILS.Autofill_notification_body', {
                 itemName,
@@ -424,19 +428,17 @@ export class ListsEffects {
               }
               this.notificationService.info(notificationTitle, notificationBody);
               localStorage.setItem('autofill:completion', Date.now().toString());
-              return action;
-            })
+              return withList$;
+            }),
+            first()
           );
         }
       }
-      return of(action).pipe(
-        withLatestFrom(action.listId ? this.listsFacade.allListDetails$.pipe(map(lists => lists.find(l => l.$key === action.listId))) : this.selectedListClone$),
-        filter(([, list]) => list !== undefined)
-      );
+      return withList$;
     }),
     debounceBufferTime(1000)
   ).pipe(
-    mergeMap((entries: [SetItemDone, List][]) => {
+    concatMap((entries: [SetItemDone, List][]) => {
       const groupedByList = entries.reduce((acc, entry) => {
         let listEntry = acc.find(e => e.list.$key === entry[1].$key);
         if (!listEntry) {
@@ -450,7 +452,6 @@ export class ListsEffects {
         return acc;
       }, []);
       return safeCombineLatest(groupedByList
-        .filter(({ list }) => list !== undefined)
         .map(({ list, actions }) => {
           if (list.offline) {
             actions.forEach(action => {
@@ -473,7 +474,7 @@ export class ListsEffects {
             });
           }
         }));
-    }, 1)
+    })
   ), { dispatch: false });
 
   updateItem$ = createEffect(() => this.actions$.pipe(

@@ -138,8 +138,8 @@ export abstract class FirestoreStorage<T extends DataModel> {
           tap(() => {
             this.recordOperation('read', key);
           }),
-          shareReplay(1),
-          takeUntil(this.stop$.pipe(filter(stop => stop === key))),
+          shareReplay(1)
+        ).pipe(
           finalize(() => {
             setTimeout(() => {
               delete this.cache[key];
@@ -152,7 +152,6 @@ export abstract class FirestoreStorage<T extends DataModel> {
 
   pureUpdate(key: string, data: UpdateData<T>): Observable<void> {
     return this.zone.runOutsideAngular(() => {
-      this.pendingChangesService.addPendingChange(`update ${this.getBaseUri()}/${key}`);
       return from(updateDoc(this.docRef(key), data)).pipe(
         catchError(error => {
           console.error(`UPDATE ${this.getBaseUri()}/${key}`);
@@ -161,7 +160,6 @@ export abstract class FirestoreStorage<T extends DataModel> {
         }),
         tap(() => {
           this.recordOperation('write', key);
-          this.pendingChangesService.removePendingChange(`update ${this.getBaseUri()}/${key}`);
         })
       );
     });
@@ -295,6 +293,26 @@ export abstract class FirestoreStorage<T extends DataModel> {
     });
     clone.appVersion = environment.version;
     return clone;
+  }
+
+  protected deepFreeze<T extends object>(object: T): T {
+    // Retrieve the property names defined on object
+    const propNames = Reflect.ownKeys(object);
+
+    // Freeze properties before freezing self
+    for (const name of propNames) {
+      const value = object[name];
+
+      if ((value && typeof value === 'object') || typeof value === 'function') {
+        this.deepFreeze(value);
+      }
+    }
+
+    return Object.freeze(object);
+  }
+
+  public newId(): string {
+    return doc(collection(this.firestore, this.getBaseUri())).id;
   }
 
   protected beforeDeserialization(data: Partial<T>): T {

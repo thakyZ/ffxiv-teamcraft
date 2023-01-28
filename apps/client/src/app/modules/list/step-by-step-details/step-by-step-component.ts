@@ -1,7 +1,7 @@
 import { TeamcraftComponent } from '../../../core/component/teamcraft-component';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { StepByStepDisplayData } from './step-by-step-display-data';
-import { filter, startWith, switchMap, tap } from 'rxjs/operators';
+import { filter, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { getItemSource } from '../model/list-row';
 import { NodeTypeIconPipe } from '../../../pipes/pipes/node-type-icon.pipe';
 import { MapMarker } from '../../map/map-marker';
@@ -63,7 +63,8 @@ export abstract class StepByStepComponent extends TeamcraftComponent implements 
       map(([display, housingMap, maps]) => {
         return new StepByStepList(display, housingMap, maps);
       }),
-      tap((list) => this.onNewStepByStep(list))
+      tap((list) => this.onNewStepByStep(list)),
+      shareReplay(1)
     );
 
     this.currentMapDisplay$ = combineLatest([this.stepByStep$, this.getMapId()]).pipe(
@@ -113,7 +114,11 @@ export abstract class StepByStepComponent extends TeamcraftComponent implements 
                 itemId: row.row.id,
                 type: row.type,
                 listRow: row.row,
-                icon: row.icon
+                icon: row.icon,
+                additionalStyle: {
+                  width: '24px',
+                  height: '24px'
+                }
               };
             });
         }).flat().filter(Boolean);
@@ -157,8 +162,8 @@ export abstract class StepByStepComponent extends TeamcraftComponent implements 
                               iconType: 'img',
                               iconImg: row.icon,
                               additionalStyle: {
-                                width: '32px',
-                                height: '32px'
+                                width: '24px',
+                                height: '24px'
                               }
                             } as MapMarker;
                           });

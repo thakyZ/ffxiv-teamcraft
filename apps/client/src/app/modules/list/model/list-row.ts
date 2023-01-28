@@ -18,7 +18,7 @@ import { LazyDataI18nKey } from '../../../lazy-data/lazy-data-types';
 import { IslandAnimal } from './island-animal';
 import { IslandCrop } from './island-crop';
 import { TripleTriadDuel } from '../../../pages/db/model/attt/triple-triad-duel';
-import { cloneDeep } from 'lodash';
+import structuredClone from '@ungap/structured-clone';
 
 export function isListRow(obj: any): obj is ListRow {
   return typeof obj === 'object'
@@ -68,7 +68,7 @@ export class ListRow extends DataModel {
   /**
    * Manual flag for an item required as HQ
    */
-  requiredAsHQ?: boolean;
+  forceRequiredHQ?: boolean;
 
   hidden?: boolean;
 
@@ -83,6 +83,8 @@ export class ListRow extends DataModel {
   craftableAmount?: number;
 
   finalItem?: boolean;
+
+  requiredHQ?: number;
 }
 
 export function getItemSource(item: ListRow, type: DataType.CRAFTED_BY, isObject?: boolean): CraftedBy[]
@@ -115,7 +117,7 @@ export function getItemSource<T = any>(item: ListRow, type: DataType, isObject =
       return isObject ? {} : [] as any;
     }
   } else {
-    return cloneDeep(source.data);
+    return structuredClone(source.data);
   }
 }
 

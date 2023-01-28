@@ -24,6 +24,7 @@ export class PacketCapture {
     'effectResult',
     'eventFinish',
     'eventPlay',
+    'eventPlay64',
     'eventPlay32',
     'eventPlay4',
     'eventPlay8',
@@ -74,6 +75,7 @@ export class PacketCapture {
     'eventStart',
     'eventFinish',
     'eventPlay4',
+    'eventPlay64',
     'systemLogMessage',
     'npcSpawn',
     'objectSpawn'
@@ -96,6 +98,7 @@ export class PacketCapture {
   }
 
   start(): void {
+    this.tries++;
     if (this.store.get('rawsock', false)) {
       this.startMachina();
     } else {
@@ -122,6 +125,7 @@ export class PacketCapture {
     if (this.captureInterface) {
       this.captureInterface.stop();
     }
+    this.mainWindow.win.webContents.send('pcap:status', 'stopped');
   }
 
   addMachinaFirewallRule(): void {
@@ -182,6 +186,8 @@ export class PacketCapture {
     const region = this.store.get('region', 'Global');
     const rawsock = this.store.get('rawsock', false);
 
+    this.mainWindow.win.webContents.send('pcap:status', 'starting');
+
     if (rawsock) {
       const elevated = await isElevated();
       if (!elevated) {
@@ -235,22 +241,25 @@ export class PacketCapture {
     this.captureInterface = new CaptureInterface(options);
     this.captureInterface.start()
       .then(() => {
+        this.mainWindow.win.webContents.send('pcap:status', 'running');
         log.info('Packet capture started');
       })
       .catch((err) => {
+        this.mainWindow.win.webContents.send('pcap:status', 'error');
         log.error(`Couldn't start packet capture`);
         log.error(err);
         if (err.message === `Cannot call write after a stream was destroyed`) {
           this.mainWindow.win.webContents.send('machina:error', {
             message: 'Wrapper_failed_to_start',
-            retryDelay: 120
+            retryDelay: 60
           });
         }
         if (this.tries < 3) {
           this.startTimeout = setTimeout(() => {
-            this.tries++;
             this.start();
-          }, 120000);
+          }, 60000);
+        } else {
+          this.stop();
         }
       });
     this.captureInterface.on('error', err => {

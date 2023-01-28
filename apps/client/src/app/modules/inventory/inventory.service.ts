@@ -37,6 +37,7 @@ import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { LodestoneIdEntry } from '../../model/user/lodestone-id-entry';
 import { PlatformService } from '../../core/tools/platform.service';
 import { toIpcData } from '../../core/rxjs/to-ipc-data';
+import { InventoryCaptureStatus } from './inventory-capture-status';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +95,8 @@ export class InventoryService {
 
   private resetInventory$ = new Subject<{ type: 'Reset' }>();
 
+  public status$ = new BehaviorSubject<InventoryCaptureStatus>(InventoryCaptureStatus.RUNNING);
+
   constructor(private ipc: IpcService, private authFacade: AuthFacade,
               private translate: TranslateService, private retainersService: RetainersService,
               private serializer: NgSerializerService, private http: HttpClient,
@@ -120,7 +123,7 @@ export class InventoryService {
     const updateInventorySlotMessages$ = this.ipc.packets$.pipe(ofMessageType('updateInventorySlot'));
     const itemMarketBoardInfoMessages$ = this.ipc.packets$.pipe(ofMessageType('itemMarketBoardInfo'));
     const clientTriggerMbPriceMessages$ = this.ipc.packets$.pipe(ofMessageType('clientTrigger'), filter(m => m.parsedIpcData.commandId === 400));
-    const islandSanctuaryInventoryPackets$ = this.ipc.packets$.pipe(
+    const actorControlSelfInventory$ = this.ipc.packets$.pipe(
       ofMessageType('actorControlSelf'),
       toIpcData(),
       filter(p => p.category === 378)
@@ -180,7 +183,8 @@ export class InventoryService {
             map(retainer => ({ type: 'RetainerSpawn', retainer: retainer }))
           );
 
-          const islandPackets$: Observable<{ type: 'IslandInventoryPacket', itemId: number, quantity: number }> = islandSanctuaryInventoryPackets$.pipe(
+          const islandPackets$: Observable<{ type: 'IslandInventoryPacket', itemId: number, quantity: number }> = actorControlSelfInventory$.pipe(
+            filter(p => p.param1 === 255),
             map(p => {
               return {
                 type: 'IslandInventoryPacket',
@@ -190,13 +194,25 @@ export class InventoryService {
             })
           );
 
+          const actorControlTokenPackets$: Observable<{ type: 'ActorControlTokenPacket', itemId: number, quantity: number }> = actorControlSelfInventory$.pipe(
+            filter(p => p.param1 !== 255),
+            map(p => {
+              return {
+                type: 'ActorControlTokenPacket',
+                itemId: p.param2,
+                quantity: p.param4
+              };
+            })
+          );
+
           const customActions$ = merge(this.contentId$, this.setInventory$, this.resetInventory$, retainerActions$);
-          return merge(packetActions$, customActions$, packetActions2$, islandPackets$).pipe(
+          return merge(packetActions$, customActions$, packetActions2$, islandPackets$, actorControlTokenPackets$).pipe(
             scan((state: InventoryState, action) => {
               if (!action) {
                 return state;
               }
               if (action.type !== 'SetContentId' && !state.inventory.contentId) {
+                this.status$.next(InventoryCaptureStatus.UNKNOWN_CHAR);
                 return state;
               }
               if (!state.inventory) {
@@ -204,6 +220,8 @@ export class InventoryService {
               }
               try {
                 switch (action.type) {
+                  case 'ActorControlTokenPacket':
+                    return { ...state, inventory: this.handleActorControlTokenPacket(state.inventory, action) };
                   case 'IslandInventoryPacket':
                     return { ...state, inventory: this.handleIslandPacket(state.inventory, action) };
                   case 'SetContentId':
@@ -286,6 +304,7 @@ export class InventoryService {
                 }
               } catch (e) {
                 console.error('INVENTORY Error:', e);
+                this.status$.next(InventoryCaptureStatus.ERROR);
                 return state;
               }
             }, {
@@ -297,6 +316,11 @@ export class InventoryService {
               retainer: ''
             }),
             map(state => state.inventory),
+            tap(inventory => {
+              if (inventory.contentId && inventory.items[inventory.contentId]) {
+                this.status$.next(InventoryCaptureStatus.RUNNING);
+              }
+            }),
             startWith(baseInventoryState)
           );
         }),
@@ -460,6 +484,7 @@ export class InventoryService {
 
   public setContentId(contentId: string | null): void {
     if (this.settings.ignoredContentIds.includes(contentId)) {
+      this.status$.next(InventoryCaptureStatus.IGNORED_CHAR);
       return;
     }
     this.authFacade.user$.pipe(
@@ -544,6 +569,14 @@ export class InventoryService {
       });
     }
     inventory.resetSearchCache();
+    return inventory;
+  }
+
+  private handleActorControlTokenPacket(inventory: UserInventory, action: { type: 'ActorControlTokenPacket', itemId: number, quantity: number }): UserInventory {
+    // TODO handle currencies in their own inventory, for now just skip it.
+    if ((window as any).debugToken) {
+      console.log(action);
+    }
     return inventory;
   }
 
