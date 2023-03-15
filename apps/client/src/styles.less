@@ -31,16 +31,28 @@ Flex tooling
   align-items: center;
 }
 
+.align-start {
+  align-items: flex-start;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
 .justify-center {
   justify-content: center;
 }
 
-.space-between {
-  justify-content: space-between;
+.justify-start {
+  justify-content: flex-start;
 }
 
 .justify-end {
-  justify-content: end;
+  justify-content: flex-end;
+}
+
+.space-between {
+  justify-content: space-between;
 }
 
 .flex-auto {
@@ -59,6 +71,14 @@ Flex tooling
   &-10 {
     gap: 10px;
   }
+
+  &-20 {
+    gap: 20px;
+  }
+}
+
+.hidden {
+  display: none;
 }
 
 /**

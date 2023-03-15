@@ -3,7 +3,7 @@ import { DataModel } from '../data-model';
 import { NgSerializerService } from '@kaiu/ng-serializer';
 import { NgZone } from '@angular/core';
 import { PendingChangesService } from '../../pending-changes/pending-changes.service';
-import { catchError, distinctUntilChanged, filter, finalize, map, retry, shareReplay, takeUntil, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, finalize, map, retry, shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 import {
   addDoc,
@@ -40,6 +40,8 @@ export abstract class FirestoreStorage<T extends DataModel> {
 
   protected skipClone = false;
 
+  protected regenerateCollectionRef = false;
+
   protected converter: FirestoreDataConverter<T> = {
     toFirestore: (modelObject: WithFieldValue<T>): DocumentData => {
       const workingCopy: Partial<WithFieldValue<T>> = (this.skipClone ? modelObject : { ...modelObject }) as Partial<WithFieldValue<T>>;
@@ -61,7 +63,15 @@ export abstract class FirestoreStorage<T extends DataModel> {
 
   protected stop$: Subject<string> = new Subject<string>();
 
-  protected readonly collection: CollectionReference<T> = collection(this.firestore, this.getBaseUri()).withConverter(this.converter);
+  private _collection: CollectionReference<T>;
+
+  protected get collection() {
+    if (!this._collection || this.regenerateCollectionRef) {
+      this.regenerateCollectionRef = false;
+      this._collection = collection(this.firestore, this.getBaseUri()).withConverter(this.converter);
+    }
+    return this._collection;
+  }
 
   protected constructor(protected firestore: Firestore, protected serializer: NgSerializerService, protected zone: NgZone,
                         protected pendingChangesService: PendingChangesService) {
@@ -85,6 +95,10 @@ export abstract class FirestoreStorage<T extends DataModel> {
       });
       console.groupEnd();
     };
+  }
+
+  public clearCache(): void {
+    this.cache = {};
   }
 
   public docRef(key: string): DocumentReference<T> {
@@ -293,22 +307,6 @@ export abstract class FirestoreStorage<T extends DataModel> {
     });
     clone.appVersion = environment.version;
     return clone;
-  }
-
-  protected deepFreeze<T extends object>(object: T): T {
-    // Retrieve the property names defined on object
-    const propNames = Reflect.ownKeys(object);
-
-    // Freeze properties before freezing self
-    for (const name of propNames) {
-      const value = object[name];
-
-      if ((value && typeof value === 'object') || typeof value === 'function') {
-        this.deepFreeze(value);
-      }
-    }
-
-    return Object.freeze(object);
   }
 
   public newId(): string {

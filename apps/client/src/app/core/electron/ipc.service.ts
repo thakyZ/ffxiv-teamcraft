@@ -2,9 +2,9 @@ import { Injectable, NgZone } from '@angular/core';
 import { PlatformService } from '../tools/platform.service';
 import { IpcRendererEvent } from 'electron';
 import { Router } from '@angular/router';
-import { Vector2 } from '../tools/vector2';
+import { Vector2 } from '@ffxiv-teamcraft/types';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { bufferCount, debounceTime, distinctUntilChanged, filter, first, map, shareReplay, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, first, map, switchMap } from 'rxjs/operators';
 import { ofMessageType } from '../rxjs/of-message-type';
 import { Store } from '@ngrx/store';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -50,20 +50,11 @@ export class IpcService {
 
   public packets$ = new Subject<Message>();
 
-  public machinaToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public pcapToggle$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   public fishingState$: ReplaySubject<any> = new ReplaySubject<any>();
 
   public mainWindowState$: ReplaySubject<any> = new ReplaySubject<any>();
-
-  public possibleMissingFirewallRule$ = this.packets$.pipe(
-    bufferCount(100),
-    first(),
-    map(packets => {
-      return packets.every(packet => packet.header.operation === 'send');
-    }),
-    shareReplay({ bufferSize: 1, refCount: true })
-  );
 
   private readonly _ipc: IPC | undefined = undefined;
 
@@ -91,6 +82,10 @@ export class IpcService {
 
   public get ready(): boolean {
     return this._ipc !== undefined;
+  }
+
+  public get available(): boolean {
+    return this.platformService.isDesktop();
   }
 
   public get itemInfoPackets$() {
@@ -140,7 +135,7 @@ export class IpcService {
     );
   }
 
-  public get freeCompanyDetails(): Observable<FreeCompanyDialog> {
+  public get freeCompanyDetails$(): Observable<FreeCompanyDialog> {
     return this.packets$.pipe(
       ofMessageType('freeCompanyDialog'),
       toIpcData()
@@ -308,8 +303,8 @@ export class IpcService {
     );
   }
 
-  public get machinaToggle(): boolean {
-    return this.machinaToggle$.value;
+  public get pcapToggle(): boolean {
+    return this.pcapToggle$.value;
   }
 
   private _overlayUri: string;
@@ -364,18 +359,27 @@ export class IpcService {
       const durationSeconds = (Date.now() - this.start) / 1000;
       console.log('Packets per second: ', Math.floor(this.totalPacketsHandled * 10 / durationSeconds) / 10);
     };
-    this.on('toggle-machina:value', (event, value) => {
-      this.machinaToggle$.next(value);
+    this.on('toggle-pcap:value', (event, value) => {
+      this.pcapToggle$.next(value);
     });
-    this.send('toggle-machina:get');
+    this.send('toggle-pcap:get');
     this.on('packet', (event, message: Message) => {
       this.handleMessage(message);
     });
-    this.on('machina:error', (event, error: { message: string, retryDelay: number }) => {
-      this.handleMachinaError(error);
+    this.on('pcap:error', (event, error: { message: string }) => {
+      this.handlePcapError(error);
     });
-    this.on('machina:error:raw', (event, error: { message: string, retryDelay: number }) => {
+    this.on('pcap:error:raw', (event, error: { message: string, code?: string, retryDelay: number }) => {
       console.log(error.message);
+      if (error.code === 'DEUCALION_NOT_FOUND') {
+        this.notification.error(
+          this.translate.instant(`PCAP_ERRORS.Default`),
+          this.translate.instant(`PCAP_ERRORS.DEUCALION_NOT_FOUND`),
+          {
+            nzDuration: 60000
+          }
+        );
+      }
     });
     this.on('metrics:importing', () => {
       this.message.info(this.translate.instant('METRICS.Importing'), {
@@ -424,8 +428,8 @@ export class IpcService {
               this.send('install-npcap', false);
               break;
             case 'disable':
-              this.send('toggle-machina', false);
-              this.machinaToggle$.next(false);
+              this.send('toggle-pcap', false);
+              this.pcapToggle$.next(false);
               break;
           }
         });
@@ -467,35 +471,13 @@ export class IpcService {
               this.send('rawsock', false);
               break;
             case 'disable':
-              this.send('toggle-machina', false);
-              this.machinaToggle$.next(false);
+              this.send('toggle-pcap', false);
+              this.pcapToggle$.next(false);
               break;
           }
         });
     });
     this.on('pcap:status', (e, status) => this.pcapStatus$.next(status));
-    // If we don't get a packet for an entire minute, something is wrong.
-    this.packets$.pipe(
-      debounceTime(60000)
-    ).subscribe(() => {
-      this.pcapStatus$.next(PacketCaptureStatus.WARNING);
-      this.send('log', {
-        level: 'error',
-        data: 'No ping received from the server during 60 seconds'
-      });
-    });
-    // If we don't get a packet for 5 minutes, attempt to restart pcap entirely.
-    this.packets$.pipe(
-      debounceTime(300000)
-    ).subscribe(() => {
-      this.pcapStatus$.next(PacketCaptureStatus.WARNING);
-      this.send('log', {
-        level: 'error',
-        data: 'No ping received from the server during 300 seconds, restarting pcap'
-      });
-      this.send('toggle-machina', false);
-      this.send('toggle-machina', true);
-    });
     this.handleOverlayChange();
   }
 
@@ -540,21 +522,21 @@ export class IpcService {
     }
   }
 
-  private handleMachinaError(error: { message: string; retryDelay: number }, raw = false): void {
+  private handlePcapError(error: { message: string }, raw = false): void {
     if (raw) {
       this.notification.error(
-        this.translate.instant(`MACHINA_ERRORS.Default`),
+        this.translate.instant(`PCAP_ERRORS.Default`),
         error.message,
         {
-          nzDuration: 60000
+          nzDuration: 20000
         }
       );
     } else {
       this.notification.error(
-        this.translate.instant(`MACHINA_ERRORS.${error.message}`),
-        this.translate.instant(`MACHINA_ERRORS.DESCRIPTION.${error.message}`, { retryDelay: error.retryDelay }),
+        this.translate.instant(`PCAP_ERRORS.${error.message}`),
+        this.translate.instant(`PCAP_ERRORS.DESCRIPTION.${error.message}`),
         {
-          nzDuration: error.retryDelay * 1000
+          nzDuration: 20000
         }
       );
     }

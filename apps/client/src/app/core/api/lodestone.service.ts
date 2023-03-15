@@ -52,7 +52,6 @@ export class LodestoneService {
 
   public getCharacterFromLodestoneApi(id: number, columns?: string[]): Observable<Partial<CharacterResponse>> {
     return this.ngZone.runOutsideAngular(() => {
-
       let params = new HttpParams();
       if (columns) {
         params = params.set('columns', columns.join(','));
@@ -130,10 +129,11 @@ export class LodestoneService {
           if (!user.defaultLodestoneId && !user.lodestoneIds[0]) {
             return of(null);
           }
-          return this.getCharacter(user.defaultLodestoneId || user.lodestoneIds[0].id).pipe(
+          const lodestoneId = user.defaultLodestoneId || user.lodestoneIds[0].id;
+          return this.getCharacter(lodestoneId).pipe(
             map(response => ({
               character: response.Character,
-              verified: user.lodestoneIds.find(entry => entry.id === user.defaultLodestoneId).verified
+              verified: user.lodestoneIds.find(entry => entry.id === lodestoneId)?.verified || false
             }))
           );
         }),

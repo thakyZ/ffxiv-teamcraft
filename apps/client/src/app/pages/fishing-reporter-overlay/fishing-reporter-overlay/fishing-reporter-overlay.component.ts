@@ -4,7 +4,7 @@ import { combineLatest, interval, Observable, ReplaySubject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 import { FishingReporterState } from '../../../core/data-reporting/state/fishing-reporter-state';
-import { LazyFishingSpot } from '../../../lazy-data/model/lazy-fishing-spot';
+import { LazyFishingSpot } from '@ffxiv-teamcraft/data/model/lazy-fishing-spot';
 
 @Component({
   selector: 'app-fishing-reporter-overlay',
@@ -43,6 +43,10 @@ export class FishingReporterOverlayComponent {
 
   openSpotInMainWindow(spot: LazyFishingSpot): void {
     this.ipc.send('overlay:open-page', `/db/${this.translate.currentLang}/fishing-spot/${spot.id}`);
+  }
+
+  openTrainInMainWindow(trainId: string): void {
+    this.ipc.send('overlay:open-page', `/fish-train/${trainId}`);
   }
 
   getErrors(state: FishingReporterState): string[] {

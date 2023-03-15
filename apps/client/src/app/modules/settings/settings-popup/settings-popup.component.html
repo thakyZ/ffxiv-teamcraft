@@ -423,14 +423,15 @@
           </div>
         </ng-template>
         <div *ngIf="user.patron || user.admin" fxLayout="column" fxLayoutGap="5px">
-          <nz-input-group>
+          <nz-form-item>
             <nz-form-label>{{'SETTINGS.Nickname' | translate}}</nz-form-label>
-            <nz-form-control [nzValidateStatus]="nicknameAvailable === false ? 'error' : null" [nzExtra]="'SETTINGS.Nickname_used' | translate">
+            <nz-form-control [nzValidateStatus]="nicknameAvailable === false ? 'error' : null" nzHasFeedback
+                             [nzErrorTip]="'SETTINGS.Nickname_used' | translate">
               <input #nickname (ngModelChange)="nicknameAvailable = undefined" [ngModel]="user.nickname" nz-input
                      placeholder="Nickname"
                      type="text">
             </nz-form-control>
-          </nz-input-group>
+          </nz-form-item>
           <button (click)="checkNicknameAvailability(nickname.value)"
                   *ngIf="!nicknameAvailable && nickname.value !== user.nickname" nz-button
                   nzBlock>Verify
@@ -477,6 +478,7 @@
 
     <ng-container *ngTemplateOutlet="notificationEditor; context:{$implicit: 'alarm', title:'SETTINGS.NOTIFICATIONS.Alarms'}"></ng-container>
     <ng-container *ngTemplateOutlet="notificationEditor; context:{$implicit: 'reset_timer', title:'SETTINGS.NOTIFICATIONS.Reset_timer'}"></ng-container>
+    <ng-container *ngTemplateOutlet="notificationEditor; context:{$implicit: 'fish_train', title:'SETTINGS.NOTIFICATIONS.Fish_train'}"></ng-container>
     <ng-container *ngIf="platform.isDesktop()">
       <ng-container *ngTemplateOutlet="notificationEditor; context:{$implicit: 'autofill', title:'SETTINGS.NOTIFICATIONS.Autofill_completion'}"></ng-container>
       <ng-container *ngTemplateOutlet="notificationEditor; context:{$implicit: 'retainer', title:'SETTINGS.NOTIFICATIONS.Retainer_tracker'}"></ng-container>
@@ -576,7 +578,7 @@
       <nz-card>
         <div fxLayout="column">
           <div>
-            <label [(ngModel)]="machinaToggle" (ngModelChange)="machinaToggleChange($event)" nz-checkbox>
+            <label [(ngModel)]="pcapToggle" (ngModelChange)="pcapToggleChange($event)" nz-checkbox>
               {{'SETTINGS.Enable_packet_capture' | translate}}
             </label>
           </div>
@@ -584,35 +586,27 @@
             <i>{{'SETTINGS.Packet_capture_info' | translate}}</i>
           </div>
           <div>
-            <label [(ngModel)]="rawsock" (ngModelChange)="rawsockChange($event)" [nzDisabled]="!machinaToggle" nz-checkbox>
-              {{'SETTINGS.Rawsock_flag' | translate}}
-            </label>
-          </div>
-          <div>
-            <i>{{'SETTINGS.Rawsock_details' | translate}}</i>
-          </div>
-          <div>
-            <label [(ngModel)]="settings.enableUniversalisSourcing" [nzDisabled]="!machinaToggle" nz-checkbox>
+            <label [(ngModel)]="settings.enableUniversalisSourcing" [nzDisabled]="!pcapToggle" nz-checkbox>
               {{'SETTINGS.Contribute_to_universalis' | translate}}
             </label>
           </div>
           <div>
-            <label [(ngModel)]="settings.pcapLogEnabled" [nzDisabled]="!machinaToggle" nz-checkbox>
+            <label [(ngModel)]="settings.pcapLogEnabled" [nzDisabled]="!pcapToggle" nz-checkbox>
               {{'SETTINGS.Enable_auto_log_check' | translate}}
             </label>
           </div>
           <div>
-            <label [(ngModel)]="settings.localFishingDataDump" [nzDisabled]="!machinaToggle" nz-checkbox>
+            <label [(ngModel)]="settings.localFishingDataDump" [nzDisabled]="!pcapToggle" nz-checkbox>
               {{'SETTINGS.Enable_local_fishing_dump' | translate}}
             </label>
           </div>
           <div>
-            <label [(ngModel)]="settings.autoUpdateStats" [nzDisabled]="!machinaToggle" nz-checkbox>
+            <label [(ngModel)]="settings.autoUpdateStats" [nzDisabled]="!pcapToggle" nz-checkbox>
               {{'SETTINGS.Enable_auto_stats_updating' | translate}}
             </label>
           </div>
           <div>
-            <label [(ngModel)]="settings.playerMetricsEnabled" [nzDisabled]="!machinaToggle" nz-checkbox>
+            <label [(ngModel)]="settings.playerMetricsEnabled" [nzDisabled]="!pcapToggle" nz-checkbox>
               {{'SETTINGS.Enable_metrics_capture' | translate}}
             </label>
             <i>{{'SETTINGS.Enable_metrics_capture_explain' | translate}}</i>
@@ -624,17 +618,17 @@
         <nz-divider nzOrientation="left" [nzText]="'SETTINGS.CATEGORIES.Character_tracking' | translate"></nz-divider>
       </div>
       <div>
-        <label [(ngModel)]="settings.followIngameCharacterSwitches" [nzDisabled]="!machinaToggle" nz-checkbox>
+        <label [(ngModel)]="settings.followIngameCharacterSwitches" [nzDisabled]="!pcapToggle" nz-checkbox>
           {{'SETTINGS.Switch_tc_when_switch_ingame_character' | translate}}
         </label>
       </div>
       <div>
-        <label [(ngModel)]="settings.showOthercharacterInventoriesInList" [nzDisabled]="!machinaToggle" nz-checkbox>
+        <label [(ngModel)]="settings.showOthercharacterInventoriesInList" [nzDisabled]="!pcapToggle" nz-checkbox>
           {{'SETTINGS.Show_other_characters_inventories_in_list' | translate}}
         </label>
       </div>
       <div>
-        <label [(ngModel)]="settings.showOthercharacterInventoriesInInventoryPage" [nzDisabled]="!machinaToggle" nz-checkbox>
+        <label [(ngModel)]="settings.showOthercharacterInventoriesInInventoryPage" [nzDisabled]="!pcapToggle" nz-checkbox>
           {{'SETTINGS.Show_other_characters_inventories_in_inventory_page' | translate}}
         </label>
       </div>
@@ -651,32 +645,32 @@
         <nz-divider nzOrientation="left" [nzText]="'SETTINGS.CATEGORIES.Inventory_tracking' | translate"></nz-divider>
       </div>
       <div>
-        <label [(ngModel)]="settings.clearInventoryOnStartup" [nzDisabled]="!machinaToggle" nz-checkbox>
+        <label [(ngModel)]="settings.clearInventoryOnStartup" [nzDisabled]="!pcapToggle" nz-checkbox>
           {{'SETTINGS.Clear_inventory_on_startup' | translate}}
         </label>
       </div>
       <div>
-        <label [(ngModel)]="settings.enableAutofillByDefault" [nzDisabled]="!machinaToggle" nz-checkbox>
+        <label [(ngModel)]="settings.enableAutofillByDefault" [nzDisabled]="!pcapToggle" nz-checkbox>
           {{'SETTINGS.Enable_autofill_by_default' | translate}}
         </label>
       </div>
       <div>
-        <label [(ngModel)]="settings.enableAutofillNotificationByDefault" [nzDisabled]="!machinaToggle" nz-checkbox>
+        <label [(ngModel)]="settings.enableAutofillNotificationByDefault" [nzDisabled]="!pcapToggle" nz-checkbox>
           {{'SETTINGS.Enable_autofill_notification_by_default' | translate}}
         </label>
       </div>
       <div>
-        <label [(ngModel)]="settings.enableAutofillHQFilter" [nzDisabled]="!machinaToggle" nz-checkbox>
+        <label [(ngModel)]="settings.enableAutofillHQFilter" [nzDisabled]="!pcapToggle" nz-checkbox>
           {{'SETTINGS.Enable_autofill_hq_filter' | translate}}
         </label>
       </div>
       <div>
-        <label [(ngModel)]="settings.enableAutofillNQFilter" [nzDisabled]="!machinaToggle" nz-checkbox>
+        <label [(ngModel)]="settings.enableAutofillNQFilter" [nzDisabled]="!pcapToggle" nz-checkbox>
           {{'SETTINGS.Enable_autofill_nq_filter' | translate}}
         </label>
       </div>
 
-      <nz-form-item nzFlex *ngIf="machinaToggle" fxLayoutAlign="flex-start center">
+      <nz-form-item nzFlex *ngIf="pcapToggle" fxLayoutAlign="flex-start center">
         <nz-form-label nzFor="ignored-inventories">{{'SETTINGS.Char_data_folder' | translate}}</nz-form-label>
         <nz-form-control>
           <nz-input-group [nzAddOnBefore]="watchFilesPath">

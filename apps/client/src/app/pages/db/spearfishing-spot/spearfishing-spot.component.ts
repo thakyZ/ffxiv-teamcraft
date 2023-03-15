@@ -9,8 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { SeoService } from '../../../core/seo/seo.service';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { SeoMetaConfig } from '../../../core/seo/seo-meta-config';
-import { I18nName } from '../../../model/common/i18n-name';
-import { Alarm } from '../../../core/alarms/alarm';
+import { I18nName } from '@ffxiv-teamcraft/types';
+import { PersistedAlarm } from '../../../core/alarms/persisted-alarm';
 import { AlarmGroup } from '../../../core/alarms/alarm-group';
 import { AlarmsFacade } from '../../../core/alarms/+state/alarms.facade';
 import { MapService } from '../../../modules/map/map.service';
@@ -18,8 +18,8 @@ import { SettingsService } from '../../../modules/settings/settings.service';
 import { GatheringNodesService } from '../../../core/data/gathering-nodes.service';
 import { LazyDataFacade } from '../../../lazy-data/+state/lazy-data.facade';
 import { safeCombineLatest } from '../../../core/rxjs/safe-combine-latest';
-import { Region } from '../../../modules/settings/region.enum';
-import { LazyData } from '../../../lazy-data/lazy-data';
+import { Region } from '@ffxiv-teamcraft/types';
+import { LazyData } from '@ffxiv-teamcraft/data/model/lazy-data';
 
 @Component({
   selector: 'app-spearfishing-spot',
@@ -37,7 +37,7 @@ export class SpearfishingSpotComponent extends TeamcraftPageComponent {
 
   alarmsLoaded$: Observable<boolean> = this.alarmsFacade.loaded$;
 
-  alarms$: Observable<Alarm[]> = this.alarmsFacade.allAlarms$;
+  alarms$: Observable<PersistedAlarm[]> = this.alarmsFacade.allAlarms$;
 
   alarmGroups$: Observable<AlarmGroup[]> = this.alarmsFacade.allGroups$;
 
@@ -161,7 +161,7 @@ export class SpearfishingSpotComponent extends TeamcraftPageComponent {
     }, { en: '', fr: '', de: '', ja: '' });
   }
 
-  public canCreateAlarm(generatedAlarm: Partial<Alarm>): Observable<boolean> {
+  public canCreateAlarm(generatedAlarm: Partial<PersistedAlarm>): Observable<boolean> {
     return this.alarms$.pipe(
       map(alarms => {
         return !alarms.some(alarm => {
@@ -172,7 +172,7 @@ export class SpearfishingSpotComponent extends TeamcraftPageComponent {
     );
   }
 
-  public addAlarm(alarm: Alarm, group?: AlarmGroup): void {
+  public addAlarm(alarm: PersistedAlarm, group?: AlarmGroup): void {
     this.alarmsFacade.addAlarmInGroup(alarm, group);
   }
 

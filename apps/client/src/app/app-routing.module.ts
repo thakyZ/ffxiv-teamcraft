@@ -256,15 +256,12 @@ const routes: Routes = [
     loadChildren: () => import('./pages/profits-helper/profits-helper.module').then(m => m.ProfitsHelperModule)
   },
   {
-    path: 'extractor',
-    loadChildren: () => import('./pages/extractor/extractor.module').then(m => m.ExtractorModule),
-    canLoad: [DevGuard]
-  },
-  {
     path: 'admin',
     loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule),
     canLoad: [ModeratorGuard]
-  }
+  },
+  { path: 'fish-train', loadChildren: () => import('./pages/fish-train/fish-train-page.module').then(m => m.FishTrainPageModule) },
+  { path: 'fish-trains', loadChildren: () => import('./pages/fish-trains/fish-trains.module').then(m => m.FishTrainsModule) }
 ];
 
 @NgModule({

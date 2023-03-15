@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BaseParam } from './base-param';
+import { BaseParam } from '@ffxiv-teamcraft/types';
 import { EquipmentPiece } from '../../model/gearset/equipment-piece';
 import { TeamcraftGearset } from '../../model/gearset/teamcraft-gearset';
 import { MateriaService } from './materia.service';
@@ -8,9 +8,9 @@ import { combineLatest, EMPTY, Observable, of } from 'rxjs';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { expand, last, map, shareReplay, switchMap } from 'rxjs/operators';
 import { safeCombineLatest } from '../../core/rxjs/safe-combine-latest';
-import { LazyItemStat } from '../../lazy-data/model/lazy-item-stat';
-import { LazyItemSetBonus } from '../../lazy-data/model/lazy-item-set-bonus';
-import { LazyMateria } from '../../lazy-data/model/lazy-materia';
+import { LazyItemStat } from '@ffxiv-teamcraft/data/model/lazy-item-stat';
+import { LazyItemSetBonus } from '@ffxiv-teamcraft/data/model/lazy-item-set-bonus';
+import { LazyMateria } from '@ffxiv-teamcraft/data/model/lazy-materia';
 import { Memoized } from '../../core/decorators/memoized';
 
 @Injectable({
@@ -172,6 +172,9 @@ export class StatsService {
   }
 
   public getStats(set: TeamcraftGearset, level: number, tribe: number, food?: any): Observable<{ id: number, value: number }[]> {
+    if (!set.mainHand) {
+      return of([]);
+    }
     return safeCombineLatest(this.getRelevantBaseStats(set.job).map(stat => {
       return this.getBaseValue(stat, set.job, level, tribe).pipe(
         map(value => {
@@ -571,12 +574,15 @@ export class StatsService {
    */
 
   public getAvgIlvl(set: TeamcraftGearset): Observable<number> {
+    if (!set.mainHand) {
+      return of(0);
+    }
     return this.lazyData.getEntry('ilvls').pipe(
       map(ilvls => {
         const withoutOffHand = ['mainHand', 'head', 'earRings', 'chest', 'necklace', 'gloves', 'bracelet', 'belt', 'ring1', 'legs', 'ring2', 'feet']
           .filter(key => set[key])
           .reduce((acc, row) => {
-            return acc + ilvls[set[row].itemId];
+            return acc + (set[row] ? ilvls[set[row].itemId] : 0);
           }, 0);
 
         if (set.offHand) {

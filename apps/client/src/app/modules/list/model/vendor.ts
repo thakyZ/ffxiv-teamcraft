@@ -1,5 +1,5 @@
-import { I18nName } from '../../../model/common/i18n-name';
-import { Vector2 } from '../../../core/tools/vector2';
+import { I18nName } from '@ffxiv-teamcraft/types';
+import { Vector2 } from '@ffxiv-teamcraft/types';
 
 export interface Vendor {
   npcId: number;

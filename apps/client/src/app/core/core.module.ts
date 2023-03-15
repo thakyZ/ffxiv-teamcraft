@@ -1,7 +1,6 @@
 import { ErrorHandler, ModuleWithProviders, NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { GarlandToolsService } from './api/garland-tools.service';
-import { DataService } from './api/data.service';
 import { NgSerializerModule } from '@kaiu/ng-serializer';
 import { I18nPipe } from './i18n.pipe';
 import { TranslateModule } from '@ngx-translate/core';
@@ -55,7 +54,7 @@ import { I18nRowPipe } from './i18n/i18n-row.pipe';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { NgForTrackByIdDirective } from './track-by/ng-for-track-by-id.directive';
 import { NgForTrackByKeyDirective } from './track-by/ng-for-track-by-key.directive';
-import { FathomEventDirective } from './analytics/fathom-event.directive';
+import { PirschEventDirective } from './analytics/pirsch-event.directive';
 
 
 @NgModule({
@@ -101,7 +100,6 @@ import { FathomEventDirective } from './analytics/fathom-event.directive';
   providers: [
     PendingChangesService,
     PlatformService,
-    DataService,
     MathToolsService,
     HtmlToolsService,
     LinkToolsService,
@@ -127,7 +125,7 @@ import { FathomEventDirective } from './analytics/fathom-event.directive';
     I18nRowPipe,
     NgForTrackByIdDirective,
     NgForTrackByKeyDirective,
-    FathomEventDirective
+    PirschEventDirective
   ],
   exports: [
     I18nPipe,
@@ -148,7 +146,7 @@ import { FathomEventDirective } from './analytics/fathom-event.directive';
     NzToolTipModule,
     NzIconModule,
     I18nRowPipe,
-    FathomEventDirective,
+    PirschEventDirective,
     NgForTrackByIdDirective,
     NgForTrackByKeyDirective
   ]

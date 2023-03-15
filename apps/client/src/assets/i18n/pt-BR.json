@@ -135,6 +135,9 @@
     "Search": "Search"
   },
   "COMMON": {
+    "Play": "Play",
+    "Pause": "Pause",
+    "Speed": "Speed",
     "Done": "Done",
     "Length": "Length",
     "Save": "Salvar",
@@ -199,6 +202,9 @@
     "Reload": "Reload",
     "Click_to_apply": "Click to apply",
     "Recommended": "Recommended",
+    "Visibility": "Visibility",
+    "Public": "Public",
+    "Private": "Private",
     "DAYS": {
       "Monday": "Monday",
       "Tuesday": "Tuesday",
@@ -523,6 +529,7 @@
     "Disable_hardware_acceleration": "Disable hardware acceleration",
     "Housing_map": "Housing map",
     "Housing_map_explain": "The housing map in which your house is",
+    "Reset_linked_characters_ok": "Character links have been reset",
     "COLORS": {
       "Background": "Background color",
       "Primary": "Primary color",
@@ -562,7 +569,8 @@
       "Autofill_completion": "Autofill completion",
       "Retainer_tracker": "Retainer tracker",
       "Voyage_tracker": "Voyage tracker",
-      "Reset_timer": "Reset timer"
+      "Reset_timer": "Reset timer",
+      "Fish_train": "Fish train"
     }
   },
   "PROFILE": {
@@ -788,7 +796,7 @@
       "Toggle_overlay": "Open/Close step by step overlay",
       "Empty_map": "Nothing to do in the current map, closest map for this list is {{closest}}",
       "Unknown_map": "Unknown map, please change map to allow TC to detect it.",
-      "No_list": "No list, please open a list in main window to have the overlay work as intended.",
+      "No_list": "No list selected, please open a list in main window to have the overlay work as intended.",
       "Others": "Others"
     },
     "DISPLAY_MODE": {
@@ -812,7 +820,7 @@
       "Layout_name": "Nome do layout",
       "Invalid_import": "Código de importação inválido",
       "Global_options": "Opções gerais",
-      "Default_readonly_message": "Default layout is readonly. You have to create a new layout using the + button to be able to customize it.",
+      "Default_readonly_message": "This is one of the default layouts and is read-only. Please create a new layout with the + button to customize your layout.",
       "Buttons": "Buttons",
       "Menu": "Menu",
       "Edit_row_buttons_display": "Edit row buttons display",
@@ -2690,7 +2698,9 @@
     "Task_level": "Task level",
     "Total_per_venture": "Total per venture",
     "Use_retainer": "Fill with retainer",
-    "Select_retainer": "Pick one of your retainers"
+    "Select_retainer": "Pick one of your retainers",
+    "Missing_gear": "Missing gear",
+    "Missing_gear_description": "Some of your retainers are missing their gear in TC data, please summon each retainer again to load their gear"
   },
   "PATREON": {
     "By_supporting_us": "By supporting us on Patreon, you get:",
@@ -2718,7 +2728,12 @@
   },
   "FREE_COMPANY_WORKSHOPS": {
     "Import_using_pcap": "Import using packet capture",
-    "Import_from_pcap_notice": "1. Go to your company's Workshop (make sure you enter after you opened this popup)<br>2. Open your Free Company's window<br>3. Interact with each submarine or airship using the management interface",
+    "Go_to_workshop": "Enter your workshop",
+    "Go_to_workshop_description": "If you're already in it, please exit the workshop and enter again.",
+    "Open_fc_window": "Open your Free Company details window",
+    "Open_fc_window_description": "This will make TC get more important details about your free company, such as server \":\" is the default binding for it.",
+    "Interact_with_ships_subs": "Interact with each Submarine/Airship you want to import",
+    "Interact_with_ships_subs_description": "Opening the airship/submarine management window makes TC load everything needed to display details about your ships.",
     "Airships": "Airships",
     "Submersibles": "Submersibles"
   },
@@ -3007,6 +3022,14 @@
       "Wrapper_failed_to_start": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.<br><br> Retrying in {{retryDelay}}s"
     }
   },
+  "PCAP_ERRORS": {
+    "Default": "Packet Capture error",
+    "ERR_GAME_NOT_RUNNING": "Packet capture failed to start",
+    "DESCRIPTION": {
+      "Default": "An unknown error happened while trying to start packet capture, please report in Discord's #troubleshooting channel.<br><br> Retrying in {{retryDelay}}s",
+      "ERR_GAME_NOT_RUNNING": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.<br><br> Retrying in {{retryDelay}}s"
+    }
+  },
   "ISLAND_SANCTUARY": {
     "Animal_source": "You need to gather this item from one of the following animals in your Island Sanctuary pasture",
     "Island_level": "Island level",
@@ -3087,5 +3110,71 @@
       "Main_drop": "Main drop",
       "Rare_drop": "Rare drop"
     }
+  },
+  "FISH_TRAIN": {
+    "Train": "Fishing train",
+    "Not_found": "Fish train not found",
+    "Route": "Route",
+    "Current_fish": "Current fish",
+    "Details_title": "Fish train #{{id}}",
+    "Departure": "Departure: {{time}}",
+    "Departure_in": "Departure in {{time}}",
+    "Leaving_in": "Closing in {{time}}",
+    "Terminus": "Terminus: {{time}}",
+    "Stopped": "Stopped",
+    "Running": "Running",
+    "Waiting": "Waiting",
+    "Bait": "Bait",
+    "Copy_macro": "Copy macro",
+    "Are_you_on_spot": "Are you already on the fishing spot?",
+    "Copy_move_macro": "Copy train move macro",
+    "Slap": "Slap: {{target}}",
+    "Fish_before": "Intuition Trigger Requirements: {{target}}",
+    "Current_position_macro": "/shout Fish train is currently fishing for {{itemName}} at {{mapName}}: {{coords}}. Preferred bait: {{bait}}, min gathering: {{minGathering}}.",
+    "Next_position_macro": "/shout Choo Choo ! Fish train is moving to {{mapName}}: {{coords}} in order to fish {{itemName}}. Preferred bait: {{bait}}, min gathering: {{minGathering}}.",
+    "Board_train": "Board train",
+    "Leave_train": "Leave this train",
+    "Stats": "Stats",
+    "Passengers": "Passengers",
+    "Total_reports": "# of fish caught",
+    "Wrong_spot": "Wrong spot",
+    "Wrong_spot_description": "You are not on the right spot to contribute to the fishing train, please check current location in fish train details.",
+    "Accuracy": "Accuracy",
+    "Accuracy_explain": "% of fish caught matching the route",
+    "Contribution_per_passenger": "Contributions per passenger",
+    "Fishing_rate": "Fishing rate",
+    "Nothing_to_show": "No contributions to display",
+    "Terminus_tag": "Terminus",
+    "Open_fishing_overlay": "Open fishing overlay",
+    "Claim_conductor_role": "Claim conductor role",
+    "Enter_conductor_token": "Enter conductor token",
+    "Conductor_role_claimed": "Successfully claimed train conductor role",
+    "Wrong_token": "Wrong token entered, claim failed",
+    "Train_conductor": "Train conductor: {{name}}",
+    "No_conductor": "No conductor",
+    "Rename_train": "Rename this train",
+    "No_slap": "No slap",
+    "Select_slap": "Pick a fish to slap",
+    "Visiblity_explain": "Public trains are visible in the Trains page",
+    "Moving_notification_title": "Train is moving to next spot",
+    "Moving_notification": "Train is moving to {{placeName}}: {{coords}} to fish next target: {{itemName}}",
+    "Fish_count": "{{amount}} fish",
+    "No_trains_found": "No trains found matching your filters",
+    "Open_details": "Open details",
+    "Open_in_carbuncleplushy": "Open on CarbunclePlushy",
+    "Private_display_explain": "Only you can see this here because you're the conductor of this train",
+    "List_title": "Fish trains",
+    "List_subtitle": "A cool way to fish with the community !",
+    "Name_filter_placeholder": "Search train by name",
+    "Create_new": "Create a train on CarbunclePlushy",
+    "Your_trains": "Your trains",
+    "Missing_world": "Missing world",
+    "Missing_world_explain": "A train with no world set is way harder for people to follow or find, please select a server in the server dropdown above.",
+    "Time_travel": "Time travel",
+    "Only_target_fish": "Only target fish",
+    "All_fish": "All fish",
+    "Fish_breakdown": "Fish breakdown",
+    "Bait_breakdown": "Bait usage breakdown",
+    "Fish_size_chart": "Fish sizes"
   }
 }

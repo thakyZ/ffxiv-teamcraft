@@ -1,4 +1,16 @@
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Inject, Injector, OnInit, PLATFORM_ID, Renderer2, ViewChild } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  Injector,
+  OnInit,
+  PLATFORM_ID,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import { environment } from '../environments/environment';
 import { GarlandToolsService } from './core/api/garland-tools.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -40,11 +52,8 @@ import { REQUEST } from '@nguniversal/express-engine/tokens';
 import * as semver from 'semver';
 import { UniversalisService } from './core/api/universalis.service';
 import { TextQuestionPopupComponent } from './modules/text-question-popup/text-question-popup/text-question-popup.component';
-import { Apollo } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular-link-http';
-import { InMemoryCache } from 'apollo-cache-inmemory';
 import { QuickSearchService } from './modules/quick-search/quick-search.service';
-import { Region } from './modules/settings/region.enum';
+import { Region } from '@ffxiv-teamcraft/types';
 import { MappyReporterService } from './core/electron/mappy/mappy-reporter';
 import { TutorialService } from './core/tutorial/tutorial.service';
 import { ChangelogPopupComponent } from './modules/changelog-popup/changelog-popup/changelog-popup.component';
@@ -58,9 +67,6 @@ import { Language } from './core/data/language';
 import { InventoryService } from './modules/inventory/inventory.service';
 import { DataService } from './core/api/data.service';
 import { AllaganReportsService } from './pages/allagan-reports/allagan-reports.service';
-import { WebSocketLink } from 'apollo-link-ws';
-import { split } from 'apollo-link';
-import { getMainDefinition } from 'apollo-utilities';
 import { LazyDataFacade } from './lazy-data/+state/lazy-data.facade';
 import { IS_HEADLESS } from '../environments/is-headless';
 import { LocalStorageBehaviorSubject } from './core/rxjs/local-storage-behavior-subject';
@@ -69,19 +75,19 @@ import { gameEnv } from '../environments/game-env';
 import { PacketCaptureStatus } from './core/electron/packet-capture-status';
 import { NzBadgeStatusType } from 'ng-zorro-antd/badge/types';
 import { InventoryCaptureStatus } from './modules/inventory/inventory-capture-status';
+import { PushNotificationsService } from 'ng-push-ivy';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less']
+  styleUrls: ['./app.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
 
   public overlay = window.location.href.indexOf('?overlay') > -1;
 
   public newFeatureName = 'allagan-reports';
-
-  public showNewFeatureBanner = !this.overlay && localStorage.getItem(`new-feature:${this.newFeatureName}`) !== 'true' && !IS_HEADLESS;
 
   public availableLanguages = this.settings.availableLocales;
 
@@ -199,8 +205,6 @@ export class AppComponent implements OnInit {
 
   public suggestedRegion: Region = null;
 
-  public possibleMissingFirewallRule$ = this.ipc.possibleMissingFirewallRule$;
-
   public firewallRuleApplied = false;
 
   public showAd$ = this.authFacade.user$.pipe(
@@ -243,66 +247,22 @@ export class AppComponent implements OnInit {
               private message: NzMessageService, private universalis: UniversalisService,
               private inventoryService: InventoryService, @Inject(PLATFORM_ID) private platform: any,
               private quickSearch: QuickSearchService, public mappy: MappyReporterService,
-              apollo: Apollo, httpLink: HttpLink, private tutorialService: TutorialService,
+              private tutorialService: TutorialService,
               private playerMetricsService: PlayerMetricsService, private patreonService: PatreonService,
               private freeCompanyWorkshopFacade: FreeCompanyWorkshopFacade, private cd: ChangeDetectorRef,
-              private data: DataService, private allaganReportsService: AllaganReportsService) {
+              private data: DataService, private allaganReportsService: AllaganReportsService,
+              pushNotificationsService: PushNotificationsService) {
 
-    const navigationEvents$ = this.router.events.pipe(
-      filter(e => e instanceof NavigationStart),
-      map((e: NavigationStart) => e.url)
-    );
+    if (pushNotificationsService.isSupported() && pushNotificationsService.permission === 'default') {
+      pushNotificationsService.requestPermission();
+    }
 
     this.desktop = this.platformService.isDesktop();
 
-    combineLatest([this.authFacade.idToken$, this.authFacade.user$, navigationEvents$]).pipe(
-      filter(([, user, nav]) => {
-        return user.allaganChecker || user.admin || nav.includes('allagan-reports')
-          || nav.includes('fishing-spot') || nav.includes('item') || this.desktop;
-      }),
-      first()
-    ).subscribe(() => {
-      const ws = new WebSocketLink({
-        uri: `wss://gubal.hasura.app/v1/graphql`,
-        options: {
-          reconnect: true,
-          connectionParams: async () => {
-            let idToken = await this.authFacade.getIdTokenResult();
-            // If we're at least 5 minutes from expiration, refresh token
-            if (Date.now() - new Date(idToken.expirationTime).getTime() < 60000) {
-              idToken = await this.authFacade.getIdTokenResult(true);
-            }
-            return { headers: { Authorization: `Bearer ${idToken.token}` } };
-          }
-        }
-      });
-
-      const httpL = httpLink.create({ uri: 'https://gubal.hasura.app/v1/graphql' });
-
-      const link = split(
-        // split based on operation type
-        ({ query }) => {
-          const { kind, operation } = getMainDefinition(query) as any;
-          return kind === 'OperationDefinition' && operation === 'subscription';
-        },
-        ws,
-        httpL
-      );
-
-      apollo.create({
-        link: link,
-        cache: new InMemoryCache({
-          addTypename: false
-        })
-      });
-
-      setTimeout(() => {
-        this.allaganReportsQueueCount$ = this.allaganReportsService.getQueueStatus().pipe(
-          map(status => status.length)
-        );
-        this.allaganReportsUnappliedCount$ = this.allaganReportsService.getUnappliedCount();
-      }, 2000);
-    });
+    this.allaganReportsQueueCount$ = this.allaganReportsService.getQueueStatus().pipe(
+      map(status => status.length)
+    );
+    this.allaganReportsUnappliedCount$ = this.allaganReportsService.getUnappliedCount();
 
     fromEvent(document, 'keydown').subscribe((event: KeyboardEvent) => {
       this.handleKeypressShortcuts(event);
@@ -553,8 +513,8 @@ export class AppComponent implements OnInit {
   }
 
   startPcap(): void {
-    this.ipc.send('toggle-machina', false);
-    this.ipc.send('toggle-machina', true);
+    this.ipc.send('toggle-pcap', true);
+    this.ipc.send('pcap:restart');
   }
 
   public openSupportPopup(): void {
@@ -566,17 +526,9 @@ export class AppComponent implements OnInit {
   }
 
   enablePacketCapture(): void {
-    this.ipc.machinaToggle$.next(true);
+    this.ipc.pcapToggle$.next(true);
     this.settings.enableUniversalisSourcing = true;
-    this.ipc.send('toggle-machina', true);
-  }
-
-  applyFirewallRule(): void {
-    this.ipc.once('machina:firewall:rule-set', () => {
-      this.firewallRuleApplied = true;
-      this.message.success(this.translate.instant('PACKET_CAPTURE.Firewall_rule_set'));
-    });
-    this.ipc.send('machina:firewall:set-rule');
+    this.ipc.send('toggle-pcap', true);
   }
 
   showPatchNotes(): Observable<any> {

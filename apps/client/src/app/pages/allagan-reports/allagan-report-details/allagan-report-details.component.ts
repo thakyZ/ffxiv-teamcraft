@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { debounceTime, filter, first, map, pluck, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, first, map, pluck, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AllaganReportsService } from '../allagan-reports.service';
 import { AllaganReportSource } from '../model/allagan-report-source';
 import { BehaviorSubject, combineLatest, merge, Observable, of, Subject } from 'rxjs';
-import { I18nName } from '../../../model/common/i18n-name';
+import { Hookset, I18nName, SearchType, SpearfishingShadowSize, SpearfishingSpeed, Tug } from '@ffxiv-teamcraft/types';
 import { I18nToolsService } from '../../../core/tools/i18n-tools.service';
 import { AllaganReport } from '../model/allagan-report';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -14,8 +14,6 @@ import { AuthFacade } from '../../../+state/auth.facade';
 import { AllaganReportQueueEntry } from '../model/allagan-report-queue-entry';
 import { AllaganReportStatus } from '../model/allagan-report-status';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { Hookset } from '../../../core/data/model/hookset';
-import { Tug } from '../../../core/data/model/tug';
 import { weatherIndex } from '../../../core/data/sources/weather-index';
 import { mapIds } from '../../../core/data/sources/map-ids';
 import { XivapiEndpoint, XivapiService } from '@xivapi/angular-client';
@@ -23,11 +21,8 @@ import { FishContextService } from '../../db/service/fish-context.service';
 import { ItemContextService } from '../../db/service/item-context.service';
 import { ReportsManagementComponent } from '../reports-management.component';
 import { OceanFishingTime } from '../model/ocean-fishing-time';
-import { SearchType } from '../../search/search-type';
 import { LazyDataFacade } from '../../../lazy-data/+state/lazy-data.facade';
 import { withLazyData } from '../../../core/rxjs/with-lazy-data';
-import { SpearfishingSpeed } from '../../../core/data/model/spearfishing-speed';
-import { SpearfishingShadowSize } from '../../../core/data/model/spearfishing-shadow-size';
 
 
 function durationRequired(control: AbstractControl) {
@@ -38,7 +33,6 @@ function durationRequired(control: AbstractControl) {
   return null;
 }
 
-// noinspection JSMismatchedCollectionQueryUpdate
 @Component({
   selector: 'app-allagan-report-details',
   templateUrl: './allagan-report-details.component.html',
@@ -171,7 +165,6 @@ export class AllaganReportDetailsComponent extends ReportsManagementComponent {
     max: 23
   };
 
-  // tslint:disable-next-line:member-ordering
   form: UntypedFormGroup = this.fb.group({
     source: [null, Validators.required],
     item: [null, this.requiredIfSource([AllaganReportSource.DESYNTH, AllaganReportSource.REDUCTION, AllaganReportSource.GARDENING, AllaganReportSource.LOOT], 'items$')],
@@ -344,7 +337,13 @@ export class AllaganReportDetailsComponent extends ReportsManagementComponent {
     this.form.get('spawn').valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
       this.form.get('duration').updateValueAndValidity();
     });
-    this.form.get('source').valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(() => {
+    this.form.get('source').valueChanges.pipe(
+      distinctUntilChanged(),
+      takeUntil(this.onDestroy$)
+    ).subscribe((source) => {
+      this.form.reset({
+        source
+      });
       setTimeout(() => {
         this.form.updateValueAndValidity();
         this.cd.detectChanges();

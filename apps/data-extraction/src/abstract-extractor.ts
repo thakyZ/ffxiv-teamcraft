@@ -6,14 +6,14 @@ import request from 'request';
 import { mkdirSync } from 'fs-extra';
 import { XivDataService } from './xiv/xiv-data.service';
 import { ParsedRow } from './xiv/parsed-row';
+import { LazyData } from '@ffxiv-teamcraft/data/model/lazy-data';
+import { kebabCase } from 'lodash';
 
 export abstract class AbstractExtractor {
 
-  protected static outputFolder = join(__dirname, '../../../client/src/app/core/data/sources/');
+  public static outputFolder = join(__dirname, '../../../apps/client/src/app/core/data/sources/');
 
-  protected static assetOutputFolder = join(__dirname, '../../../client/src/assets/data/');
-
-  protected static XIVAPI_BASE_URL = process.env.XIVAPI_BASE_URL || 'https://xivapi.com';
+  public static assetOutputFolder = join(__dirname, '../../../libs/data/src/lib/json/');
 
   protected static XIVAPI_KEY = process.env.XIVAPI_KEY;
 
@@ -23,9 +23,11 @@ export abstract class AbstractExtractor {
 
   private done$ = new Subject<string>();
 
-  public isSpecific = false;
-
   protected progress: any;
+
+  multiBarRef: any;
+
+  maxLevel = 90;
 
   constructor() {
     interval(AbstractExtractor.XIVAPI_KEY ? 50 : 250)
@@ -42,6 +44,10 @@ export abstract class AbstractExtractor {
 
   public setProgress(progress: any): void {
     this.progress = progress;
+  }
+
+  public setMultiBarRef(ref: any): void {
+    this.multiBarRef = ref;
   }
 
   public abstract getName(): string;
@@ -67,7 +73,12 @@ export abstract class AbstractExtractor {
 
 
   protected requireLazyFile(name: string): any {
-    return require(join(AbstractExtractor.assetOutputFolder, `${name}.json`));
+    return JSON.parse(readFileSync(join(AbstractExtractor.assetOutputFolder, `${name}.json`), 'utf-8'));
+  }
+
+
+  protected requireLazyFileByKey<K extends keyof LazyData>(key: K): LazyData[K] {
+  return JSON.parse(readFileSync(join(AbstractExtractor.assetOutputFolder, `${kebabCase(key)}.json`), 'utf-8'));
   }
 
   protected addQueryParam(url: string, paramName: string, paramValue: string | number): string {
@@ -234,12 +245,12 @@ export abstract class AbstractExtractor {
     return input[0].map((_, colIndex) => input.map(row => row[colIndex]));
   }
 
-  protected persistToJson(fileName: string, content: any): void {
-    writeFileSync(join(AbstractExtractor.outputFolder, `${fileName}.json`), JSON.stringify(content, null, 2));
-  }
-
   protected persistToJsonAsset(fileName: string, content: any): void {
     writeFileSync(join(AbstractExtractor.assetOutputFolder, `${fileName}.json`), JSON.stringify(content, null, 2));
+  }
+
+  protected persistToMinifiedJsonAsset(fileName: string, content: any): void {
+    writeFileSync(join(AbstractExtractor.assetOutputFolder, `${fileName}.json`), JSON.stringify(content));
   }
 
   protected persistToTypescript(fileName: string, variableName: string, content: any): void {

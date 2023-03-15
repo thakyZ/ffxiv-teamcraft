@@ -1,10 +1,10 @@
-import { LazyData } from '../../../lazy-data/lazy-data';
 import { CraftworksObject } from '../craftworks-object';
 import { WorkshopPlanning } from './workshop-planning';
 import { IslandWorkshopSimulator } from './island-workshop-simulator';
 import { WorkshopStatusData } from '../workshop-status-data';
 import { WorkshopPattern } from '../workshop-patterns';
 import { findPatterns } from './find-pattern';
+import { LazyData } from '@ffxiv-teamcraft/data/model/lazy-data';
 
 
 export class PlanningFormulaOptimizer {
@@ -44,7 +44,7 @@ export class PlanningFormulaOptimizer {
       }
 
       // Okay, if we're here, we know what'll peak and how, so we want to build an optimized value route now
-      let [best, combo] = this.findBestAndComboObjects(projectedSupplyObjects, objectsUsage);
+      const [best, combo] = this.findBestAndComboObjects(projectedSupplyObjects, objectsUsage);
 
       let totalTime = 0;
       let useComboItem = combo.craftworksEntry.craftingTime + best.craftworksEntry.craftingTime <= 12;
@@ -55,10 +55,26 @@ export class PlanningFormulaOptimizer {
         useComboItem = !useComboItem;
         totalTime += item.craftworksEntry.craftingTime;
         objectsUsage[item.id] = (objectsUsage[item.id] || 0) + this.workshops * (totalTime === 0 ? 1 : 2);
-        [best, combo] = this.findBestAndComboObjects(projectedSupplyObjects, objectsUsage);
+        // If our best changes, we cannot ensure it will combo so we go to one at a time
+        const [bestChange, _] = this.findBestAndComboObjects(projectedSupplyObjects, objectsUsage);
+        if (bestChange !== best) {
+          break;
+        }
         projectedTime = useComboItem ? combo.craftworksEntry.craftingTime + best.craftworksEntry.craftingTime : best.craftworksEntry.craftingTime;
       }
-      if (totalTime < 24) {
+      //Inverted schedule detection for *84 schedules
+      const planLength = day.planning.length;
+      if (planLength >= 2 && day.planning[planLength - 1].craftworksEntry.craftingTime == 4 && day.planning[planLength - 2].craftworksEntry.craftingTime == 8) {
+        let item = day.planning[planLength - 2];
+        day.planning.push(item);
+        totalTime += item.craftworksEntry.craftingTime;
+        objectsUsage[item.id] = objectsUsage[item.id] + this.workshops * 2;
+        item = day.planning[0];
+        totalTime -= item.craftworksEntry.craftingTime;
+        objectsUsage[item.id] = objectsUsage[item.id] - this.workshops;
+        day.planning.shift();
+      }
+      while (totalTime < 24) {
         const bestFirstItem = projectedSupplyObjects.filter(obj => {
           return obj.craftworksEntry.craftingTime <= (24 - totalTime)
             && obj.craftworksEntry.themes.some(t => day.planning[0].craftworksEntry.themes.includes(t))
@@ -68,6 +84,7 @@ export class PlanningFormulaOptimizer {
         })[0];
         if (bestFirstItem) {
           day.planning.unshift(bestFirstItem);
+          totalTime += bestFirstItem.craftworksEntry.craftingTime;
         } else {
           const noComboFirstItem = projectedSupplyObjects.filter(obj => {
             return obj.craftworksEntry.craftingTime <= (24 - totalTime)
@@ -77,6 +94,10 @@ export class PlanningFormulaOptimizer {
           })[0];
           if (noComboFirstItem) {
             day.planning.unshift(noComboFirstItem);
+            totalTime += noComboFirstItem.craftworksEntry.craftingTime;
+          }
+          else {
+            break;
           }
         }
       }
@@ -151,7 +172,7 @@ export class PlanningFormulaOptimizer {
 
   private getBestItems(projectedSupplyObjects: CraftworksObject[], objectsUsage: Record<number, number>): CraftworksObject[] {
     let items = projectedSupplyObjects
-      .filter((obj, i, array) => array.filter(e => e.craftworksEntry.themes.some(t => obj.craftworksEntry.themes.includes(t))) && obj.patterns.length === 1);
+      .filter((obj, i, array) => array.filter(e => e.craftworksEntry.themes.some(t => obj.craftworksEntry.themes.includes(t))) && obj.isPeaking);
 
     if (items.length === 0) {
       items = projectedSupplyObjects
@@ -171,9 +192,9 @@ export class PlanningFormulaOptimizer {
         object.patterns = this.findPatternsForDay(history, object, dayIndex);
         object.supply = object.patterns.map(p => {
           return p.pattern[dayIndex][0];
-        }).sort((a, b) => a - b)[0];
+        }).sort((a, b) => a > b ? -1 : 1)[0];
         object.hasPeaked = object.patterns.length === 1 && object.patterns[0].index < dayIndex;
-        object.isPeaking = object.patterns.length === 1 && object.patterns[0].index === dayIndex;
+        object.isPeaking = (object.patterns.length === 1 || object.patterns.length === 2) && object.patterns[0].index === dayIndex;
         return object;
       });
   }

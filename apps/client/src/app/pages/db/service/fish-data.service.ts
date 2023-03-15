@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { switchMap } from 'rxjs/operators';
+import { map, Observable, shareReplay, switchMap } from 'rxjs';
 import { AuthFacade } from '../../../+state/auth.facade';
 import {
   BaitsPerFishPerSpotQuery,
@@ -13,7 +13,6 @@ import {
   WeathersPerFishPerSpotQuery
 } from './fish-data.gql';
 import { QueryOptionsAlone } from 'apollo-angular/types';
-import { Observable } from 'rxjs';
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
 
@@ -150,5 +149,33 @@ export class FishDataService {
         baitId, spot
       }
     });
+  }
+
+  public getTrainStats(trainId: string): Observable<any> {
+    const reportsQuery = gql`subscription FishTrainReports($trainId: String!) {
+      fishingresults(where: {trainId: {_eq: $trainId}}) {
+        itemId,
+        date,
+        userId,
+        baitId,
+        mooch,
+        size
+      }
+    }`;
+    return this.apollo.subscribe<any>({
+      query: reportsQuery,
+      fetchPolicy: 'network-only',
+      variables: {
+        trainId: trainId
+      }
+    }).pipe(
+      map((reports) => {
+        return {
+          count: reports.data.fishingresults.length,
+          reports: reports.data.fishingresults
+        };
+      }),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
   }
 }

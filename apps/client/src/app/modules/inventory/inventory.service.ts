@@ -27,12 +27,12 @@ import { InventoryItem } from '../../model/user/inventory/inventory-item';
 import { InventoryPatch } from '../../model/user/inventory/inventory-patch';
 import { InventoryEventType } from '../../model/user/inventory/inventory-event-type';
 import { HttpClient } from '@angular/common/http';
-import { Region } from '../settings/region.enum';
+import { Region } from '@ffxiv-teamcraft/types';
 import { SettingsService } from '../settings/settings.service';
 import { ContentIdLinkingPopupComponent } from './content-id-linking-popup/content-id-linking-popup.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { InventoryState } from './sync-state/inventory-state';
-import { LazyMateria } from '../../lazy-data/model/lazy-materia';
+import { LazyMateria } from '@ffxiv-teamcraft/data/model/lazy-materia';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { LodestoneIdEntry } from '../../model/user/lodestone-id-entry';
 import { PlatformService } from '../../core/tools/platform.service';
@@ -102,6 +102,10 @@ export class InventoryService {
               private serializer: NgSerializerService, private http: HttpClient,
               private settings: SettingsService, private modal: NzModalService,
               private lazyData: LazyDataFacade, private platform: PlatformService) {
+    if (!this.platform.isDesktop()) {
+      this.inventory$ = of(new UserInventory());
+      return;
+    }
     this.retainerInformations$.connect();
     this.authFacade.characterEntries$.subscribe(entries => {
       this.characterEntries = entries as Array<LodestoneIdEntry & { character: CharacterResponse }>;
@@ -116,7 +120,9 @@ export class InventoryService {
       this.odr$.next(odr);
     });
 
-    const itemInfoMessages$ = this.ipc.packets$.pipe(ofMessageType('itemInfo'));
+    const itemInfoMessages$ = this.ipc.packets$.pipe(
+      ofMessageType('itemInfo')
+    );
     const containerInfoMessages$ = this.ipc.packets$.pipe(ofMessageType('containerInfo'));
     const currencyCrystalInfoMessages$ = this.ipc.packets$.pipe(ofMessageType('currencyCrystalInfo'));
     const inventoryModifyHandlerMessages$ = this.ipc.packets$.pipe(ofMessageType('inventoryModifyHandler'));
@@ -331,7 +337,7 @@ export class InventoryService {
   }
 
   public init(): void {
-    if (!this.platform.isOverlay()) {
+    if (this.platform.isDesktop() && !this.platform.isOverlay()) {
       this.inventory$.subscribe(inventory => {
         this.ipc.send('inventory:set', inventory);
       });

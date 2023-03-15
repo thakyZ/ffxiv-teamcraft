@@ -173,7 +173,7 @@ export class ShopsExtractor extends AbstractExtractor {
               const entry = {
                 id: cost,
                 amount: specialShop.CountCost[tradeIndex][costIndex] || (specialShop.UseCurrencyType === 8 ? specialShop.ItemReceive[tradeIndex][costIndex]?.PriceMid || 0 : 0),
-                hq: specialShop.HQCost[tradeIndex][costIndex] > 0,
+                hq: cost > 50 && specialShop.HQCost[tradeIndex][costIndex] > 0,
                 collectability: specialShop.CollectabilityRatingCost[tradeIndex][costIndex]
               };
 
@@ -189,7 +189,12 @@ export class ShopsExtractor extends AbstractExtractor {
                 entry.id = StaticData.CURRENCIES[entry.id] || entry.id;
               }
 
-              if ([2, 4].includes(specialShop.UseCurrencyType) && entry.id < 10) {
+              if (([2].includes(specialShop.UseCurrencyType) || specialShop.index === 1770637) && entry.id < 10) {
+                entry.id = { ...StaticData.CURRENCIES }[entry.id];
+              }
+
+              // Looks like we'll have to hardcode some of them
+              if ([16, 4].includes(specialShop.UseCurrencyType) && entry.id < 10 && specialShop.index !== 1770637) {
                 entry.id = { ...StaticData.CURRENCIES, ...StaticData.TOMESTONES }[entry.id];
               }
               return entry;
@@ -351,8 +356,14 @@ export class ShopsExtractor extends AbstractExtractor {
 
   private processCustomTalkLinks(customTalks: any[], npcIdsByDataId: Record<number, number[]>, specialShops: any[]): Record<number, number[]> {
     const preEndwalkerGemstoneShops = {
+      '1769957': [1027998],
       '1769958': [1027538],
-      '1769957': [1027998]
+      '1769959': [1027385],
+      '1769960': [1027497],
+      '1769961': [1027892],
+      '1769962': [1027665],
+      '1769963': [1027709],
+      '1769964': [1027766]
     };
     const hardcodedLinks = {
       721385: [262919]
@@ -380,7 +391,7 @@ export class ShopsExtractor extends AbstractExtractor {
               preEndwalkerGemstoneShops[shop.index] = [talk.ScriptArg[npcInstructionIndex]];
             }
           }
-        } else if (scriptInstruction.includes('SHOP')) {
+        } else if (scriptInstruction.includes('SHOP') || scriptInstruction.includes('LOGMSG')) {
           acc[talk.index].push(scriptArg);
         }
       }

@@ -3,7 +3,7 @@ import { NavigationObjective } from '../navigation-objective';
 import { MapService } from '../map.service';
 import { NavigationStep } from '../navigation-step';
 import { BehaviorSubject, combineLatest, fromEvent, Observable, Subject } from 'rxjs';
-import { Vector2 } from '../../../core/tools/vector2';
+import { Vector2 } from '@ffxiv-teamcraft/types';
 import { MapData } from '../map-data';
 import { filter, first, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { WorldNavigationStep } from '../world-navigation-step';
@@ -37,8 +37,8 @@ export class WorldNavigationMapComponent extends TeamcraftComponent implements O
       filter((event: KeyboardEvent) => event.key === 'ArrowRight' || event.key === 'ArrowLeft'),
       takeUntil(this.onDestroy$)
     ).subscribe(event => {
-      const direction = event.key === 'ArrowRight' ? 1 : -1;
-      this.currentPathIndex$.next(this.currentPathIndex$.value - direction);
+      const direction = event.key === 'ArrowRight' ? -1 : 1;
+      this.currentPathIndex$.next(Math.max(this.currentPathIndex$.value - direction, 0));
     });
   }
 

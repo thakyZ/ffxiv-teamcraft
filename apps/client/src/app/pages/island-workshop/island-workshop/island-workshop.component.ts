@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { IpcService } from '../../../core/electron/ipc.service';
 import { LocalStorageBehaviorSubject } from '../../../core/rxjs/local-storage-behavior-subject';
 import { TeamcraftComponent } from '../../../core/component/teamcraft-component';
-import { combineLatest, EMPTY, map, Observable, of, Subject, timer } from 'rxjs';
+import { combineLatest, EMPTY, map, Observable, of, timer } from 'rxjs';
 import { LazyDataFacade } from '../../../lazy-data/+state/lazy-data.facade';
 import { withLazyData } from '../../../core/rxjs/with-lazy-data';
 import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
 import { TranslateService } from '@ngx-translate/core';
 import { TextQuestionPopupComponent } from '../../../modules/text-question-popup/text-question-popup/text-question-popup.component';
-import { catchError, distinctUntilChanged, filter, retry, switchMap, tap } from 'rxjs/operators';
+import { catchError, distinctUntilChanged, filter, retry, switchMap } from 'rxjs/operators';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { subDays } from 'date-fns';
@@ -19,10 +19,10 @@ import { WorkshopStatusData } from '../workshop-status-data';
 import { SettingsService } from '../../../modules/settings/settings.service';
 import { WorkshopPattern, workshopPatterns } from '../workshop-patterns';
 import { PlanningFormulaOptimizer } from '../optimizer/planning-formula-optimizer';
-import { getItemSource } from '../../../modules/list/model/list-row';
-import { DataType } from '../../../modules/list/data/data-type';
+import { DataType, getExtract, getItemSource } from '@ffxiv-teamcraft/types';
 import { AuthFacade } from '../../../+state/auth.facade';
 import { I18nToolsService } from '../../../core/tools/i18n-tools.service';
+import { EnvironmentService } from '../../../core/environment.service';
 
 interface ColumnItem {
   name: string;
@@ -150,7 +150,7 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
 
   public tableColumns$: Observable<ColumnItem[]> = combineLatest([
     this.translate.get('ISLAND_SANCTUARY.WORKSHOP.POPULARITY.High'),
-    this.lazyData.getEntry('islandCraftworksTheme')
+    this.lazyData.getI18nEntry('islandCraftworksTheme')
   ]).pipe(
     // Just a small trick to only compute all this once translations are loaded
     map(([, themes]) => {
@@ -250,8 +250,8 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
     })
   );
 
-  private stateHistory$ = this.previousWeeklyReset$.pipe(
-    switchMap(reset => {
+  private stateHistory$ = combineLatest([this.previousWeeklyReset$, this.settings.region$]).pipe(
+    switchMap(([reset]) => {
       const historyEntriesToFetch = [reset.toString()];
       let nextDay = reset + 86400000;
       while (nextDay < Date.now()) {
@@ -284,16 +284,19 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
       const popularityEntry = islandPopularity[state.popularity];
       const predictedPopularityEntry = islandPopularity[state.predictedPopularity];
       return state.supplyDemand
-        .filter(row => row.id > 0 && islandCraftworks[row.id]?.itemId > 0)
+        .filter(row => {
+          const maxId = this.environment.gameVersion < 6.3 ? 50 : Infinity;
+          return row.id > 0 && row.id <= maxId && islandCraftworks[row.id]?.itemId > 0;
+        })
         .filter(row => {
           let matches = true;
           if (excludePasture || excludeCrops) {
             const recipe = recipes.find(r => r.id === `mji-craftworks-${row.id}`);
             if (excludePasture) {
-              matches = matches && recipe.ingredients.every(i => getItemSource(extracts[i.id], DataType.ISLAND_PASTURE)?.length === 0);
+              matches = matches && recipe.ingredients.every(i => getItemSource(getExtract(extracts, i.id), DataType.ISLAND_PASTURE)?.length === 0);
             }
             if (excludeCrops) {
-              matches = matches && recipe.ingredients.every(i => getItemSource(extracts[i.id], DataType.ISLAND_CROP, true).seed === undefined);
+              matches = matches && recipe.ingredients.every(i => getItemSource(getExtract(extracts, i.id), DataType.ISLAND_CROP, true).seed === undefined);
             }
           }
           return matches;
@@ -344,8 +347,8 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
     })
   );
 
-  public onlineState$ = this.previousReset$.pipe(
-    switchMap(reset => {
+  public onlineState$ = combineLatest([this.previousReset$, this.settings.region$]).pipe(
+    switchMap(([reset]) => {
       return this.mjiWorkshopStatusService.get(reset.toString()).pipe(
         retry({
           count: 60,
@@ -369,8 +372,8 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
           const recipe = recipes.find(r => r.id === `mji-craftworks-${id}`);
           const possibleCrafts = Math.floor(24 / (obj.craftingTime + 4));
           recipe.ingredients.forEach(i => {
-            const pastureData = getItemSource(extracts[i.id], DataType.ISLAND_PASTURE);
-            const cropData = getItemSource(extracts[i.id], DataType.ISLAND_CROP);
+            const pastureData = getItemSource(getExtract(extracts, i.id), DataType.ISLAND_PASTURE);
+            const cropData = getItemSource(getExtract(extracts, i.id), DataType.ISLAND_CROP);
             if (pastureData?.length > 0) {
               // possibleCrafts crafts per day max, with 3 workshops
               acc.pasture[i.id] = (acc.pasture[i.id] || 0) + i.amount * possibleCrafts * 3;
@@ -389,7 +392,7 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
     })
   );
 
-  public machinaToggle = false;
+  public pcapToggle = false;
 
   public getExport = () => {
     return JSON.stringify(this.state$.value);
@@ -399,25 +402,26 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
               public translate: TranslateService, private dialog: NzModalService,
               private message: NzMessageService, private mjiWorkshopStatusService: IslandWorkshopStatusService,
               public platformService: PlatformService, public settings: SettingsService,
-              private authFacade: AuthFacade, private i18n: I18nToolsService) {
+              private authFacade: AuthFacade, private i18n: I18nToolsService,
+              private environment: EnvironmentService) {
     super();
 
     if (this.platformService.isDesktop()) {
-      this.ipc.on('toggle-machina:value', (event, value) => {
-        this.machinaToggle = value;
+      this.ipc.pcapToggle$.subscribe((value) => {
+        this.pcapToggle = value;
       });
-      this.ipc.send('toggle-machina:get');
       combineLatest([this.previousReset$, this.state$, this.authFacade.user$]).pipe(
         switchMap(([reset, state, user]) => {
           return this.mjiWorkshopStatusService.get(reset.toString()).pipe(
             map((historyEntry) => {
-              const shouldUpdate = !historyEntry.lock
-                && !state.edited
-                && historyEntry.objects.some((obj, i) => {
-                  return state.supplyDemand[i].supply < obj.supply;
-                })
-                && !state.supplyDemand.some(entry => entry.supply > 3)
-                && !state.supplyDemand.every(entry => entry.supply === 0 && entry.demand === 0);
+              const shouldUpdate = user.admin ||
+                (!historyEntry.lock
+                  && !state.edited
+                  && historyEntry.objects.some((obj, i) => {
+                    return state.supplyDemand[i].supply < obj.supply;
+                  })
+                  && !state.supplyDemand.some(entry => entry.supply > 3)
+                  && !state.supplyDemand.every(entry => entry.supply === 0 && entry.demand === 0));
               return {
                 shouldUpdate,
                 historyEntry
@@ -427,12 +431,17 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
               return of({ shouldUpdate: true, historyEntry: null });
             }),
             switchMap(({ shouldUpdate, historyEntry }) => {
-              // Only update if reset was less than 2h ago, else it's probably bad data anyways
               if (shouldUpdate && state.updated >= reset) {
                 let supplyDemand = state.supplyDemand;
                 if (historyEntry) {
-                  supplyDemand = state.supplyDemand.map((row, i) => {
-                    row.supply = Math.min(historyEntry.objects[i].supply, row.supply);
+                  supplyDemand = historyEntry.objects.map((historyRow, i) => {
+                    const stateRow = state.supplyDemand[i];
+                    // If supply is >= 3, it's probably a missing item, just return history row (and fallback if it's undefined).
+                    if (stateRow.supply >= 3) {
+                      return historyRow || stateRow;
+                    }
+                    // Pick the row that has the lowest supply
+                    return stateRow.supply > historyRow.supply ? historyRow : stateRow;
                   });
                 }
                 return this.mjiWorkshopStatusService.set(reset.toString(), {
@@ -447,7 +456,7 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
             })
           );
         })
-      ).subscribe(() => console.log('UPLOADED STATE'));
+      ).subscribe();
       this.ipc.islandWorkshopSupplyDemandPackets$.subscribe(packet => {
         this.state$.next({
           ...packet,
@@ -505,7 +514,7 @@ export class IslandWorkshopComponent extends TeamcraftComponent {
         return Math.min(day[0], 2) === patternEntry[0]
           && (
             patternEntry[1] === -1
-            || (patternEntry[1] === -2 && day[1] !== 0)
+            || (patternEntry[1] === -2 && day[1] !== 1)
             || day[1] === patternEntry[1]
           );
       });

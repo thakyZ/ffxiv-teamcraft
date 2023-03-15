@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import { EquipmentPiece } from '../../model/gearset/equipment-piece';
 import { Memoized } from '../../core/decorators/memoized';
 import { TeamcraftGearset } from '../../model/gearset/teamcraft-gearset';
-import { getItemSource } from '../list/model/list-row';
-import { DataType } from '../list/data/data-type';
+import { getExtract, getItemSource } from '@ffxiv-teamcraft/types';
+import { DataType } from '@ffxiv-teamcraft/types';
 import { TradeSource } from '../list/model/trade-source';
 import { GearsetProgression } from '../../model/gearset/gearset-progression';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
-import { LazyMateria } from '../../lazy-data/model/lazy-materia';
+import { LazyMateria } from '@ffxiv-teamcraft/data/model/lazy-materia';
 import { combineLatest, Observable, of } from 'rxjs';
 import { StaticData } from '../../lazy-data/static-data';
-import { LazyItemStat } from '../../lazy-data/model/lazy-item-stat';
+import { LazyItemStat } from '@ffxiv-teamcraft/data/model/lazy-item-stat';
 import { safeCombineLatest } from '../../core/rxjs/safe-combine-latest';
-import { LazyData } from '../../lazy-data/lazy-data';
+import { LazyData } from '@ffxiv-teamcraft/data/model/lazy-data';
 import { SettingsService } from '../settings/settings.service';
 
 @Injectable({
@@ -226,7 +226,7 @@ export class MateriaService {
           }
           return a.baseParamId - b.baseParamId;
         }).map(materia => {
-          const extract = extracts[materia.id];
+          const extract = getExtract(extracts, materia.id);
           const trades = getItemSource<TradeSource[]>(extract, DataType.TRADE_SOURCES);
           const scripIds = [
             25199,

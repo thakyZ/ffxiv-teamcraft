@@ -1,12 +1,12 @@
 import { AlarmsAction, AlarmsActionTypes } from './alarms.actions';
-import { Alarm } from '../alarm';
+import { PersistedAlarm } from '../persisted-alarm';
 import { AlarmGroup } from '../alarm-group';
 
 export interface AlarmsState {
-  alarms: Alarm[];
+  alarms: PersistedAlarm[];
   groups: AlarmGroup[];
   externalGroup: AlarmGroup;
-  externalGroupAlarms: Alarm[];
+  externalGroupAlarms: PersistedAlarm[];
   loaded: boolean;
 }
 
@@ -101,7 +101,9 @@ export function alarmsReducer(
         ...state,
         alarms: [...state.alarms.map(alarm => {
           if (alarm.$key === action.key) {
-            alarm.done = action.done;
+            return {
+              ...alarm
+            };
           }
           return alarm;
         })]

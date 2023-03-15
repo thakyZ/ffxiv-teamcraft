@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { TeamcraftComponent } from '../../../core/component/teamcraft-component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { IpcService } from '../../../core/electron/ipc.service';
-import { filter, map, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, first, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { FreeCompanyWorkshopFacade } from '../+state/free-company-workshop.facade';
 import { FreeCompanyWorkshop } from '../model/free-company-workshop';
 import { VesselType } from '../model/vessel-type';
@@ -17,8 +17,6 @@ import { worlds } from '../../../core/data/sources/worlds';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImportWorkshopFromPcapPopupComponent extends TeamcraftComponent implements OnInit {
-  private _isLoading = new BehaviorSubject<boolean>(false);
-
   private _freeCompany = new BehaviorSubject(null);
 
   private _airshipList = new BehaviorSubject(Array(4));
@@ -29,14 +27,43 @@ export class ImportWorkshopFromPcapPopupComponent extends TeamcraftComponent imp
 
   private _submarineSectorProgression = new BehaviorSubject(null);
 
+  private fcId$ = this.ipc.freeCompanyId$.pipe(
+    shareReplay(1),
+    takeUntil(this.onDestroy$)
+  );
+
+  private freeCompanyDetails$ = this.ipc.freeCompanyDetails$.pipe(
+    shareReplay(1),
+    takeUntil(this.onDestroy$)
+  );
+
+  public fcIdStatus$ = this.fcId$.pipe(
+    map(() => 'finish'),
+    startWith('process')
+  );
+
+  public freeCompanyDetailsStatus$ = this.freeCompanyDetails$.pipe(
+    map(() => 'finish'),
+    startWith('process')
+  );
+
+  public interactStatus$ = combineLatest([
+    this.freeCompanyDetailsStatus$,
+    this.fcIdStatus$
+  ]).pipe(
+    map((statuses) => {
+      if (statuses.every(s => s === 'finish')) {
+        return 'process';
+      }
+      return 'wait';
+    })
+  );
+
+
   constructor(private modalRef: NzModalRef, private ipc: IpcService,
               private freeCompanyWorkshopFacade: FreeCompanyWorkshopFacade,
               private authFacade: AuthFacade) {
     super();
-  }
-
-  public get isLoading$() {
-    return this._isLoading.asObservable();
   }
 
   public get freeCompany$() {
@@ -83,21 +110,17 @@ export class ImportWorkshopFromPcapPopupComponent extends TeamcraftComponent imp
       map((user) => {
         return Object.keys(worlds).find((key) => worlds[key] === user.world);
       }),
+      shareReplay(1),
       takeUntil(this.onDestroy$)
     );
 
-    const fcId$ = this.ipc.freeCompanyId$.pipe(
-      takeUntil(this.onDestroy$)
-    );
-
-    this.ipc.freeCompanyDetails.pipe(
-      tap(() => {
-        this._isLoading.next(true);
+    this.freeCompanyDetails$.pipe(
+      switchMap((packet) => {
+        return combineLatest([of(packet), server$, this.fcId$]).pipe(
+          first()
+        );
       }),
-      withLatestFrom(fcId$),
-      filter(([packet, fcId]) => packet.freeCompanyId.toString() === fcId),
-      map(([packet]) => packet),
-      withLatestFrom(server$),
+      filter(([packet, , fcId]) => packet.freeCompanyId.toString() === fcId),
       map(([packet, server]) => {
         return {
           id: packet.freeCompanyId.toString(),
@@ -106,9 +129,6 @@ export class ImportWorkshopFromPcapPopupComponent extends TeamcraftComponent imp
           rank: packet.fcRank,
           server
         };
-      }),
-      tap(() => {
-        this._isLoading.next(false);
       }),
       takeUntil(this.onDestroy$)
     ).subscribe((data) => {

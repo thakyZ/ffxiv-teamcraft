@@ -135,6 +135,9 @@
     "Search": "Suche"
   },
   "COMMON": {
+    "Play": "Play",
+    "Pause": "Pause",
+    "Speed": "Speed",
     "Done": "Fertig",
     "Length": "Länge",
     "Save": "Speichern",
@@ -199,6 +202,9 @@
     "Reload": "Neu laden",
     "Click_to_apply": "Klicken zum anwenden",
     "Recommended": "Empfohlen",
+    "Visibility": "Visibility",
+    "Public": "Public",
+    "Private": "Private",
     "DAYS": {
       "Monday": "Montag",
       "Tuesday": "Dienstag",
@@ -523,6 +529,7 @@
     "Disable_hardware_acceleration": "Hardwarebeschleunigung deaktivieren",
     "Housing_map": "Wohngebietskarte",
     "Housing_map_explain": "Die Karte des Wohngebiets, in dem dein Haus ist",
+    "Reset_linked_characters_ok": "Character links have been reset",
     "COLORS": {
       "Background": "Hintergrundfarbe",
       "Primary": "Hauptfarbe",
@@ -562,7 +569,8 @@
       "Autofill_completion": "Auto-Vervollständigung",
       "Retainer_tracker": "Gehilfen-Tracker",
       "Voyage_tracker": "Erkundungs-Tracker",
-      "Reset_timer": "Timer-Zurücksetzung"
+      "Reset_timer": "Timer-Zurücksetzung",
+      "Fish_train": "Fish train"
     }
   },
   "PROFILE": {
@@ -788,13 +796,13 @@
       "Toggle_overlay": "Schritt-für-Schritt-Overlay öffnen/schließen",
       "Empty_map": "Nichts in der aktuellen Karte zu tun, die nächste Karte für diese Liste ist {{closest}}",
       "Unknown_map": "Unbekannte Karte, bitte wechsle die die Karte, damit TC sie erkennen kann.",
-      "No_list": "Keine Liste, bitte öffne eine Liste im Hauptfenster, damit das Overlay wie beabsichtigt arbeitet.",
+      "No_list": "No list selected, please open a list in main window to have the overlay work as intended.",
       "Others": "Others"
     },
     "DISPLAY_MODE": {
       "Title": "Anzeigemodus",
       "Full": "Full",
-      "Minimalist": "Minimalist",
+      "Minimalist": "Minimalistisch",
       "Step_by_step": "Schritt für Schritt",
       "Switched_to_minimalist_large_list": "Der Anzeigemodus wurde auf minimalistisch umgeschaltet, da dies eine große Liste ist. Du kannst dies in den Einstellungen deaktivieren."
     },
@@ -812,7 +820,7 @@
       "Layout_name": "Layoutname",
       "Invalid_import": "Ungültiger Layout Import Code!",
       "Global_options": "Allgemeine Optionen",
-      "Default_readonly_message": "Standardlayout ist schreibgeschützt. Erstelle mit dem + Button ein neues, um es zu ändern.",
+      "Default_readonly_message": "This is one of the default layouts and is read-only. Please create a new layout with the + button to customize your layout.",
       "Buttons": "Schaltflächen",
       "Menu": "Menü",
       "Edit_row_buttons_display": "Anzeige der Zeilenschaltflächen bearbeiten",
@@ -2184,8 +2192,8 @@
     "Editing_others_gearset": "Lokaler Bearbeitungsmodus",
     "Editing_others_gearset_description": "Du bearbeitest gerade das Ausrüstungsset eines anderen Benutzers. Es wird nichts gespeichert, solange du nicht oben auf die Schaltfläche \"Speichern\" klickst, um deine eigene Kopie zu erstellen.",
     "Empty_materias": "Alle Materia aus der ausgewählten Ausrüstung entfernen",
-    "Total_scrips": "Total currencies needed",
-    "Reset_progression": "Reset item and materia progression",
+    "Total_scrips": "Gesamt benötigte Währung",
+    "Reset_progression": "Item und Materiafortschritt zurücksetzen",
     "SLOT": {
       "Body": "Rumpf",
       "Ears": "Ohrring",
@@ -2690,7 +2698,9 @@
     "Task_level": "Stufe der Unternehmung",
     "Total_per_venture": "Gesamt für Unternehmung",
     "Use_retainer": "Wähle Gehilfe aus",
-    "Select_retainer": "Wähle einen Gehilfen"
+    "Select_retainer": "Wähle einen Gehilfen",
+    "Missing_gear": "Fehlende Ausrüstung",
+    "Missing_gear_description": "Some of your retainers are missing their gear in TC data, please summon each retainer again to load their gear"
   },
   "PATREON": {
     "By_supporting_us": "Durch deine Unterstützung auf Patreon erhältst du:",
@@ -2718,7 +2728,12 @@
   },
   "FREE_COMPANY_WORKSHOPS": {
     "Import_using_pcap": "Durch Paketerfassung importieren",
-    "Import_from_pcap_notice": "1. Gehe zur Gesellschaftswerkstätte (betritt diese nachdem du diese Meldung geöffnet hast)<br>2. Öffne das Fenster für die Freie Gesellschaft<br>3. Interagiere mit jedem Tauchboot oder Flugschiff über das Verwaltungsfenster",
+    "Go_to_workshop": "Betritt deine Werkstatt",
+    "Go_to_workshop_description": "Wenn du bereits darin bist, verlasse bitte die Werkstatt und betrete sie erneut.",
+    "Open_fc_window": "Öffne das Fenster mit den Details der Freien Gesellschaft",
+    "Open_fc_window_description": "This will make TC get more important details about your free company, such as server \":\" is the default binding for it.",
+    "Interact_with_ships_subs": "Interagiere mit jedem U-Boot/Luftschiff, das du importieren möchtest",
+    "Interact_with_ships_subs_description": "Das Öffnen des Luftschiff-/U-Boot-Management-Fensters macht TC laden alles, was nötig ist, um Details über Ihre Schiffe anzuzeigen.",
     "Airships": "Luftschiffe",
     "Submersibles": "Tauchboote"
   },
@@ -2986,8 +3001,8 @@
   "LIST_AGGREGATE": {
     "Home_title": "List Aggregate",
     "Home_subtitle": "Open multiple lists at once in an aggregated view",
-    "Select_lists": "Select the lists you want to aggregate",
-    "Select_layout": "Select a layout",
+    "Select_lists": "Wähle die Listen, die du zusammenfassen möchtest",
+    "Select_layout": "Wähle ein Layout",
     "Open_aggregate": "Open an aggregated view",
     "Title": "Aggregated list view",
     "Select_panel": "Select a panel to open its view",
@@ -3005,6 +3020,14 @@
     "Wrapper_failed_to_start": "Machina-Wrapper konnte nicht gestartet werden",
     "DESCRIPTION": {
       "Wrapper_failed_to_start": "Bitte stelle sicher, dass das Spiel läuft und nicht als Admininstrator ausgeführt wird (oder, in diesem Fall, TC als Administrator starten).<br>Wenn dieses Problem weiterhin besteht, melde dich bitte an Discords Fehlerbehebungskanal #troubleshooting mit einem Screenshot der obigen Nachrichten.<br><br> Wiederholung in {{retryDelay}}s"
+    }
+  },
+  "PCAP_ERRORS": {
+    "Default": "Packet Capture error",
+    "ERR_GAME_NOT_RUNNING": "Packet capture failed to start",
+    "DESCRIPTION": {
+      "Default": "An unknown error happened while trying to start packet capture, please report in Discord's #troubleshooting channel.<br><br> Retrying in {{retryDelay}}s",
+      "ERR_GAME_NOT_RUNNING": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.<br><br> Retrying in {{retryDelay}}s"
     }
   },
   "ISLAND_SANCTUARY": {
@@ -3087,5 +3110,71 @@
       "Main_drop": "Hauptbeute",
       "Rare_drop": "Seltene Beute"
     }
+  },
+  "FISH_TRAIN": {
+    "Train": "Fishing train",
+    "Not_found": "Fish train not found",
+    "Route": "Route",
+    "Current_fish": "Current fish",
+    "Details_title": "Fish train #{{id}}",
+    "Departure": "Departure: {{time}}",
+    "Departure_in": "Departure in {{time}}",
+    "Leaving_in": "Closing in {{time}}",
+    "Terminus": "Terminus: {{time}}",
+    "Stopped": "Stopped",
+    "Running": "Running",
+    "Waiting": "Waiting",
+    "Bait": "Bait",
+    "Copy_macro": "Copy macro",
+    "Are_you_on_spot": "Are you already on the fishing spot?",
+    "Copy_move_macro": "Copy train move macro",
+    "Slap": "Slap: {{target}}",
+    "Fish_before": "Intuition Trigger Requirements: {{target}}",
+    "Current_position_macro": "/shout Fish train is currently fishing for {{itemName}} at {{mapName}}: {{coords}}. Preferred bait: {{bait}}, min gathering: {{minGathering}}.",
+    "Next_position_macro": "/shout Choo Choo ! Fish train is moving to {{mapName}}: {{coords}} in order to fish {{itemName}}. Preferred bait: {{bait}}, min gathering: {{minGathering}}.",
+    "Board_train": "Board train",
+    "Leave_train": "Leave this train",
+    "Stats": "Stats",
+    "Passengers": "Passengers",
+    "Total_reports": "# of fish caught",
+    "Wrong_spot": "Wrong spot",
+    "Wrong_spot_description": "You are not on the right spot to contribute to the fishing train, please check current location in fish train details.",
+    "Accuracy": "Accuracy",
+    "Accuracy_explain": "% of fish caught matching the route",
+    "Contribution_per_passenger": "Contributions per passenger",
+    "Fishing_rate": "Fishing rate",
+    "Nothing_to_show": "No contributions to display",
+    "Terminus_tag": "Terminus",
+    "Open_fishing_overlay": "Open fishing overlay",
+    "Claim_conductor_role": "Claim conductor role",
+    "Enter_conductor_token": "Enter conductor token",
+    "Conductor_role_claimed": "Successfully claimed train conductor role",
+    "Wrong_token": "Wrong token entered, claim failed",
+    "Train_conductor": "Train conductor: {{name}}",
+    "No_conductor": "No conductor",
+    "Rename_train": "Rename this train",
+    "No_slap": "No slap",
+    "Select_slap": "Pick a fish to slap",
+    "Visiblity_explain": "Public trains are visible in the Trains page",
+    "Moving_notification_title": "Train is moving to next spot",
+    "Moving_notification": "Train is moving to {{placeName}}: {{coords}} to fish next target: {{itemName}}",
+    "Fish_count": "{{amount}} fish",
+    "No_trains_found": "No trains found matching your filters",
+    "Open_details": "Open details",
+    "Open_in_carbuncleplushy": "Open on CarbunclePlushy",
+    "Private_display_explain": "Only you can see this here because you're the conductor of this train",
+    "List_title": "Fish trains",
+    "List_subtitle": "A cool way to fish with the community !",
+    "Name_filter_placeholder": "Search train by name",
+    "Create_new": "Create a train on CarbunclePlushy",
+    "Your_trains": "Your trains",
+    "Missing_world": "Missing world",
+    "Missing_world_explain": "A train with no world set is way harder for people to follow or find, please select a server in the server dropdown above.",
+    "Time_travel": "Time travel",
+    "Only_target_fish": "Only target fish",
+    "All_fish": "All fish",
+    "Fish_breakdown": "Fish breakdown",
+    "Bait_breakdown": "Bait usage breakdown",
+    "Fish_size_chart": "Fish sizes"
   }
 }

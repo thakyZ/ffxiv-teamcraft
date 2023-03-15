@@ -1,10 +1,10 @@
-import { getItemSource, ListRow } from '../../modules/list/model/list-row';
+import { ListRow } from '../../modules/list/model/list-row';
 import { FilterMethod } from './filter-method';
 import { FilterResult } from './filter-result';
 import { CraftedBy } from '../../modules/list/model/crafted-by';
 import { List } from '../../modules/list/model/list';
 import { beastTribeNpcs } from '../data/sources/beast-tribe-npcs';
-import { DataType } from '../../modules/list/data/data-type';
+import { DataType, getItemSource } from '@ffxiv-teamcraft/types';
 import { SettingsService } from '../../modules/settings/settings.service';
 import { Vendor } from '../../modules/list/model/vendor';
 import { housingMaterialSuppliers } from '../data/sources/housing-material-suppliers';
@@ -323,13 +323,11 @@ export class LayoutRowFilter {
     const parsed = filterString.split(':');
     const baseFilterString: string = parsed.shift();
     const baseFilter: LayoutRowFilter = LayoutRowFilter[baseFilterString.replace('!', '')];
+    const firstFilter = baseFilterString[0] === '!' ? LayoutRowFilter.not(baseFilter) : baseFilter;
     if (parsed.length > 1 && baseFilter !== undefined) {
-      return LayoutRowFilter.processRows(parsed, baseFilter);
+      return LayoutRowFilter.processRows(parsed, firstFilter);
     }
-    if (baseFilterString[0] === '!') {
-      return LayoutRowFilter.not(baseFilter);
-    }
-    return baseFilter;
+    return firstFilter;
   }
 
   public static not(baseFilter: LayoutRowFilter): LayoutRowFilter {

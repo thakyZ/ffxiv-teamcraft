@@ -2,7 +2,7 @@ import { Injectable, Optional } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { Theme } from './theme';
 import { IpcService } from '../../core/electron/ipc.service';
-import { Region } from './region.enum';
+import { Region } from '@ffxiv-teamcraft/types';
 import { debounceTime, filter, map, startWith } from 'rxjs/operators';
 import { CommissionTag } from '../commission-board/model/commission-tag';
 import { Language } from '../../core/data/language';
@@ -31,7 +31,7 @@ export class SettingsService {
         localStorage.setItem('settings', JSON.stringify(this.cache));
       });
     }
-    this.region$ = this.regionChange$.pipe(map(change => change.next), startWith(this.region));
+    this.region$ = this.regionChange$.pipe(map(change => change.next), debounceTime(50), startWith(this.region));
   }
 
   private _cache: Record<string, string>;

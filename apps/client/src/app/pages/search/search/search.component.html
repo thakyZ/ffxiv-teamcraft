@@ -319,24 +319,27 @@
         </div>
       </div>
     </div>
-    <div class="search-box-footer" fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="flex-start center"
-         *ngIf="hasAdditionalFilters(searchType)"
-         (click)="showFilters = !showFilters; settings.showSearchFilters = showFilters">
-      <i nz-icon [nzType]="showFilters ? 'eye-invisible' : 'eye'"></i>
-      <div>{{ (showFilters ? 'SEARCH.Hide_filters' : 'SEARCH.Show_filters') | translate}}</div>
-    </div>
-  </div>
+    <div class="search-box-footer"
+         *ngIf="(sortBy$ | async) === true || hasAdditionalFilters(searchType)"
+         (click)="hasAdditionalFilters(searchType) ? toggleFiltersDisplay() : null">
 
-  <div class="order-boxes" fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="center center" fxLayoutGap="10px" *ngIf="showSort$ | async">
-    <div>{{'SEARCH.Sort_by' | translate}}</div>
-    <nz-select (ngModelChange)="sortBy$.next($event)" [ngModel]="sortBy$ | async" nzAllowClear>
-      <nz-option *ngFor="let entry of possibleSortEntries$ | async" [nzLabel]="('SEARCH.SORT_BY.'+entry.label) | translate"
-                 [nzValue]="entry.field"></nz-option>
-    </nz-select>
-    <nz-select (ngModelChange)="sortOrder$.next($event)" [ngModel]="sortOrder$ | async">
-      <nz-option [nzLabel]="'SEARCH.Sort_asc' | translate" nzValue="asc"></nz-option>
-      <nz-option [nzLabel]="'SEARCH.Sort_desc' | translate" nzValue="desc"></nz-option>
-    </nz-select>
+      <div *ngIf="hasAdditionalFilters(searchType)" class="flex-row align-center gap-5 search-footer-toggle">
+        <i nz-icon [nzType]="showFilters ? 'eye-invisible' : 'eye'"></i>
+        <div>{{ (showFilters ? 'SEARCH.Hide_filters' : 'SEARCH.Show_filters') | translate}}</div>
+      </div>
+
+      <div class="order-boxes flex-row align-center gap-10" *ngIf="showSort$ | async">
+        <div>{{'SEARCH.Sort_by' | translate}}</div>
+        <nz-select (ngModelChange)="sortBy$.next($event)" [ngModel]="sortBy$ | async" nzAllowClear (click)="$event.stopPropagation()">
+          <nz-option *ngFor="let entry of possibleSortEntries$ | async" [nzLabel]="('SEARCH.SORT_BY.'+entry.label) | translate"
+                     [nzValue]="entry.field"></nz-option>
+        </nz-select>
+        <nz-select (ngModelChange)="sortOrder$.next($event)" [ngModel]="sortOrder$ | async" (click)="$event.stopPropagation()">
+          <nz-option [nzLabel]="'SEARCH.Sort_asc' | translate" nzValue="asc"></nz-option>
+          <nz-option [nzLabel]="'SEARCH.Sort_desc' | translate" nzValue="desc"></nz-option>
+        </nz-select>
+      </div>
+    </div>
   </div>
 </div>
 <div *ngIf="(searchType$ | async) === searchTypes.LEVE" fxLayout="row" fxLayoutAlign="center center">
@@ -346,7 +349,7 @@
   <app-search-intro></app-search-intro>
 </div>
 <ng-container *ngIf="searchType$ | async as searchType">
-  <div *ngIf="results$ | async as results" fxLayout="column" fxLayoutAlign="flex-start center">
+  <div *ngIf="results$ | async as results" class="flex-column justify-start align-center">
     <div *ngIf="searchType === searchTypes.ITEM || searchType === searchTypes.RECIPE  || searchType === searchTypes.ANY"
          class="addition-buttons">
       <button nz-button (click)="selectAll(results, !allSelected)">{{(allSelected ? 'Unselect_all' : 'Select_all') | translate}}</button>
@@ -361,7 +364,8 @@
               <i nz-icon nzType="close"></i>
             </div>
             <app-item-icon *ngIf="item.contentType === 'items'" [icon]="item.icon" [itemId]="item.itemId" [width]="24"></app-item-icon>
-            <app-item-icon *ngIf="item.contentType === 'islandBuildings'" [icon]="item.icon" [itemId]="null" [width]="24" [tooltipDisabled]="true"></app-item-icon>
+            <app-item-icon *ngIf="item.contentType === 'islandBuildings'" [icon]="item.icon" [itemId]="null" [width]="24"
+                           [tooltipDisabled]="true"></app-item-icon>
             <div fxLayout="column">
               <div>
                 <app-i18n-name [content]="item.contentType" [id]="item.itemId"></app-i18n-name>
@@ -440,25 +444,3 @@
     </div>
   </div>
 </ng-container>
-
-<ng-template #notificationRef let-notification>
-  <div class="ant-notification-notice-content ant-notification-notice-with-icon">
-    <span class="ant-notification-notice-icon"><i class="ant-notification-notice-icon-success" nz-icon
-                                                  nzType="check-circle"></i></span>
-    <div>
-      <div class="ant-notification-notice-message">{{'COMMON.Success' | translate}}</div>
-      <div class="ant-notification-notice-description">
-        <span *ngIf="itemsAdded === 1">{{'Recipe_Added' | translate: { listname: modifiedList.name } }}</span>
-        <span *ngIf="itemsAdded !== 1">{{'Recipes_Added' | translate: {
-          itemcount: itemsAdded,
-          listname: modifiedList.name
-        } }}</span>
-      </div>
-      <span class="ant-notification-notice-btn">
-            <a (click)="notification.close();" nz-button nzType="primary" routerLink="/list/{{modifiedList.$key}}">
-              <span>{{'Open' | translate}}</span>
-            </a>
-          </span>
-    </div>
-  </div>
-</ng-template>

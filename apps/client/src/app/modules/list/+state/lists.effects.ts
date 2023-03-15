@@ -264,16 +264,30 @@ export class ListsEffects {
   markItemsHq$ = createEffect(() => this.actions$.pipe(
     ofType<MarkItemsHq>(ListsActionTypes.MarkItemsHq),
     withLatestFrom(this.selectedListClone$),
-    map(([{ itemIds, hq }, list]) => {
-      list.items = list.items.map(i => {
-        if (itemIds.includes(i.id)) {
-          return {
-            ...i,
-            requiredAsHQ: hq
-          };
-        }
-        return i;
-      });
+    map(([{ itemIds, hq, finalItems }, list]) => {
+      if (finalItems) {
+        list.finalItems = list.finalItems.map(i => {
+          if (itemIds.includes(i.id)) {
+            return {
+              ...i,
+              forceRequiredHQ: hq
+            };
+          }
+          return i;
+        });
+      } else {
+        list.items = list.items.map(i => {
+          if (itemIds.includes(i.id)) {
+            return {
+              ...i,
+              forceRequiredHQ: hq
+            };
+          }
+          return i;
+        });
+      }
+      ListController.updateAllStatuses(list);
+      ListController.updateEtag(list);
       return new UpdateList(list);
     })
   ));
@@ -314,7 +328,6 @@ export class ListsEffects {
 
   updateListInDatabase$ = createEffect(() => this.actions$.pipe(
     ofType<UpdateList>(ListsActionTypes.UpdateList),
-    debounceTime(1000),
     switchMap((action) => {
       if (action.payload.offline) {
         this.saveToLocalstorage(action.payload, false);
@@ -436,7 +449,7 @@ export class ListsEffects {
       }
       return withList$;
     }),
-    debounceBufferTime(1000)
+    debounceBufferTime(50)
   ).pipe(
     concatMap((entries: [SetItemDone, List][]) => {
       const groupedByList = entries.reduce((acc, entry) => {
@@ -491,6 +504,8 @@ export class ListsEffects {
       } else {
         list.items = updatedItems;
       }
+      ListController.updateAllStatuses(list, action.item.id);
+      ListController.updateEtag(list);
       return list;
     }),
     map(list => new UpdateList(list))

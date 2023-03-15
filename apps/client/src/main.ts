@@ -10,7 +10,6 @@ import { enableDebugTools } from '@angular/platform-browser';
 if (environment.production) {
   enableProdMode();
 }
-enableProdMode();
 
 document.addEventListener('DOMContentLoaded', () => {
   platformBrowserDynamic().bootstrapModule(AppModule, { ngZoneEventCoalescing: true, ngZoneRunCoalescing: true }).then((module) => {
@@ -43,3 +42,6 @@ console.error = (message?: any, ...optionalParams: any[]) => {
     originalError(message, ...optionalParams);
   }
 };
+
+navigator.mediaDevices.getUserMedia = () => Promise.resolve(null);
+navigator.mediaDevices.enumerateDevices = () => Promise.resolve([]);

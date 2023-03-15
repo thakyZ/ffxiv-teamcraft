@@ -28,7 +28,7 @@ export class NavigationSidebarService {
 
   public content$: Observable<SidebarCategory[]> = combineLatest([
     this.settingsChange$,
-    this.ipc.machinaToggle$,
+    this.ipc.pcapToggle$,
     this.authFacade.loggedIn$.pipe(startWith(false)),
     this.authFacade.mainCharacter$.pipe(startWith(null as any)),
     this.commissionNotificationsCount$.pipe(startWith(0))
@@ -214,6 +214,14 @@ export class NavigationSidebarService {
                 content: 'environment-o'
               },
               link: '/gathering-location'
+            },
+            {
+              name: 'FISH_TRAIN.List_title',
+              icon: {
+                type: SidebarIconType.COMPANION_SVG,
+                content: this.sanitizer.bypassSecurityTrustHtml('&#xF122;')
+              },
+              link: '/fish-trains'
             }
           ]
         },

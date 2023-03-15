@@ -70,7 +70,7 @@ export class ItemIconComponent {
           if (xivapiIcon) {
             return `https://xivapi.com${xivapiIcon}`;
           }
-          return 'https://xivapi.com/img-misc/code-regular.svg';
+          return undefined;
         })
       );
     }),
@@ -103,8 +103,7 @@ export class ItemIconComponent {
 
   handleClick(event: MouseEvent): void {
     event.preventDefault();
-    event.stopPropagation();
-    if (this.disableClick || this.itemId === null) {
+    if (this.disableClick || this.itemId === null || event.type === 'mouseup') {
       return;
     }
     if (event.which === 2) {

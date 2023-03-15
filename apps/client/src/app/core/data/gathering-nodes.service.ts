@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { GarlandToolsService } from '../api/garland-tools.service';
-import { GatheringNode } from './model/gathering-node';
-import { getItemSource } from '../../modules/list/model/list-row';
-import { DataType } from '../../modules/list/data/data-type';
-import { FishingBait } from './model/fishing-bait';
+import { DataType, FishingBait, GatheringNode } from '@ffxiv-teamcraft/types';
+import { getItemSource } from '@ffxiv-teamcraft/types';
 import { Observable, of } from 'rxjs';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { map } from 'rxjs/operators';
-import { LazyFishingSpot } from '../../lazy-data/model/lazy-fishing-spot';
-import { LazyData } from '../../lazy-data/lazy-data';
+import { LazyFishingSpot } from '@ffxiv-teamcraft/data/model/lazy-fishing-spot';
+import { LazyData } from '@ffxiv-teamcraft/data/model/lazy-data';
 import { safeCombineLatest } from '../rxjs/safe-combine-latest';
 
 @Injectable({
@@ -124,7 +122,7 @@ export class GatheringNodesService {
           });
 
           const islandMatches: GatheringNode[] = [islandGatheringItems[id]]
-            .filter(item => !! item)
+            .filter(item => !!item)
             .map(item => {
               return {
                 id: -id,
@@ -138,7 +136,7 @@ export class GatheringNodesService {
                 x: item.x,
                 y: item.y,
                 z: item.z
-              }
+              };
             });
 
           return [...minBtnSpearHiddenMatches.filter(e => !spearFishingMatches.some(s => s.id === e.id)), ...fishingSpotMatches, ...spearFishingMatches, ...islandMatches]

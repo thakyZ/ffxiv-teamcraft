@@ -2,7 +2,7 @@ import { Component, OnDestroy, TemplateRef, ViewChild } from '@angular/core';
 import { BehaviorSubject, combineLatest, concat, from, Observable, of, Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { I18nToolsService } from '../../../core/tools/i18n-tools.service';
-import { I18nName } from '../../../model/common/i18n-name';
+import { I18nName } from '@ffxiv-teamcraft/types';
 import { debounceTime, filter, first, map, mergeMap, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { ListsFacade } from '../../../modules/list/+state/lists.facade';
@@ -24,8 +24,9 @@ import { LogTracking } from '../../../model/user/log-tracking';
 import { LazyDataFacade } from '../../../lazy-data/+state/lazy-data.facade';
 import { withLazyData } from '../../../core/rxjs/with-lazy-data';
 import { safeCombineLatest } from '../../../core/rxjs/safe-combine-latest';
-import { LazyRecipe } from '../../../lazy-data/model/lazy-recipe';
+import { LazyRecipe } from '@ffxiv-teamcraft/data/model/lazy-recipe';
 import { EnvironmentService } from '../../../core/environment.service';
+import { LazyLeve } from '@ffxiv-teamcraft/data/model/lazy-leve';
 
 @Component({
   selector: 'app-recipe-finder',
@@ -216,7 +217,7 @@ export class RecipeFinderComponent implements OnDestroy {
       withLazyData(this.lazyData, 'leves'),
       map(([[entries, onlyLeveItems], leves]) => {
         const withLeves = entries.map(entry => {
-          entry.leves = Object.entries(leves)
+          entry.leves = Object.entries<LazyLeve>(leves)
             .filter(([, leve]) => {
               return leve.items.some(i => i.itemId === entry.itemId);
             })

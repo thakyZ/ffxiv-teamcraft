@@ -1,14 +1,13 @@
 import { ZoneBreakdownRow } from './zone-breakdown-row';
-import { getItemSource, ListRow } from '../../modules/list/model/list-row';
+import { ListRow } from '../../modules/list/model/list-row';
 import { tpWindowEntries } from '../../core/data/sources/tp-window-entries';
 import { LayoutRowFilter } from '../../core/layout/layout-row-filter';
-import { DataType } from '../../modules/list/data/data-type';
-import { GatheredBy } from '../../modules/list/model/gathered-by';
+import { DataType, getItemSource } from '@ffxiv-teamcraft/types';
 import { Drop } from '../../modules/list/model/drop';
-import { Alarm } from '../../core/alarms/alarm';
+import { PersistedAlarm } from '../../core/alarms/persisted-alarm';
 import { Vendor } from '../../modules/list/model/vendor';
 import { TradeSource } from '../../modules/list/model/trade-source';
-import { Vector2 } from '../../core/tools/vector2';
+import { Vector2 } from '@ffxiv-teamcraft/types';
 import { mapIds } from '../../core/data/sources/map-ids';
 
 export class ZoneBreakdown {
@@ -17,7 +16,7 @@ export class ZoneBreakdown {
     rows.forEach(row => {
       if (getItemSource(row, DataType.GATHERED_BY, true).nodes !== undefined && getItemSource(row, DataType.GATHERED_BY, true).nodes.length !== 0
         && this.hasOneFilter(filterChain, LayoutRowFilter.IS_GATHERING, LayoutRowFilter.IS_GATHERED_BY_BTN, LayoutRowFilter.IS_GATHERED_BY_MIN, LayoutRowFilter.IS_GATHERED_BY_FSH)) {
-        getItemSource<GatheredBy>(row, DataType.GATHERED_BY, true).nodes.forEach(node => {
+        getItemSource(row, DataType.GATHERED_BY, true).nodes.forEach(node => {
           const coords = { x: node.x || 0, y: node.y || 0 };
           // In the case of fishing, we have to get the zone name differently, as the spot has zoneid for its own place name, not the map's name
           if (node.type === 4) {
@@ -58,7 +57,7 @@ export class ZoneBreakdown {
           this.addToBreakdown(drop.zoneid, drop.mapid, row, hideZoneDuplicates, drop.position);
         });
       } else if (getItemSource(row, DataType.ALARMS).length > 0 && this.hasOneFilter(filterChain, LayoutRowFilter.IS_TIMED, LayoutRowFilter.IS_REDUCTION)) {
-        getItemSource<Alarm[]>(row, DataType.ALARMS).forEach(alarm => {
+        getItemSource<PersistedAlarm[]>(row, DataType.ALARMS).forEach(alarm => {
           this.addToBreakdown(alarm.zoneId, alarm.mapId, row, hideZoneDuplicates, alarm.coords);
         });
       } else if (getItemSource(row, DataType.VENDORS).length > 0 && this.hasOneFilter(filterChain, LayoutRowFilter.CAN_BE_BOUGHT)) {

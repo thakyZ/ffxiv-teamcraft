@@ -6,12 +6,14 @@ import { EorzeaFacade } from '../../modules/eorzea/+state/eorzea.facade';
 import { EorzeanTimeService } from '../eorzea/eorzean-time.service';
 import { IpcService } from '../electron/ipc.service';
 import { toIpcData } from '../rxjs/to-ipc-data';
-import { Tug } from '../data/model/tug';
-import { Hookset } from '../data/model/hookset';
+import { Hookset, Tug } from '@ffxiv-teamcraft/types';
 import { SettingsService } from '../../modules/settings/settings.service';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { EventPlay } from '@ffxiv-teamcraft/pcap-ffxiv';
 import { FishingReporterState } from './state/fishing-reporter-state';
+import { FishTrainFacade } from '../../modules/fish-train/fish-train/fish-train.facade';
+import { getFishTrainStatus } from '../../modules/fish-train/get-fish-train-status';
+import { FishTrainStatus } from '../../pages/fish-trains/fish-trains/fish-train-status';
 
 
 export class FishingReporter implements DataReporter {
@@ -20,7 +22,8 @@ export class FishingReporter implements DataReporter {
 
   constructor(private eorzea: EorzeaFacade, private lazyData: LazyDataFacade,
               private etime: EorzeanTimeService, private ipc: IpcService,
-              private settings: SettingsService) {
+              private settings: SettingsService, private fishTrainFacade: FishTrainFacade) {
+    this.fishTrainFacade.loadRunning();
   }
 
   getDataReports(_packets$: Observable<any>): Observable<any[]> {
@@ -234,8 +237,11 @@ export class FishingReporter implements DataReporter {
       this.eorzea.weatherId$.pipe(startWith(null), distinctUntilChanged()),
       this.eorzea.previousWeatherId$.pipe(startWith(null), distinctUntilChanged()),
       throw$.pipe(startWith(null)),
-      bite$.pipe(startWith(null))
-    ]).subscribe(([isFishing, mapId, baitId, spot, stats, mooch, statuses, weatherId, previousWeatherId, throwData, biteData]) => {
+      bite$.pipe(startWith(null)),
+      this.fishTrainFacade.currentTrain$.pipe(startWith(null)),
+      this.fishTrainFacade.currentTrainSpotId$.pipe(startWith(null))
+    ]).subscribe(([isFishing, mapId, baitId, spot, stats, mooch, statuses, weatherId, previousWeatherId, throwData, biteData, train, trainSpotId]) => {
+      const shouldAddTrain = trainSpotId === spot?.id && getFishTrainStatus(train) === FishTrainStatus.RUNNING;
       this.setState({
         isFishing,
         mapId,
@@ -247,7 +253,9 @@ export class FishingReporter implements DataReporter {
         weatherId,
         previousWeatherId,
         throwData,
-        biteData
+        biteData,
+        train: shouldAddTrain ? train : null,
+        wrongSpot: spot && train && getFishTrainStatus(train) === FishTrainStatus.RUNNING && trainSpotId !== spot?.id
       });
     });
 
@@ -262,7 +270,9 @@ export class FishingReporter implements DataReporter {
         hookset$,
         spot$,
         fisherStats$,
-        mooch$
+        mooch$,
+        this.fishTrainFacade.currentTrainSpotId$.pipe(startWith(null)),
+        this.fishTrainFacade.currentTrain$.pipe(startWith(null))
       ),
       filter(([fish, , throwData, biteData, , spot, stats]) => {
         return (fish.id === -1 && stats?.gp > 1)
@@ -270,7 +280,8 @@ export class FishingReporter implements DataReporter {
             && spot.fishes.indexOf(fish.id) > -1
           ) && throwData.weatherId !== null;
       }),
-      map(([fish, baitId, throwData, biteData, hookset, spot, stats, mooch]) => {
+      map(([fish, baitId, throwData, biteData, hookset, spot, stats, mooch, trainSpotId, train]) => {
+        const shouldAddTrain = trainSpotId === spot?.id && getFishTrainStatus(train) === FishTrainStatus.RUNNING;
         const entry = {
           itemId: fish.id,
           etime: throwData.etime.getUTCHours(),
@@ -290,6 +301,7 @@ export class FishingReporter implements DataReporter {
           hookset,
           spot: spot.id,
           size: fish.size,
+          trainId: shouldAddTrain ? train?.$key : null,
           ...stats
         };
         if (mooch) {

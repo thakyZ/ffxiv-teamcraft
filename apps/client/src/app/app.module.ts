@@ -95,8 +95,6 @@ import hr from '@angular/common/locales/hr';
 import ko from '@angular/common/locales/ko';
 import { InventoryModule } from './modules/inventory/inventory.module';
 import { EorzeaModule } from './modules/eorzea/eorzea.module';
-import { GraphQLModule } from './graphql.module';
-import { ApolloInterceptor } from './apollo-interceptor';
 import { QuickSearchModule } from './modules/quick-search/quick-search.module';
 import { GearsetsModule } from './modules/gearsets/gearsets.module';
 import { ChangelogPopupModule } from './modules/changelog-popup/changelog-popup.module';
@@ -115,10 +113,8 @@ import { FreeCompanyWorkshopsModule } from './modules/free-company-workshops/fre
 import { AdsModule } from './modules/ads/ads.module';
 import { NzNoAnimationModule } from 'ng-zorro-antd/core/no-animation';
 import * as AllaganReportsGQLProviders from './pages/allagan-reports/allagan-reports.gql';
-import { LazyDataModule } from './lazy-data/lazy-data.module';
 import { initialState as listsInitialState, listsReducer } from './modules/list/+state/lists.reducer';
 import { ListsEffects } from './modules/list/+state/lists.effects';
-import { ListsActionTypes, SetItemDone } from './modules/list/+state/lists.actions';
 import { GOOGLE_ANALYTICS_ROUTER_INITIALIZER_PROVIDER } from './core/analytics/analytics-router-initializer';
 import { enableMultiTabIndexedDbPersistence, getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
@@ -128,6 +124,11 @@ import { getFunctions, provideFunctions } from '@angular/fire/functions';
 import { getPerformance, providePerformance } from '@angular/fire/performance';
 import { ListAggregateModule } from './modules/list-aggregate/list-aggregate.module';
 import { BreakpointDebugComponent } from './tools/breakpoint-debug/breakpoint-debug.component';
+import { FishTrainModule } from './modules/fish-train/fish-train.module';
+import { APOLLO_OPTIONS, ApolloModule } from 'apollo-angular';
+import { HttpLink } from 'apollo-angular/http';
+import { apolloClientFactory } from './apollo-client-factory';
+import { AuthFacade } from './+state/auth.facade';
 
 const icons: IconDefinition[] = [
   SettingOutline,
@@ -192,6 +193,11 @@ const nzConfig: NzConfig = {
   ],
   providers: [
     GOOGLE_ANALYTICS_ROUTER_INITIALIZER_PROVIDER,
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory: apolloClientFactory,
+      deps: [HttpLink, AuthFacade]
+    },
     { provide: NZ_I18N, useValue: en_US },
     {
       provide: NZ_CONFIG,
@@ -199,7 +205,6 @@ const nzConfig: NzConfig = {
     },
     { provide: NZ_ICONS, useValue: icons },
     { provide: HTTP_INTERCEPTORS, useClass: UniversalInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ApolloInterceptor, multi: true },
     ...APP_INITIALIZERS,
     ...Object.values(AllaganReportsGQLProviders)
   ],
@@ -252,6 +257,7 @@ const nzConfig: NzConfig = {
     LoadingScreenModule,
     GearsetsModule,
     CraftingReplayModule,
+    FishTrainModule,
 
     ChangelogPopupModule,
 
@@ -294,26 +300,7 @@ const nzConfig: NzConfig = {
       }
     }),
     !environment.production ? StoreDevtoolsModule.instrument({
-      name: 'FFXIV Teamcraft',
-      stateSanitizer: (state) => {
-        const { lazyData, ...sanitized } = state;
-        return sanitized;
-      },
-      actionSanitizer: (action) => {
-        if (action.type.includes('LazyData')) {
-          return {
-            type: action.type,
-            key: (action as any).key,
-            entity: (action as any).entity,
-            id: (action as any).id
-          };
-        }
-        if (action.type === ListsActionTypes.SetItemDone) {
-          const { settings, ...sanitized } = (action as SetItemDone);
-          return sanitized;
-        }
-        return action;
-      }
+      name: 'FFXIV Teamcraft'
     }) : [],
     EffectsModule.forRoot([]),
     StoreModule.forFeature('auth', authReducer, { initialState: authInitialState }),
@@ -324,7 +311,7 @@ const nzConfig: NzConfig = {
 
     ListAggregateModule,
 
-    GraphQLModule,
+    ApolloModule,
 
     PlayerMetricsModule,
     NzSpaceModule,
@@ -334,7 +321,6 @@ const nzConfig: NzConfig = {
     NzAlertModule,
     NavigationSidebarModule,
     AdsModule,
-    LazyDataModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     }),

@@ -1,5 +1,5 @@
-import { DataType } from '../../modules/list/data/data-type';
-import { getItemSource, ListRow } from '../../modules/list/model/list-row';
+import { DataType, getItemSource, TRADE_SOURCES_PRIORITIES } from '@ffxiv-teamcraft/types';
+import { ListRow } from '../../modules/list/model/list-row';
 import { NpcBreakdownRow } from './npc-breakdown-row';
 import { TradeSource } from '../../modules/list/model/trade-source';
 import { TradeIconPipe } from '../../pipes/pipes/trade-icon.pipe';
@@ -7,7 +7,7 @@ import { beastTribeNpcs } from '../../core/data/sources/beast-tribe-npcs';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { from, Observable } from 'rxjs';
 import { housingMaterialSuppliers } from '../../core/data/sources/housing-material-suppliers';
-import { map, mergeScan } from 'rxjs/operators';
+import { first, map, mergeScan } from 'rxjs/operators';
 import { Vendor } from '../../modules/list/model/vendor';
 import { TradeNpc } from '../../modules/list/model/trade-npc';
 
@@ -74,7 +74,7 @@ export class NpcBreakdown {
     return tradeSource.trades
       .map(trade => {
         return trade.currencies
-          .map(currency => TradeIconPipe.TRADE_SOURCES_PRIORITIES[currency.id])
+          .map(currency => TRADE_SOURCES_PRIORITIES[currency.id])
           .sort((ca, cb) => cb.ca)[0];
       })
       .sort((a, b) => {
@@ -106,7 +106,7 @@ export class NpcBreakdown {
   }
 
   private addRow(npcId: number, row: ListRow, rows: NpcBreakdownRow[]): Observable<NpcBreakdownRow[]> {
-    return this.lazyData.getRow('npcs', npcId).pipe(
+    return this.lazyData.getRow('npcs', npcId, null).pipe(
       map(npc => {
         let breakdownRow = rows.find(r => r.npcId === npcId);
         if (breakdownRow === undefined) {
@@ -116,7 +116,8 @@ export class NpcBreakdown {
         }
         breakdownRow.items = [...breakdownRow.items, row];
         return rows;
-      })
+      }),
+      first()
     );
   }
 

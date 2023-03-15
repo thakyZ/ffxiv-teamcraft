@@ -3,7 +3,7 @@ import { observeInput } from '../../../core/rxjs/observe-input';
 import { combineLatest, map, Observable } from 'rxjs';
 import { StepByStepList } from './model/step-by-step-list';
 import { ListDisplay } from '../../../core/layout/list-display';
-import { DataType } from '../data/data-type';
+import { DataType } from '@ffxiv-teamcraft/types';
 import { PermissionLevel } from '../../../core/database/permissions/permission-level.enum';
 import { distinctUntilChanged, filter, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { SettingsService } from '../../settings/settings.service';
@@ -64,10 +64,6 @@ export class StepByStepDetailsComponent extends StepByStepComponent implements O
       const nextIncompleteMap = list.maps.find(mapId => !list.steps[mapId].complete);
       this.selectedMap$.next(nextIncompleteMap || 0);
     }
-  }
-
-  toggleOverlay(): void {
-    this.ipc.openOverlay('/step-by-step-list-overlay');
   }
 
   trackById(index: number, item: { id: number }): number {

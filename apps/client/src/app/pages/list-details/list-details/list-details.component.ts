@@ -6,7 +6,7 @@ import { distinctUntilChanged, filter, first, map, shareReplay, switchMap, takeU
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
 import { LayoutRowDisplay } from '../../../core/layout/layout-row-display';
 import { List } from '../../../modules/list/model/list';
-import { getItemSource, ListRow } from '../../../modules/list/model/list-row';
+import { ListRow } from '../../../modules/list/model/list-row';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NameQuestionPopupComponent } from '../../../modules/name-question-popup/name-question-popup/name-question-popup.component';
@@ -38,7 +38,7 @@ import { IpcService } from '../../../core/electron/ipc.service';
 import { SettingsService } from '../../../modules/settings/settings.service';
 import { InventorySynthesisPopupComponent } from '../inventory-synthesis-popup/inventory-synthesis-popup.component';
 import { PlatformService } from '../../../core/tools/platform.service';
-import { DataType } from '../../../modules/list/data/data-type';
+import { DataType, getItemSource } from '@ffxiv-teamcraft/types';
 import { ListSplitPopupComponent } from '../../../modules/list/list-split-popup/list-split-popup.component';
 import { CommissionsFacade } from '../../../modules/commission-board/+state/commissions.facade';
 import { InventoryCleanupPopupComponent } from '../inventory-cleanup-popup/inventory-cleanup-popup.component';
@@ -48,6 +48,7 @@ import { safeCombineLatest } from '../../../core/rxjs/safe-combine-latest';
 import { uniq } from 'lodash';
 import { LocalStorageBehaviorSubject } from '../../../core/rxjs/local-storage-behavior-subject';
 import { ListDisplayMode } from './list-display-mode';
+import { AnalyticsService } from '../../../core/analytics/analytics.service';
 
 @Component({
   selector: 'app-list-details',
@@ -140,6 +141,8 @@ export class ListDetailsComponent extends TeamcraftPageComponent implements OnIn
     shareReplay(1)
   );
 
+  public isDesktop = this.platform.isDesktop();
+
   constructor(private layoutsFacade: LayoutsFacade, public listsFacade: ListsFacade,
               private activatedRoute: ActivatedRoute, private dialog: NzModalService,
               private translate: TranslateService, private router: Router,
@@ -149,30 +152,21 @@ export class ListDetailsComponent extends TeamcraftPageComponent implements OnIn
               private discordWebhookService: DiscordWebhookService, private i18n: I18nToolsService,
               private linkTools: LinkToolsService, protected seoService: SeoService,
               private media: MediaObserver, public ipc: IpcService, private inventoryFacade: InventoryService,
-              public settings: SettingsService, public platform: PlatformService, private commissionsFacade: CommissionsFacade) {
+              public settings: SettingsService, public platform: PlatformService, private commissionsFacade: CommissionsFacade,
+              private analyticsService: AnalyticsService) {
     super(seoService);
-    this.ipc.once('toggle-machina:value', (event, value) => {
+    this.ipc.once('toggle-pcap:value', (event, value) => {
       this.machinaToggle = value;
     });
-    this.ipc.send('toggle-machina:get');
+    this.ipc.send('toggle-pcap:get');
     this.layouts$ = this.layoutsFacade.allLayouts$;
     this.selectedLayout$ = this.layoutsFacade.selectedLayout$;
     this.finalItemsRow$ = combineLatest([this.list$, this.adaptativeFilter$, this.hideCompletedGlobal$]).pipe(
       switchMap(([list, adaptativeFilter, overrideHideCompleted]) => this.layoutsFacade.getFinalItemsDisplay(list, adaptativeFilter, overrideHideCompleted))
     );
-    this.display$ = combineLatest([this.list$, this.adaptativeFilter$, this.hideCompletedGlobal$, this.displayMode$]).pipe(
-      switchMap(([list, adaptativeFilter, overrideHideCompleted, displayMode]) => {
-        const layout$ = this.layoutsFacade.selectedLayout$.pipe(
-          map(layout => {
-            if (displayMode === ListDisplayMode.STEP_BY_STEP) {
-              const withFinalItems = layout.clone();
-              withFinalItems.includeRecipesInItems = true;
-              return withFinalItems;
-            }
-            return layout;
-          })
-        );
-        return this.layoutsFacade.getDisplay(list, adaptativeFilter, overrideHideCompleted, layout$);
+    this.display$ = combineLatest([this.list$, this.adaptativeFilter$, this.displayMode$, this.hideCompletedGlobal$]).pipe(
+      switchMap(([list, adaptativeFilter, displayMode, overrideHideCompleted]) => {
+        return this.layoutsFacade.getDisplay(list, adaptativeFilter, overrideHideCompleted, this.layoutsFacade.selectedLayout$, displayMode === ListDisplayMode.STEP_BY_STEP);
       }),
       shareReplay({ bufferSize: 1, refCount: true })
     );
@@ -206,6 +200,10 @@ export class ListDetailsComponent extends TeamcraftPageComponent implements OnIn
 
   public set adaptativeFilter(value: boolean) {
     this.adaptativeFilter$.next(value);
+  }
+
+  toggleStepByStepOverlay(): void {
+    this.ipc.openOverlay('/step-by-step-list-overlay');
   }
 
   ngOnInit() {
@@ -339,6 +337,7 @@ export class ListDetailsComponent extends TeamcraftPageComponent implements OnIn
   cloneList(list: List): void {
     this.listsFacade.loadMyLists();
     const clone = ListController.clone(list);
+    this.analyticsService.event('List created');
     this.listsFacade.updateList(list);
     this.listManager.upgradeList(clone).pipe(
       first()

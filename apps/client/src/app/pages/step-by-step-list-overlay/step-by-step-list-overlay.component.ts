@@ -12,7 +12,6 @@ import { SettingsService } from '../../modules/settings/settings.service';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { MapService } from '../../modules/map/map.service';
 import { MapModule } from '../../modules/map/map.module';
-import { MapData } from '../../modules/map/map-data';
 import { PipesModule } from '../../pipes/pipes.module';
 import { CoreModule } from '../../core/core.module';
 import { FullpageMessageModule } from '../../modules/fullpage-message/fullpage-message.module';
@@ -42,13 +41,9 @@ import { ListDisplay } from '../../core/layout/list-display';
 })
 export class StepByStepListOverlayComponent extends StepByStepComponent implements OnInit {
 
-  public zoneId$ = this.eorzeaFacade.zoneId$;
-
   public mapId$ = this.eorzeaFacade.mapId$.pipe(
     tap(() => this.loading = true)
   );
-
-  public position$ = this.ipc.updatePositionHandlerPackets$;
 
   public list$ = this.listsFacade.selectedList$;
 
@@ -57,13 +52,17 @@ export class StepByStepListOverlayComponent extends StepByStepComponent implemen
   public permissionLevel$: Observable<PermissionLevel> = this.listsFacade.selectedListPermissionLevel$;
 
   private display$ = combineLatest([this.list$, this.adaptativeFilter$]).pipe(
-    switchMap(([list, adaptativeFilter]) => this.layoutsFacade.getDisplay(list, adaptativeFilter, false)),
+    switchMap(([list, adaptativeFilter]) => {
+      return this.layoutsFacade.getDisplay(list, adaptativeFilter, false, this.layoutsFacade.selectedLayout$, true);
+    }),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
   public closestMap$: Observable<number>;
 
   public stepsList$: Observable<NavigationStep[]>;
+
+  public noListSelected = true;
 
   constructor(protected eorzeaFacade: EorzeaFacade, protected ipc: IpcService,
               protected listsFacade: ListsFacade, protected layoutsFacade: LayoutsFacade,
@@ -74,12 +73,15 @@ export class StepByStepListOverlayComponent extends StepByStepComponent implemen
     this.ipc.send('overlay:pcap', { enabled: true, url: '/step-by-step-list-overlay' });
     this.ipc.mainWindowState$.pipe(
       filter(state => {
-        return state.lists && state.lists.selectedId && state.layouts;
+        return state.lists && state.layouts;
       })
     ).subscribe((state) => {
-      this.listsFacade.overlayListsLoaded(Object.values<List>(state.lists.listDetails.entities).filter(list => list.$key === state.lists.selectedId));
-      this.listsFacade.select(state.lists.selectedId);
-      this.layoutsFacade.selectFromOverlay(state.layouts.selectedKey);
+      this.noListSelected = !state.lists.selectedId;
+      if (state.lists.selectedId) {
+        this.listsFacade.overlayListsLoaded(Object.values<List>(state.lists.listDetails.entities).filter(list => list.$key === state.lists.selectedId));
+        this.listsFacade.select(state.lists.selectedId);
+        this.layoutsFacade.selectFromOverlay(state.layouts.selectedKey);
+      }
     });
   }
 
@@ -91,28 +93,16 @@ export class StepByStepListOverlayComponent extends StepByStepComponent implemen
     return this.mapId$;
   }
 
-  markStepAsDone(step: NavigationStep): void {
-    this.listsFacade.setItemDone(step.itemId, step.iconid, step.finalItem, step.item_amount, null, step.total_item_amount);
-  }
-
   ngOnInit() {
     super.ngOnInit();
     this.stepsList$ = this.currentPath$.pipe(
       map(path => path.path.steps.slice(1))
     );
-    this.closestMap$ = combineLatest([
-      this.mapId$,
-      this.stepByStep$
-    ]).pipe(
-      switchMap(([mapId, stepByStep]) => {
-        return combineLatest([this.mapService.getMapById(mapId), ...stepByStep.maps.filter(id => id !== mapId && !stepByStep.steps[id].complete).map(id => this.mapService.getMapById(id))]).pipe(
-          map(([currentMap, ...maps]: MapData[]) => {
-            return maps.sort((a, b) => {
-              return this.mapService.getTpCost(currentMap.aetherytes[0], a.aetherytes[0]) -
-                this.mapService.getTpCost(currentMap.aetherytes[0], b.aetherytes[0]);
-            })[0]?.id;
-          })
-        );
+    this.closestMap$ = combineLatest([this.stepByStep$, this.mapId$]).pipe(
+      map(([stepByStep, currentMapId]) => {
+        return stepByStep.maps.filter(mapId => {
+          return mapId !== currentMapId && stepByStep.steps[mapId].progress < 100;
+        })[0];
       })
     );
   }

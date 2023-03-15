@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
-import { Vector2 } from '../../core/tools/vector2';
-import { I18nName } from '../../model/common/i18n-name';
+import { Vector2 } from '@ffxiv-teamcraft/types';
+import { I18nName } from '@ffxiv-teamcraft/types';
 import { ListRow } from '../list/model/list-row';
 
 export interface NavigationObjective extends Vector2 {

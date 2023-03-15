@@ -1,21 +1,20 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { MapData } from './map-data';
-import { Vector2 } from '../../core/tools/vector2';
+import { Vector2, Vector3 } from '@ffxiv-teamcraft/types';
 import { MathToolsService } from '../../core/tools/math-tools';
 import { NavigationStep } from './navigation-step';
 import { NavigationObjective } from './navigation-objective';
-import { map, shareReplay, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
+import { debounceTime, map, shareReplay, startWith, switchMap, withLatestFrom } from 'rxjs/operators';
 import { XivapiService } from '@xivapi/angular-client';
 import * as _ from 'lodash';
 import { WorldNavigationStep } from './world-navigation-step';
-import { requestsWithDelay } from '../../core/rxjs/requests-with-delay';
 import { SettingsService } from '../settings/settings.service';
 import { EorzeaFacade } from '../eorzea/+state/eorzea.facade';
-import { Vector3 } from '../../core/tools/vector3';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { I18nToolsService } from '../../core/tools/i18n-tools.service';
-import { LazyAetheryte } from '../../lazy-data/model/lazy-aetheryte';
+import { LazyAetheryte } from '@ffxiv-teamcraft/data/model/lazy-aetheryte';
+import { safeCombineLatest } from '../../core/rxjs/safe-combine-latest';
 
 @Injectable()
 export class MapService {
@@ -25,6 +24,13 @@ export class MapService {
 
   // TP duration on the same map, this is an average.
   private static readonly TP_DURATION = 8;
+
+  private static readonly MAP_OVERRIDES = {
+    213: 257, // dravanian forelands => use Idyllshire
+    11: 12, // Limsa lower => use upper
+    13: 14, // Steps of thal => use steps of nald
+    2: 3 // Old gridania => use new
+  };
 
   private cache: { [index: number]: Observable<MapData> } = {};
 
@@ -81,7 +87,7 @@ export class MapService {
 
   public getOptimizedPathInWorld(points: NavigationObjective[]): Observable<WorldNavigationStep[]> {
     const allMaps = _.uniq(points.map(point => point.mapId));
-    return requestsWithDelay(allMaps.map(mapId => this.getMapById(mapId)), 250)
+    return safeCombineLatest(allMaps.map(mapId => this.getMapById(mapId)))
       .pipe(
         switchMap(maps => {
           return combineLatest(
@@ -154,6 +160,31 @@ export class MapService {
       );
   }
 
+  public sortMapIdsByTpCost(_mapIds: number[]): Observable<number[]> {
+    const mapIds = [..._mapIds];
+    return this.lazyData.getEntry('aetherytes').pipe(
+      switchMap(aetherytes => {
+        const currentMapId$ = this.eorzea.mapId$.pipe(startWith(this.settings.startingPlace), debounceTime(10));
+        return currentMapId$.pipe(
+          map(currentMapId => {
+            const path = [];
+            while (mapIds.length > 0) {
+              const currentAetheryte = this.filterAetherytes(aetherytes, path[0] || currentMapId, true, true)[0];
+              path.push(mapIds.sort((a, b) => {
+                const aAetheryte = this.filterAetherytes(aetherytes, a, true, true)[0];
+                const bAetheryte = this.filterAetherytes(aetherytes, b, true, true)[0];
+                const aCost = this.getTpCost(currentAetheryte, aAetheryte as LazyAetheryte);
+                const bCost = this.getTpCost(currentAetheryte, bAetheryte as LazyAetheryte);
+                return aCost - bCost;
+              }).shift());
+            }
+            return path;
+          })
+        );
+      })
+    );
+  }
+
   getPositionPercentOnMap(mapData: MapData, position: Vector2): Vector2 {
     const scale = mapData.size_factor / 100;
 
@@ -192,7 +223,7 @@ export class MapService {
       return 999;
     }
 
-    if (from.map === to.map) {
+    if (this.getMapId(from.map) === this.getMapId(to.map)) {
       return 70;
     }
 
@@ -204,18 +235,27 @@ export class MapService {
   }
 
   private getAetherytes(id: number, excludeMinis = false): Observable<LazyAetheryte[]> {
-    // If it's dravanian forelands, use Idyllshire id instead.
-    if (id === 213) {
-      id = 257;
-    }
     return this.lazyData.getEntry('aetherytes').pipe(
       map(aetherytes => {
-        return aetherytes
-          .filter((aetheryte) => {
-            return aetheryte.map === id && (!excludeMinis || aetheryte.type === 0);
-          });
+        return this.filterAetherytes(aetherytes, id, excludeMinis);
       })
     );
+  }
+
+  private filterAetherytes(aetherytes: LazyAetheryte[], mapId: number, excludeMinis = false, includeTownOverrides = false): LazyAetheryte[] {
+    // Handle main cities having two maps but only one aetheryte, and idyllshire
+    if (mapId > 20 || includeTownOverrides) {
+      mapId = this.getMapId(mapId);
+    }
+
+    return aetherytes
+      .filter((aetheryte) => {
+        return aetheryte.map === mapId && (!excludeMinis || aetheryte.type === 0);
+      });
+  }
+
+  getMapId(mapId: number): number {
+    return MapService.MAP_OVERRIDES[mapId] || mapId;
   }
 
   private totalDuration(path: NavigationStep[]): number {

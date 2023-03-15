@@ -1,12 +1,10 @@
-import { exec, execSync } from 'child_process';
 import { MainWindow } from '../window/main-window';
 import { Store } from '../store';
 import { join, resolve } from 'path';
-import { app } from 'electron';
 import isDev from 'electron-is-dev';
 import log from 'electron-log';
-import { default as isElevated } from 'native-is-elevated';
-import { CaptureInterface, CaptureInterfaceOptions, Message } from '@ffxiv-teamcraft/pcap-ffxiv';
+import { CaptureInterface, CaptureInterfaceOptions, ErrorCodes, Message, Region } from '@ffxiv-teamcraft/pcap-ffxiv';
+import { app } from 'electron';
 
 export class PacketCapture {
 
@@ -81,15 +79,13 @@ export class PacketCapture {
     'objectSpawn'
   ];
 
-  private static readonly MACHINA_EXE_PATH = join(app.getAppPath(), '../../resources/MachinaWrapper/MachinaWrapper.exe');
-
   private captureInterface: CaptureInterface;
 
-  private startTimeout = null;
-
-  private tries = 0;
-
   private overlayListeners = [];
+
+  private get region(): Region {
+    return this.store.get<Region>('region', 'Global');
+  }
 
   constructor(private mainWindow: MainWindow, private store: Store, private options: any) {
     this.mainWindow.closed$.subscribe(() => {
@@ -97,39 +93,17 @@ export class PacketCapture {
     });
   }
 
-  start(): void {
-    this.tries++;
-    if (this.store.get('rawsock', false)) {
-      this.startMachina();
-    } else {
-      try {
-        execSync('Get-Service -Name Npcap', { 'shell': 'powershell.exe', 'timeout': 5000, 'stdio': ['ignore', 'pipe', 'ignore'], 'windowsHide': true });
-        log.debug('The Npcap service was detected, starting Machina');
-        this.startMachina();
-      } catch (err) {
-        log.error(`Error and/or possible timeout while detecting the Npcap windows service: ${err}`);
-        if (err.message.includes('ETIMEDOUT')) {
-          log.log(`Starting machina since it's just a timeout`);
-          this.startMachina();
-        } else {
-          this.mainWindow.win.webContents.send('install-npcap-prompt', true);
-        }
-      }
-    }
+  restart() {
+    return this.stop().then(() => {
+      this.mainWindow.win.webContents.send('pcap:status', 'starting');
+      setTimeout(() => {
+        this.startPcap();
+      }, 1000);
+    });
   }
 
-  stop(): void {
-    if (this.startTimeout) {
-      clearTimeout(this.startTimeout);
-    }
-    if (this.captureInterface) {
-      this.captureInterface.stop();
-    }
-    this.mainWindow.win.webContents.send('pcap:status', 'stopped');
-  }
-
-  addMachinaFirewallRule(): void {
-    exec(`netsh advfirewall firewall add rule name="FFXIVTeamcraft - Machina" dir=in action=allow program="${PacketCapture.MACHINA_EXE_PATH}" enable=yes`);
+  stop(): Promise<void> {
+    return this.captureInterface.stop();
   }
 
   public registerOverlayListener(id: string, listener: (packet: Message) => void): void {
@@ -182,31 +156,16 @@ export class PacketCapture {
     }
   }
 
-  private async startMachina(): Promise<void> {
-    const region = this.store.get('region', 'Global');
-    const rawsock = this.store.get('rawsock', false);
+  public async startPcap(): Promise<void> {
+    const region = this.store.get<Region>('region', 'Global');
 
     this.mainWindow.win.webContents.send('pcap:status', 'starting');
 
-    if (rawsock) {
-      const elevated = await isElevated();
-      if (!elevated) {
-        this.mainWindow.win.webContents.send('rawsock-needs-admin', true);
-        return;
-      }
-      const appPath = app.getAppPath();
-      const appVersion = /\d+\.\d+\.\d+/.exec(appPath)[0];
-      exec(`netsh advfirewall firewall show rule status=enabled name="FFXIVTeamcraft - Machina" verbose`, (...output) => {
-        if (output[1].indexOf(appVersion) === -1) {
-          exec('netsh advfirewall firewall delete rule name="FFXIVTeamcraft - Machina"', () => {
-            this.addMachinaFirewallRule();
-          });
-        }
-      });
-    }
+    this.startGlobalPcap(region);
+  }
 
+  private startGlobalPcap(region: Region): void {
     const options: Partial<CaptureInterfaceOptions> = {
-      monitorType: rawsock ? 'RawSocket' : 'WinPCap',
       region: region,
       filter: (header, typeName: Message['type']) => {
         if (header.sourceActor === header.targetActor) {
@@ -215,17 +174,9 @@ export class PacketCapture {
         return PacketCapture.PACKETS_FROM_OTHERS.includes(typeName);
       },
       logger: message => {
-        if (message.type === 'info' && this.options.verbose) {
-          log.info(message.message);
-        } else if (message.type !== 'info') {
-          log[message.type || 'warn'](message.message);
-        }
+        log[message.type || 'warn'](message.message);
       }
     };
-
-    if (this.options.pid) {
-      options.pid = this.options.pid;
-    }
 
     if (isDev) {
       const localDataPath = this.getLocalDataPath();
@@ -234,41 +185,20 @@ export class PacketCapture {
         log.info('[pcap] Using localOpcodes:', localDataPath);
       }
     } else {
-      options.exePath = PacketCapture.MACHINA_EXE_PATH;
+      options.deucalionDllPath = join(app.getAppPath(), '../../deucalion/deucalion.dll');
     }
 
     log.info(`Starting PacketCapture with options: ${JSON.stringify(options)}`);
     this.captureInterface = new CaptureInterface(options);
-    this.captureInterface.start()
-      .then(() => {
-        this.mainWindow.win.webContents.send('pcap:status', 'running');
-        log.info('Packet capture started');
-      })
-      .catch((err) => {
-        this.mainWindow.win.webContents.send('pcap:status', 'error');
-        log.error(`Couldn't start packet capture`);
-        log.error(err);
-        if (err.message === `Cannot call write after a stream was destroyed`) {
-          this.mainWindow.win.webContents.send('machina:error', {
-            message: 'Wrapper_failed_to_start',
-            retryDelay: 60
-          });
-        }
-        if (this.tries < 3) {
-          this.startTimeout = setTimeout(() => {
-            this.start();
-          }, 60000);
-        } else {
-          this.stop();
-        }
-      });
     this.captureInterface.on('error', err => {
-      log.error(err);
-    });
-    this.captureInterface.on('error', err => {
-      this.mainWindow.win.webContents.send('machina:error:raw', {
+      this.mainWindow.win.webContents.send('pcap:status', 'error');
+      this.mainWindow.win.webContents.send('pcap:error:raw', {
         message: err
       });
+      log.error(err);
+    });
+    this.captureInterface.on('stopped', () => {
+      this.mainWindow.win.webContents.send('pcap:status', 'stopped');
     });
     this.captureInterface.setMaxListeners(0);
     this.captureInterface.on('message', (message) => {
@@ -277,5 +207,35 @@ export class PacketCapture {
       }
       this.sendToRenderer(message);
     });
+    this.captureInterface.on('ready', () => {
+      // Give it 200ms to make sure pipe is created
+      setTimeout(() => {
+        this.captureInterface.start()
+          .then(() => {
+            this.mainWindow.win.webContents.send('pcap:status', 'running');
+            log.info('Packet capture started');
+          })
+          .catch((errCode) => {
+            this.mainWindow.win.webContents.send('pcap:status', 'error');
+            log.error(`Couldn't start packet capture`);
+            log.error(ErrorCodes[errCode] || `CODE: ${errCode}`);
+
+            if (ErrorCodes[errCode]) {
+              this.mainWindow.win.webContents.send('pcap:error', {
+                message: ErrorCodes[errCode]
+              });
+            } else if (errCode.toString().includes('ENOENT')) {
+              this.mainWindow.win.webContents.send('pcap:error', {
+                message: 'RESTART_GAME'
+              });
+            } else {
+              this.mainWindow.win.webContents.send('pcap:error', {
+                message: 'Default'
+              });
+            }
+          });
+      }, 200);
+    });
   }
+
 }
