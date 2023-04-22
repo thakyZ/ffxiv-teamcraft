@@ -74,7 +74,8 @@
           </nz-tag>
         </div>
         <ng-container *ngIf="inventories$ | async as inventories">
-          <button nz-button nzType="primary" nzShape="circle" nz-tooltip
+          <button nz-button nzType="primary" nzShape="circle"
+                  nz-tooltip [nzTooltipTitle]="'LIST_DETAILS.Fill_with_inventory' | translate"
                   *ngIf="platform.isDesktop()"
                   nz-dropdown
                   [nzDropdownMenu]="menu">
@@ -133,10 +134,25 @@
             <i nz-icon nzType="clear" nzTheme="outline"></i>
           </button>
           <button (click)="openInventoryPopup(list)" [nzTooltipTitle]="'LIST_DETAILS.Inventory_breakdown' | translate"
-                  nz-button nz-tooltip nzShape="circle"
-                  nzType="primary">
+                  nz-button nz-tooltip nzShape="circle">
             <i nz-icon nzType="number" nzTheme="outline"></i>
           </button>
+<!--          <button (click)="openHistoryPopup()"-->
+<!--                  [disabled]="(permissionLevel$ | async) < 20"-->
+<!--                  [nzTooltipTitle]="'LIST.History' | translate" nz-button-->
+<!--                  nz-tooltip-->
+<!--                  nzShape="circle" nzType="primary">-->
+<!--            <i nz-icon nzType="field-time" nzTheme="outline"></i>-->
+<!--          </button>-->
+<!--          <button (click)="openContributionsPopup()"-->
+<!--                  [disabled]="(permissionLevel$ | async) < 20"-->
+<!--                  [nzTooltipTitle]="'LIST_DETAILS.Contributions_popup' | translate"-->
+<!--                  nz-button-->
+<!--                  nz-tooltip-->
+<!--                  nzShape="circle"-->
+<!--                  nzType="default">-->
+<!--            <i nz-icon nzType="pie-chart"></i>-->
+<!--          </button>-->
         </div>
       </div>
     </div>
@@ -204,6 +220,9 @@
          fxLayoutGap="5px">
       <div fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center" fxLayoutGap="5px">
         <div fxLayout="row" fxLayoutGap="5px">
+          <button nz-button nzSize="small" nzType="primary" (click)="addItems()">
+            <i nz-icon nzType="plus"></i> {{'LIST_DETAILS.Add_item' | translate}}
+          </button>
           <button (click)="createAlarms(list)" [nzTooltipTitle]="'LIST.Add_all_alarms' | translate" nz-button nz-tooltip
                   nzShape="circle" nzSize="small">
             <i nz-icon nzType="bell"></i>

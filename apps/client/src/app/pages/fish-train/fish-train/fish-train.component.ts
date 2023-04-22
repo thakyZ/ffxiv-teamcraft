@@ -2,14 +2,14 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FishTrainFacade } from '../../../modules/fish-train/fish-train/fish-train.facade';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamcraftComponent } from '../../../core/component/teamcraft-component';
-import { delayWhen, distinctUntilChanged, filter, first, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { delayWhen, filter, first, map, shareReplay, startWith, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { LazyDataFacade } from '../../../lazy-data/+state/lazy-data.facade';
-import { DataType, FishTrainStop, GatheringNode, getExtract, getItemSource, I18nName } from '@ffxiv-teamcraft/types';
+import { DataType, FishTrainStop, GatheringNode, getExtract, getItemSource } from '@ffxiv-teamcraft/types';
 import { BehaviorSubject, combineLatest, of, Subscription, timer } from 'rxjs';
 import { I18nToolsService } from '../../../core/tools/i18n-tools.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FishDataService } from '../../db/service/fish-data.service';
-import { findLastIndex, isEqual } from 'lodash';
+import { findLastIndex } from 'lodash';
 import { PlatformService } from '../../../core/tools/platform.service';
 import { IpcService } from '../../../core/electron/ipc.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -21,6 +21,10 @@ import { SoundNotificationService } from '../../../core/sound-notification/sound
 import { SoundNotificationType } from '../../../core/sound-notification/sound-notification-type';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { PushNotificationsService } from 'ng-push-ivy';
+import { ProgressPopupService } from '../../../modules/progress-popup/progress-popup.service';
+import { LodestoneService } from '../../../core/api/lodestone.service';
+import { TrainFishingReport } from '../../../core/data-reporting/fishing-report';
+import { safeCombineLatest } from '../../../core/rxjs/safe-combine-latest';
 
 @Component({
   selector: 'app-fish-train',
@@ -46,12 +50,16 @@ export class FishTrainComponent extends TeamcraftComponent {
 
   fishTrain$ = this.fishTrainFacade.selectedFishTrain$;
 
+  outdated$ = this.fishTrain$.pipe(
+    map(train => train.reports.length === 0 && train.end < new Date('04/05/2023').getTime() && !train.empty)
+  );
+
   gubalFishTrainStats$ = this.fishTrain$.pipe(
-    map(train => train.$key),
-    distinctUntilChanged(),
-    switchMap(trainId => {
-      return this.fishDataService.getTrainStats(trainId);
-    }),
+    filter(train => train.reports !== undefined),
+    map(train => ({
+      count: train.reports.length,
+      reports: train.reports
+    })),
     startWith({
       count: 0,
       reports: []
@@ -59,6 +67,7 @@ export class FishTrainComponent extends TeamcraftComponent {
   );
 
   fishTrainWithLocations$ = this.fishTrain$.pipe(
+    filter(train => !train.notFound),
     switchMap(train => {
       return this.lazyData.getRows('extracts', ...train.fish.map(stop => stop.id)).pipe(
         map(extracts => {
@@ -140,27 +149,8 @@ export class FishTrainComponent extends TeamcraftComponent {
     shareReplay(1)
   );
 
-  private fishNames$ = this.fishTrain$.pipe(
-    distinctUntilChanged((a, b) => isEqual(a.fish, b.fish)),
-    switchMap(train => {
-      return this.lazyData.getRows('items', ...train.fish.map(fish => fish.id));
-    }),
-    map((rows: any) => {
-      return Object.entries<I18nName>(rows)
-        .reduce((acc, [id, name]) => {
-          return {
-            ...acc,
-            [id]: this.i18n.getName(name)
-          };
-        }, {});
-    })
-  );
-
-  public sliderData$ = combineLatest([
-    this.display$,
-    this.fishNames$
-  ]).pipe(
-    map(([display, fishNames]) => {
+  public sliderData$ = this.display$.pipe(
+    map((display) => {
       return {
         min: display.start,
         max: display.end,
@@ -168,7 +158,7 @@ export class FishTrainComponent extends TeamcraftComponent {
         marks: display.fish.reduce((acc, fish) => {
           return {
             ...acc,
-            [fish.start]: fishNames[fish.id]
+            [fish.start]: ''
           };
         }, {
           [display.start]: 'Departure',
@@ -183,7 +173,9 @@ export class FishTrainComponent extends TeamcraftComponent {
 
   public loggedIn$ = this.authFacade.loggedIn$;
 
-  macroPopoverShown = false;
+  public macroPopoverShown = false;
+
+  public overlay = false;
 
   constructor(private fishTrainFacade: FishTrainFacade, private route: ActivatedRoute,
               private lazyData: LazyDataFacade, private i18n: I18nToolsService,
@@ -192,7 +184,8 @@ export class FishTrainComponent extends TeamcraftComponent {
               private dialog: NzModalService, private message: NzMessageService,
               private authFacade: AuthFacade, private soundNotificationService: SoundNotificationService,
               private notificationService: NzNotificationService, private pushNotificationsService: PushNotificationsService,
-              private cd: ChangeDetectorRef, private router: Router) {
+              private cd: ChangeDetectorRef, private router: Router, private progressPopup: ProgressPopupService,
+              private lodestone: LodestoneService) {
     super();
     route.paramMap
       .pipe(
@@ -213,6 +206,7 @@ export class FishTrainComponent extends TeamcraftComponent {
       first(),
       delayWhen(() => this.translate.get('LOADING'))
     ).subscribe(({ query, train }) => {
+      this.overlay = query.get('overlay') !== null;
       const token = query.get('conductorToken');
       if (token && !train.conductor) {
         if (token === train.conductorToken) {
@@ -404,4 +398,56 @@ export class FishTrainComponent extends TeamcraftComponent {
     this.playSpeed$.next(speeds[(currentSpeed + 1) % speeds.length]);
   }
 
+  deleteTrain(key: string): void {
+    this.fishTrainFacade.deleteTrain(key);
+  }
+
+  migrateTrain(train: PersistedFishTrain): void {
+    const operation$ = this.fishDataService.getTrainStatsSnapshot(train.$key).pipe(
+      switchMap(stats => {
+        // Preparing characters first
+        const characters$ = safeCombineLatest(train.passengers.map(passenger => this.lodestone.getUserCharacter(passenger).pipe(
+            map(character => {
+              return {
+                id: passenger,
+                name: character?.character?.Name || 'Anonymous'
+              };
+            })
+          ))
+        ).pipe(
+          map(chars => {
+            return chars.reduce((acc, char) => {
+              return {
+                ...acc,
+                [char.id]: char.name
+              };
+            }, {});
+          }),
+          first()
+        );
+
+        // Then migrating stats model to new report model
+        return characters$.pipe(
+          map(chars => {
+            return stats.reports.map(report => {
+              return {
+                trainId: train.$key,
+                baitId: report.baitId,
+                mooch: report.mooch,
+                date: new Date(report.date).getTime(),
+                name: chars[report.userId] || 'Anonymous',
+                size: report.size,
+                itemId: report.itemId
+              } as TrainFishingReport;
+            });
+          }),
+          switchMap(reports => {
+            return this.fishTrainFacade.addReports(train.$key, reports);
+          }),
+          tap(() => this.fishTrainFacade.load(train.$key))
+        );
+      })
+    );
+    this.progressPopup.showProgress(operation$, 1);
+  }
 }

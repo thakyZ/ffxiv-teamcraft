@@ -13,7 +13,9 @@ echo VERSION ${PACKAGE_VERSION}
 touch ~/.ssh/known_hosts
 ssh-keyscan -H ssh.ffxivteamcraft.com >> ~/.ssh/known_hosts
 
-rsync -avz ./dist/apps/client/* dalamud@ssh.ffxivteamcraft.com:~/cdn.ffxivteamcraft.com/${PACKAGE_VERSION}
+ls ./dist
+
+rsync -avz ./dist/apps/client/* dalamud@ssh.ffxivteamcraft.com:~/cdn.ffxivteamcraft.com/${PACKAGE_VERSION} --log-file ./rsync.log
 
 ssh dalamud@51.83.37.191 << EOF
   cp -rn ./cdn.ffxivteamcraft.com/latest/* ./cdn.ffxivteamcraft.com/${PACKAGE_VERSION}/

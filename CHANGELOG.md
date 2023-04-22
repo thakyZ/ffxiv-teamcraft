@@ -2,6 +2,226 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="10.4.9"></a>
+## [10.4.9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.8...v10.4.9) (2023-04-19)
+
+
+### Bug Fixes
+
+* **db:** fix collectable trade display ([8871b2f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/8871b2f))
+* **db:** fixed add item to list input combo in item db pages ([d607366](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d607366))
+* **db:** fixed wrong currency shown on some tomestone trades ([4936631](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4936631))
+* **desktop:** fixed an issue with retainer crystals and gil tracking ([903525c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/903525c))
+* **simulator:** actions sort in multi-row rotations now drags properly ([db824c2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/db824c2)), closes [/github.com/angular/components/issues/13372#issuecomment-1264356365](https://github.com//github.com/angular/components/issues/13372/issues/issuecomment-1264356365)
+
+
+### Features
+
+* **db:** support for korean v6.25 update ([e273856](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e273856))
+
+
+
+<a name="10.4.8"></a>
+## [10.4.8](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.7...v10.4.8) (2023-04-07)
+
+
+### Bug Fixes
+
+* **support:** fixed patreon oauth and better tipeee connect logic ([fc78a85](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fc78a85))
+
+
+
+<a name="10.4.7"></a>
+## [10.4.7](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.6...v10.4.7) (2023-04-06)
+
+
+### Bug Fixes
+
+* **desktop:** fixed patreon and discord oauth ([90ec4f3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/90ec4f3))
+* **patreon:** fix patron status sometimes removed after benefits were applied manually ([f93209f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f93209f))
+
+
+### Features
+
+* **core:** you can now connect with tipeee to get supporter perks ([4f9e1a1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4f9e1a1))
+* **db:** 6.38 update content ([fbf23af](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fbf23af))
+
+
+### Performance Improvements
+
+* **fish-train:** refactored fish train persistence to lower database stress ([f6861f9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f6861f9))
+
+
+
+<a name="10.4.6"></a>
+## [10.4.6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.5...v10.4.6) (2023-04-02)
+
+
+### Bug Fixes
+
+* **core:** better handling of gubal websocket creation failing ([07a3648](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/07a3648))
+
+
+
+<a name="10.4.5"></a>
+## [10.4.5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.4...v10.4.5) (2023-04-02)
+
+
+### Bug Fixes
+
+* **db:** fixed fish bite etime chart on fishing spot pages ([c5baaa3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c5baaa3))
+* **db:** fixed some instances not loading properly, also made loading faster for instances ([0062f47](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0062f47)), closes [#2570](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2570) [#2494](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2494)
+* **gearset:** set base confidence rate to 0.66 for melding prediction for more intuitive results ([661ef28](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/661ef28))
+* **list:** filling from inventory now tarts with final items ([c8617a5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c8617a5))
+* **list-pricing:** fixed "exclude completed items" checkbox ([865f0f2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/865f0f2)), closes [#2565](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2565)
+
+
+### Features
+
+* **db:** hour of the day chart on fish is now using bars instead of line representation ([eda3f98](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/eda3f98))
+* **patreon:** 6 new patrons, thanks for your support ! ([9b70dbb](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9b70dbb))
+
+
+
+<a name="10.4.4"></a>
+## [10.4.4](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.3...v10.4.4) (2023-03-31)
+
+
+### Bug Fixes
+
+* **core:** removing lists history for now, it stresses the DB too hard for almost no user benefits ([7c8f5bb](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7c8f5bb))
+
+
+
+<a name="10.4.3"></a>
+## [10.4.3](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.1...v10.4.3) (2023-03-30)
+
+
+### Bug Fixes
+
+* **allagan-reports:** don't update list if rows are selected ([8f21de9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/8f21de9))
+* **db:** fixed mogstation icon not loading ([4da7d33](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4da7d33))
+* **db:** move http connection to new graphQL API too ([072fd3c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/072fd3c))
+* **leveling-equipment:** fixed gloves always suggested as level 51 gloves ([e6c5f07](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e6c5f07))
+* **simulator:** fixed simulator not opening for KR/CN users ([12c255e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/12c255e))
+
+
+### Features
+
+* **db:** import of 300+ allagan reports ([9d71b59](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9d71b59))
+* **fishing:** increased accuracy in etime report and db chart ([cc3a7d6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/cc3a7d6))
+* **lists:** basic version of the contribution stats popup ([5033d5f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5033d5f))
+* **lists:** list history system for online lists ([ef7939e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ef7939e))
+
+
+### Performance Improvements
+
+* **core:** new graphql API ([957c28b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/957c28b))
+* **core:** new lodestone api with cache layer for faster loading ([9cfd6b5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9cfd6b5))
+* **gc-supply:** now using lazy data for faster loading and better data ([53140f0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/53140f0))
+
+
+
+<a name="10.4.2"></a>
+## [10.4.2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.1...v10.4.2) (2023-03-30)
+
+
+### Bug Fixes
+
+* **allagan-reports:** don't update list if rows are selected ([8f21de9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/8f21de9))
+* **db:** fixed mogstation icon not loading ([4da7d33](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4da7d33))
+* **leveling-equipment:** fixed gloves always suggested as level 51 gloves ([e6c5f07](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e6c5f07))
+* **simulator:** fixed simulator not opening for KR/CN users ([12c255e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/12c255e))
+
+
+### Features
+
+* **db:** import of 300+ allagan reports ([9d71b59](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9d71b59))
+* **fishing:** increased accuracy in etime report and db chart ([cc3a7d6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/cc3a7d6))
+* **lists:** basic version of the contribution stats popup ([5033d5f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/5033d5f))
+* **lists:** list history system for online lists ([ef7939e](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/ef7939e))
+
+
+### Performance Improvements
+
+* **core:** new graphql API ([957c28b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/957c28b))
+* **core:** new lodestone api with cache layer for faster loading ([9cfd6b5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9cfd6b5))
+* **gc-supply:** now using lazy data for faster loading and better data ([53140f0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/53140f0))
+
+
+
+<a name="10.4.1"></a>
+## [10.4.1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.4.0...v10.4.1) (2023-03-25)
+
+
+### Bug Fixes
+
+* **fish-trains:** fixed board train button sometimes not showing ([c4c85e9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c4c85e9))
+* **list-details:** fixed list reset freezing the app entirely ([7edfed2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7edfed2))
+
+
+### Features
+
+* **patch-notes:** popup now shows up to 10 versions in the past based on last update seen ([715d671](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/715d671))
+
+
+
+<a name="10.4.0"></a>
+# [10.4.0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.3.14...v10.4.0) (2023-03-25)
+
+
+### Bug Fixes
+
+* **allagan-reports:** fixed instance source input not suggesting values ([f7dd7e9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f7dd7e9))
+* **allagan-reports:** new QUEST data source ([07b8d75](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/07b8d75))
+* **allagan-reports:** remove currencies and auto extract achievements ([fdd7656](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fdd7656))
+* **desktop:** auto deny external media access, including audio and video ([2be850f](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/2be850f))
+* **fish-train:** fixed data fetching on first connection with anonymous account ([4bdcb86](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/4bdcb86))
+* **fish-train:** remove labels from time travelling bar as they are unreadable in many cases ([66adb6d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/66adb6d))
+* **fish-trains:** better responsive layout for fish trains listing ([bacb6b9](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/bacb6b9))
+* **gearsets:** fixed import from pcap sometimes not working ([377c831](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/377c831))
+* **layout:** fixed final items sometimes shown as can be skipped entirely ([87a75f6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/87a75f6))
+* **leveling-equipment:** filter items that do not contribute main stats ([fd27ce0](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/fd27ce0))
+* **step-by-step:** fixed player location not shown in overlay ([bce9992](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/bce9992))
+
+
+### Features
+
+* **alarm-button:** display map name in location popup ([8e4b4e6](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/8e4b4e6))
+* **db:** now showing radius around nodes and mob spawns on maps when they can have some ([0234575](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/0234575))
+* **list-details:** add tooltip to the fill from inventory button ([29a09b2](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/29a09b2))
+* **list-details:** new add items button at the top of the page ([a2c41c1](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/a2c41c1))
+* **settings:** new setting to disable slow mode notification for crafting/gathering ([974219b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/974219b))
+* **simulator:** min stats popup now accounts for collectable thresholds ([1d02f86](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/1d02f86))
+* **simulator:** support for splendorous tools bonus on good condition ([d84118b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/d84118b))
+* **step-by-step:** you can now hover aetherytes to see their name ([9198cc5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9198cc5))
+
+
+
+<a name="10.3.14"></a>
+## [10.3.14](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.3.13...v10.3.14) (2023-03-19)
+
+
+### Bug Fixes
+
+* **desktop:** fixed a crash after restarting packet capture on new game session ([67d9934](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/67d9934))
+* **desktop:** fixed step by step position not filtered based on map ID ([169e17b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/169e17b))
+* **desktop:** new pcap error message for missing UTF-8 support errors ([9513b3b](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/9513b3b))
+* **layout:** "can skip" tag is now displayed when not on NPC breakdown display mode ([f7d629d](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/f7d629d)), closes [#2554](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/issues/2554)
+* **leveling-equipment:** fixed DoL/W accessories sometimes shown for DoH jobs ([6288344](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6288344))
+* **search:** fixed É character not handled properly ([c05ef06](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/c05ef06))
+* **teams:** fixed list progression message not being consistent on last progression tick ([e9478d5](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/e9478d5))
+
+
+### Features
+
+* **fish-train:** added embed/overlay display mode enabled by using ?overlay=true in url ([05e1584](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/05e1584))
+* **fish-train:** you can now delete empty waiting fish trains as conductor ([101ec9c](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/101ec9c))
+* **search:** new search intro template ([6d6e169](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/6d6e169))
+* **ux:** changed the layout of search page's welcome mode ([7e3bf36](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/commit/7e3bf36))
+
+
+
 <a name="10.3.13"></a>
 ## [10.3.13](https://github.com/ffxiv-teamcraft/ffxiv-teamcraft/compare/v10.3.12-hotfix...v10.3.13) (2023-03-11)
 

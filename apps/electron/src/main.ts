@@ -19,7 +19,7 @@ const argv = process.argv.slice(1);
 
 // Log configuration
 log.transports.file.level = 'debug';
-log.log(argv);
+log.log(`START`);
 
 // Small optimizations
 app.commandLine.appendSwitch('disable-renderer-backgrounding');
@@ -53,6 +53,15 @@ const pcapManager = new PacketCapture(mainWindow, store, options);
 const trayMenu = new TrayMenu(mainWindow, overlayManager, store, pcapManager);
 const metrics = new MetricsSystem(mainWindow, store);
 const datFilesWatcher = new DatFilesWatcher(mainWindow, store);
+
+['uncaughtException', 'unhandledRejection'].forEach(event => {
+  process.on(event, (message) => {
+    if (message.toString().includes('EBADF')) {
+      return;
+    }
+    log.error(event, message);
+  });
+});
 
 if (options.noHA || store.get('hardware-acceleration', false)) {
   app.disableHardwareAcceleration();

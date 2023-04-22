@@ -8,7 +8,7 @@ import { AuthFacade } from '../../../+state/auth.facade';
 import { AllaganReportQueueEntry } from '../model/allagan-report-queue-entry';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AllaganReportStatus } from '../model/allagan-report-status';
-import { AllaganReportSource } from '../model/allagan-report-source';
+import { AllaganReportSource, TRADE_SOURCES_PRIORITIES } from '@ffxiv-teamcraft/types';
 import { uniq } from 'lodash';
 import { LazyDataFacade } from '../../../lazy-data/+state/lazy-data.facade';
 import { getExtract } from '@ffxiv-teamcraft/types';
@@ -34,7 +34,7 @@ export class AllaganReportsComponent {
   public selectCount = 0;
 
   public queueStatus$ = this.allaganReportsService.getQueueStatus().pipe(
-    filter(() => !this.dirty),
+    filter(() => !this.dirty && this.selectCount === 0),
     map(rows => {
       return rows.map(row => {
         return {
@@ -70,7 +70,7 @@ export class AllaganReportsComponent {
         fishWithNoData,
         itemsWithNoSource: Object.keys(items)
           .filter(id => {
-          if (+id < 0) {
+          if (+id <= 1 || TRADE_SOURCES_PRIORITIES[+id] >= 20) {
             return false;
           }
           const enName = items[id].en;

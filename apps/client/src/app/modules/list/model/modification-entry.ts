@@ -1,11 +1,19 @@
-import { DataModel } from '../../../core/database/storage/data-model';
+export class ModificationEntry {
+  id?: string;
 
-export class ModificationEntry extends DataModel {
+  listId?: string;
+
   userId: string;
+
   amount: number;
+
   itemId: number;
+
   date: number;
+
   finalItem: boolean;
+
   total: number;
+
   recipeId?: string;
 }

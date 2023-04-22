@@ -18,7 +18,7 @@
   "List_fork_in_progress": "このリストをマイアカウントにコピー中…",
   "Network_error_logged_out": "ネットワークエラーが検出されたため、ログアウトしました。この問題が解決しない場合は、DiscordでMiuにお問い合わせください。",
   "Hide_zone_duplicates": "複数のエリアで入手できるアイテムは一度だけ表示するようにする",
-  "Patch_notes": "{{version}} の変更",
+  "Patch_notes": "Patch Notes",
   "Patch_notes_footer": "新機能は気に入っていただけましたか？Patreonでのプロジェクトのサポートを検討してください",
   "Selection": "選択",
   "Change_character": "キャラクター",
@@ -107,6 +107,7 @@
     "Contributors": "サポーター"
   },
   "Patreon_login_success": "Patreonのログインに成功しました！",
+  "Tipeee_login_success": "Tipeee login success!",
   "Hide_if_empty": "空欄を隠す",
   "No_favorites": "お気に入りなし",
   "Ephemeral_list": "完了した後、削除予定",
@@ -188,7 +189,7 @@
     "Never": "しない",
     "Festival": "フェスティバルの間のみ",
     "Back": "戻る",
-    "Support_us_remove_ads": "Patreonをサポートして広告を消す",
+    "Support_us_remove_ads": "Support us to remove ads",
     "Support_us": "サポート",
     "Show_more": "詳細を表示",
     "Item": "アイテム",
@@ -442,15 +443,14 @@
     "Reset_password_warning": "本当にパスワードを再設定しますか？",
     "Password_reset_mail_sent": "パスワード再設定メールに寄せされました",
     "Connect_with_patreon": "Patreonアカウントを連携する",
+    "Connect_with_tipeee": "Connect with Tipeee",
     "Connected_with_patreon": "Patreonアカウントに連携されています",
+    "Connected_with_tipeee": "Connected with Tipeee",
     "Nickname": "Patreonの通称名",
     "Nickname_used": "通称名は既に使用されてる",
-    "No_nickname_warning": "寄付者専用の機能を使用するためには、設定ページからニックネームを設定して下さい。",
+    "No_nickname_warning": "Please navigate to the settings page and setup a nickname in order to be able to use the supporter exclusive features properly.",
     "Show_devtools": "Devツールを表示",
     "Clear_cache": "キャッシュをクリア(アプリが再起動されます)",
-    "Add_firewall_rule": "パケットキャプチャファイアウォールルールを追加",
-    "Installing_npcap": "Npcapのインストールが進行中です",
-    "Installing_npcap_description": "パケットキャプチャを機能させるには、npcapをインストールする必要があります。 デフォルトの設定をそのままにしておくようにしてください（winpcapのAPI互換性のチェックを外さないでください）。これが完了するとTeamcraftは再起動します。",
     "Enable_item_tags": "アイテムダグを使用",
     "Show_copy_list_own_list": "マイリストバネルにコピーボタンを表示する",
     "Custom_theme": "カスタムテーマ",
@@ -516,6 +516,7 @@
     "Alarm_panels_collapsed_by_default": "アラームパネル簡素化を基本値として設定",
     "Alarm_groups_before_no_group": "アラームグループをグループ指定のないアラームより前に表示",
     "Disconnect_patreon": "Patreonアカウントとの連携を解除する",
+    "Disconnect_tipeee": "Disconnect from Tipeee",
     "Export_settings": "設定をエクスポート",
     "Import_settings": "設定をインポート",
     "Import_successful": "設定を呼び出しました。",
@@ -530,6 +531,7 @@
     "Housing_map": "Housing map",
     "Housing_map_explain": "The housing map in which your house is",
     "Reset_linked_characters_ok": "Character links have been reset",
+    "Display_slow_mode_notification": "Display crafting/gathering slow mode notification",
     "COLORS": {
       "Background": "背景色",
       "Primary": "デフォルトカラー",
@@ -772,7 +774,7 @@
     "Autofill_notification_body": "{{listName}} リストの{{itemName}} 作業が完了できました",
     "Autofill_crafting_gathering_title": "製作・収集中",
     "Autofill_crafting_gathering_message": "データベースの更新を安定化させるために、製作中または採集中はオートフィルの反応を遅らせています。製作を終わらせて、ゲーム内で立ち上がるか、採集UIを閉じたときに通常のオートフィルに戻ります。",
-    "Fill_with_inventory": "Fill with inventory (only accounts for what you have in personal inventory)",
+    "Fill_with_inventory": "Fill with inventory",
     "Filter_items_done": "完了したアイテムを非表示",
     "Inventory_synthesis": "所持品統合(各所持品ごとのアイテム)",
     "X_needed": "{{amount}} 個必要",
@@ -1209,6 +1211,7 @@
       "Craftsmanship": "作業精度",
       "Control": "加工精度",
       "Specialist": "マイスター",
+      "Splendorous": "Uses a splendorous tool",
       "Ingredients": "HQ材料",
       "Consumables": "薬品・調理品",
       "Apply_stats": "サブステを適用する",
@@ -1387,6 +1390,9 @@
     "Donation_button": "寄付する（1回）",
     "Buy_merch": "Teamcraftのグッズを買う",
     "Features_header": "始める！",
+    "Open_feature": "Open",
+    "Open_in_guides": "Read",
+    "Featured_guides": "Featured guides",
     "DESCRIPTION": {
       "Lists": "Create lists to get information about all materials, share them with your friends... everything starts here! Just search for an item, expand filters to get specific items, and start crafting things.",
       "Public_lists": "Clone lists created by the community that help you craft things, levekits, airships, BiS gear, everything can be found here.",
@@ -1394,7 +1400,8 @@
       "Gathering_location": "Find informations about any gathering item, create an alarm, get instant coordinates, closest aetheryte, required Folklore book, and more!",
       "Rotations": "スキル回しを作成し、シミュレーターで確認やカスタムシミュレーターを利用して理論上の制作マクロを構成することができます。",
       "Levequests": "Find some levequests for a given job and/or level range, see instant benefits on them and create lists for them.",
-      "Macro_translation": "Got some macros but not in your language? Go to the macro translator and translate it back to your language so it works in your FFXIV game language!"
+      "Macro_translation": "Got some macros but not in your language? Go to the macro translator and translate it back to your language so it works in your FFXIV game language!",
+      "Island_sanctuary": "Optimize your planning and configure it in the island sanctuary workshop planner!"
     }
   },
   "UPDATE": {
@@ -1519,7 +1526,7 @@
     "Search": "検索",
     "Generate_list": "クイックリストを作成",
     "Intro": "レベルを入力し、検索をクリックして開始します。",
-    "Loading_message": "可能な調達品を読み込み中... 時間が所要されます"
+    "Loading_message": "Loading possible deliveries..."
   },
   "DESYNTH": {
     "Title": "分解ガイド",
@@ -1609,7 +1616,7 @@
     "Currencies": "通貨",
     "Rowena_splendor": "ロウェナ商会取引",
     "Unlocks": "ロック解除",
-    "Jump_to_page": "別のページへクイックジャンプする",
+    "Jump_to_page": "Open item db page",
     "Ishgard_restoration": "イシュガルド復興",
     "ITEM": {
       "Masterpiece_exp_tooltip": "次のレベルに必要な経験値の％",
@@ -2711,7 +2718,7 @@
     "Starting_at_X": "Starting at ${{monthly}} per month or ${{yearly}} per year",
     "Footer_text": "As little as $1 a month has a significant impact on Teamcraft's development and brings me closer to my dream of becoming a full-time developer on this project and expanding it beyond just being a tool for FFXIV.",
     "Already_supporter": "Already a supporter?",
-    "Disable_ads_explanation": "To disable ads, connect with your Patreon account to make Teamcraft able to verify your support and disable ads automatically"
+    "Disable_ads_explanation": "To disable ads, connect with your Patreon or Tipeee account to make Teamcraft able to verify your support and disable ads automatically"
   },
   "SUPPORT_US": {
     "Popup_introduction": "おはようございます、私はTeamcraft開発者Miuです。<br/>Teamcraftはここ数年前から私の趣味であり現在は趣味ではない私の職業にするための夢として、その夢を叶えるために頑張っています。<br/><br/>もし皆さんがpatreonでサポートしてくれるなら、Teamcraftをもっと改善して私は私の夢を現実にする事ができます。<br/><br/>patreonでプロジェクトにサポートしてくれるなら次のような素敵な特典を得る事ができます。",
@@ -2864,6 +2871,8 @@
     "Venture_placeholder": "Venture name",
     "Monster_placeholder": "Monster name",
     "Voyage_placeholder": "Voyage name",
+    "Achievement_placeholder": "Achievement name",
+    "Quest_placeholder": "Quest name",
     "Voyage_type": "Voyage type",
     "Reported_by": "Reported by",
     "Approved_by": "Approved by",
@@ -2955,7 +2964,8 @@
       "FATE": "FATE",
       "MOGSTATION": "MOGSTATION",
       "DEPRECATED": "DEPRECATED",
-      "ISLAND_ANIMAL": "ISLAND_ANIMAL"
+      "ISLAND_ANIMAL": "ISLAND_ANIMAL",
+      "QUEST": "QUEST"
     },
     "STATUS": {
       "PROPOSAL": "PROPOSAL",
@@ -3015,19 +3025,16 @@
     "Requirement_items_count": "# of required items",
     "Switch_panel": "Switch panel"
   },
-  "MACHINA_ERRORS": {
-    "Default": "Machina Wrapper error",
-    "Wrapper_failed_to_start": "Machina Wrapper failed to start",
-    "DESCRIPTION": {
-      "Wrapper_failed_to_start": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.<br><br> Retrying in {{retryDelay}}s"
-    }
-  },
   "PCAP_ERRORS": {
     "Default": "Packet Capture error",
-    "ERR_GAME_NOT_RUNNING": "Packet capture failed to start",
+    "GAME_NOT_RUNNING": "Packet capture failed to start",
+    "RESTART_GAME": "Packet capture didn't shut down properly",
+    "GAME_RUNNING_AS_ADMIN": "Cannot access game process",
     "DESCRIPTION": {
-      "Default": "An unknown error happened while trying to start packet capture, please report in Discord's #troubleshooting channel.<br><br> Retrying in {{retryDelay}}s",
-      "ERR_GAME_NOT_RUNNING": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.<br><br> Retrying in {{retryDelay}}s"
+      "Default": "An unknown error happened while trying to start packet capture, please report in Discord's #troubleshooting channel.",
+      "GAME_NOT_RUNNING": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.",
+      "RESTART_GAME": "Please restart the game to be able to run packet capture properly.",
+      "GAME_RUNNING_AS_ADMIN": "Game is running as admin, please either restart it normally or restart Teamcraft as admin."
     }
   },
   "ISLAND_SANCTUARY": {
@@ -3175,6 +3182,12 @@
     "All_fish": "All fish",
     "Fish_breakdown": "Fish breakdown",
     "Bait_breakdown": "Bait usage breakdown",
-    "Fish_size_chart": "Fish sizes"
+    "Fish_size_chart": "Fish sizes",
+    "Delete_train": "Delete",
+    "Train_not_running": "Train not running",
+    "Outdated": "This train is outdated",
+    "Outdated_description": "This train is using an outdated data storage approach, please migrate to be able to see your stats again",
+    "Outdated_description_passenger": "This train is using an outdated data storage approach, please ask the conductor to migrate it to see the stats again.",
+    "Migrate": "Migrate"
   }
 }

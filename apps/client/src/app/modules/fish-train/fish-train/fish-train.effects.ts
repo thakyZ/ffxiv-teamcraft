@@ -3,15 +3,18 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 
 import { catchError, filter, map, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
 import {
+  addReportToFishTrain,
   boardTrain,
   claimConductorRole,
+  deleteTrain,
   leaveTrain,
   loadAllTrains,
   loadFishTrain,
   loadFishTrainNotFound,
   loadFishTrainsSuccess,
   loadFishTrainSuccess,
-  loadRunningTrains, pureUpdateTrain,
+  loadRunningTrains,
+  pureUpdateTrain,
   setFishSlap
 } from './fish-train.actions';
 import { FishTrainService } from '../../../core/database/fish-train.service';
@@ -28,7 +31,7 @@ export class FishTrainEffects {
   loadFishTrains$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(loadFishTrain),
-      mergeMap(({ id }) => this.fishTrainService.get(id).pipe(
+      switchMap(({ id }) => this.fishTrainService.get(id).pipe(
         map((train) => loadFishTrainSuccess({ train })),
         catchError((err) => {
           console.log(err);
@@ -50,6 +53,20 @@ export class FishTrainEffects {
     return this.actions$.pipe(
       ofType(pureUpdateTrain),
       mergeMap(({ id, train }) => this.fishTrainService.pureUpdate(id, train))
+    );
+  }, { dispatch: false });
+
+  addReportToFishTrain$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(addReportToFishTrain),
+      mergeMap(({ report }) => this.fishTrainService.addReport(report))
+    );
+  }, { dispatch: false });
+
+  deleteTrain$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(deleteTrain),
+      mergeMap(({ id }) => this.fishTrainService.remove(id))
     );
   }, { dispatch: false });
 

@@ -59,7 +59,7 @@ import { TutorialService } from './core/tutorial/tutorial.service';
 import { ChangelogPopupComponent } from './modules/changelog-popup/changelog-popup/changelog-popup.component';
 import { version } from '../environments/version';
 import { PlayerMetricsService } from './modules/player-metrics/player-metrics.service';
-import { PatreonService } from './core/patreon/patreon.service';
+import { SupportService } from './core/patreon/support.service';
 import { UpdaterStatus } from './model/other/updater-status';
 import { RemoveAdsPopupComponent } from './modules/ads/remove-ads-popup/remove-ads-popup.component';
 import { FreeCompanyWorkshopFacade } from './modules/free-company-workshops/+state/free-company-workshop.facade';
@@ -205,17 +205,15 @@ export class AppComponent implements OnInit {
 
   public suggestedRegion: Region = null;
 
-  public firewallRuleApplied = false;
-
   public showAd$ = this.authFacade.user$.pipe(
     map(user => {
-      return !(user.admin || user.moderator || user.patron);
+      return !(user.admin || user.moderator || user.supporter);
     })
   );
 
   public showPatreonButton$ = this.authFacade.user$.pipe(
     map(user => {
-      return !user.patron;
+      return !user.supporter;
     })
   );
 
@@ -248,7 +246,7 @@ export class AppComponent implements OnInit {
               private inventoryService: InventoryService, @Inject(PLATFORM_ID) private platform: any,
               private quickSearch: QuickSearchService, public mappy: MappyReporterService,
               private tutorialService: TutorialService,
-              private playerMetricsService: PlayerMetricsService, private patreonService: PatreonService,
+              private playerMetricsService: PlayerMetricsService, private patreonService: SupportService,
               private freeCompanyWorkshopFacade: FreeCompanyWorkshopFacade, private cd: ChangeDetectorRef,
               private data: DataService, private allaganReportsService: AllaganReportsService,
               pushNotificationsService: PushNotificationsService) {
@@ -259,9 +257,7 @@ export class AppComponent implements OnInit {
 
     this.desktop = this.platformService.isDesktop();
 
-    this.allaganReportsQueueCount$ = this.allaganReportsService.getQueueStatus().pipe(
-      map(status => status.length)
-    );
+    this.allaganReportsQueueCount$ = this.allaganReportsService.getReportsCount();
     this.allaganReportsUnappliedCount$ = this.allaganReportsService.getUnappliedCount();
 
     fromEvent(document, 'keydown').subscribe((event: KeyboardEvent) => {
@@ -502,6 +498,7 @@ export class AppComponent implements OnInit {
         this.playerMetricsService.start();
         setTimeout(() => {
           this.ipc.send('app-ready', true);
+          this.ipc.send('log', `VERSION: ${environment.version}`);
           this.dataLoaded = true;
           this.desktopLoading$.next(false);
           this.cd.detectChanges();
@@ -533,7 +530,7 @@ export class AppComponent implements OnInit {
 
   showPatchNotes(): Observable<any> {
     const res$ = new Subject<void>();
-    this.translate.get('Patch_notes', { version: environment.version }).pipe(
+    this.translate.get('Patch_notes').pipe(
       switchMap(title => {
         return this.dialog.create({
           nzTitle: title,
@@ -619,10 +616,10 @@ export class AppComponent implements OnInit {
       let increasedPageViews = false;
 
       this.user$.subscribe(user => {
-        if (!user.patron && !user.admin && this.settings.theme.name === 'CUSTOM') {
+        if (!user.supporter && !user.admin && this.settings.theme.name === 'CUSTOM') {
           this.settings.theme = Theme.DEFAULT;
         }
-        if (!user.patron && !increasedPageViews) {
+        if (!user.supporter && !increasedPageViews) {
           const viewTriggersForPatreonPopup = [20, 200, 500];
           this.settings.pageViews++;
           increasedPageViews = true;

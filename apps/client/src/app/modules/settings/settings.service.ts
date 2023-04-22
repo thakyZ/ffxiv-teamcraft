@@ -239,7 +239,7 @@ export class SettingsService {
   }
 
   public get materiaConfidenceRate(): number {
-    return +this.getSetting('materias:confidence', '0.5');
+    return +this.getSetting('materias:confidence', '0.66');
   }
 
   public set materiaConfidenceRate(rate: number) {
@@ -420,6 +420,14 @@ export class SettingsService {
 
   public set sidebarFavorites(favorites: string[]) {
     this.setSetting('sidebar-favorites', JSON.stringify(favorites));
+  }
+
+  public get displaySlowModeNotification(): boolean {
+    return this.getBoolean('displaySlowModeNotification', true);
+  }
+
+  public set displaySlowModeNotification(display: boolean) {
+    this.setSetting('displaySlowModeNotification', display.toString());
   }
 
   public get autoMarkAsCompleted(): boolean {

@@ -18,7 +18,7 @@
   "List_fork_in_progress": "Копирование списка на ваш аккаунт…",
   "Network_error_logged_out": "Обнаружена сетевая ошибка, вы были разлогинены. Если эта проблема повторится, пожалуйста, свяжитесь с Miu в дискорд сервере.",
   "Hide_zone_duplicates": "Скрыть дубликаты зон (предметы из нескольких зон отображаются только один раз)",
-  "Patch_notes": "{{version}} изменения",
+  "Patch_notes": "Patch Notes",
   "Patch_notes_footer": "Вам нравятся новые возможности? Рассмотрите возможность поддержки проекта на patreon",
   "Selection": "Выбор",
   "Change_character": "Персонаж",
@@ -107,6 +107,7 @@
     "Contributors": "Поддержавшие проект"
   },
   "Patreon_login_success": "Успешный вход в Patreon!",
+  "Tipeee_login_success": "Tipeee login success!",
   "Hide_if_empty": "Скрыть, если пусто",
   "No_favorites": "Нет избранного",
   "Ephemeral_list": "Будут удалены после завершения",
@@ -188,7 +189,7 @@
     "Never": "Никогда",
     "Festival": "Только во время фестиваля",
     "Back": "Назад",
-    "Support_us_remove_ads": "Поддержите нас на patreon, чтобы убрать рекламу",
+    "Support_us_remove_ads": "Support us to remove ads",
     "Support_us": "Поддержите нас",
     "Show_more": "Показать еще",
     "Item": "Предмет",
@@ -442,15 +443,14 @@
     "Reset_password_warning": "Вы уверены, что хотите сбросить пароль?",
     "Password_reset_mail_sent": "Отправлено электронное письмо о сбросе пароля",
     "Connect_with_patreon": "Присоединить Patreon",
+    "Connect_with_tipeee": "Connect with Tipeee",
     "Connected_with_patreon": "Соединено с Patreon",
+    "Connected_with_tipeee": "Connected with Tipeee",
     "Nickname": "Ник",
     "Nickname_used": "Данный ник уже используется",
-    "No_nickname_warning": "Пожалуйста, перейдите на страницу настроек и установите ник, чтобы иметь возможность использовать эксклюзивные функции Patreon'а.",
+    "No_nickname_warning": "Please navigate to the settings page and setup a nickname in order to be able to use the supporter exclusive features properly.",
     "Show_devtools": "Показать инструменты разработчика",
     "Clear_cache": "Очистить кэш (перезапустит приложение)",
-    "Add_firewall_rule": "Добавить правило брандмауэра захвата пакетов",
-    "Installing_npcap": "Выполняется установка Npcap",
-    "Installing_npcap_description": "Чтобы захват пакетов работал, нам нужно установить npcap. Убедитесь, что настройки по умолчанию сохранены (не отмечайте api winpcap совместимость). Teamcraft перезапустится, как только это будет сделано.",
     "Enable_item_tags": "Включить теги предметов",
     "Show_copy_list_own_list": "Показать кнопку копирования на панели своих списков",
     "Custom_theme": "Пользовательская тема",
@@ -516,6 +516,7 @@
     "Alarm_panels_collapsed_by_default": "Свернуть панель группы оповещений по умолчанию",
     "Alarm_groups_before_no_group": "Показывать группы оповещений перед оповещениями без группы",
     "Disconnect_patreon": "Disconnect from Patreon",
+    "Disconnect_tipeee": "Disconnect from Tipeee",
     "Export_settings": "Экспорт настроек",
     "Import_settings": "Импорт настроек",
     "Import_successful": "Настройки импортированы",
@@ -530,6 +531,7 @@
     "Housing_map": "Housing map",
     "Housing_map_explain": "The housing map in which your house is",
     "Reset_linked_characters_ok": "Character links have been reset",
+    "Display_slow_mode_notification": "Display crafting/gathering slow mode notification",
     "COLORS": {
       "Background": "Цвет фона",
       "Primary": "Основной цвет",
@@ -772,7 +774,7 @@
     "Autofill_notification_body": "{{itemName}} завершён для списка {{listName}}",
     "Autofill_crafting_gathering_title": "Обнаружен процесс крафта или сбора",
     "Autofill_crafting_gathering_message": "Автозаполнение работает в медленном режиме до тех пор, пока вы не завершите крафт (встанете в игре) или сбор (закроете интерфейс), чтобы избежать проблем с автозаполнением.",
-    "Fill_with_inventory": "Fill with inventory (only accounts for what you have in personal inventory)",
+    "Fill_with_inventory": "Fill with inventory",
     "Filter_items_done": "Скрыть завершенные предметы",
     "Inventory_synthesis": "Анализ запасов в инвентаре",
     "X_needed": "{{amount}} требуется",
@@ -1209,6 +1211,7 @@
       "Craftsmanship": "Мастерство",
       "Control": "Контроль",
       "Specialist": "Специалист",
+      "Splendorous": "Uses a splendorous tool",
       "Ingredients": "HQ Ингредиенты",
       "Consumables": "Расходные материалы",
       "Apply_stats": "Применить характеристики",
@@ -1387,6 +1390,9 @@
     "Donation_button": "Внести пожертвование",
     "Buy_merch": "Купить мерч Teamcraft",
     "Features_header": "Вперёд!",
+    "Open_feature": "Open",
+    "Open_in_guides": "Read",
+    "Featured_guides": "Featured guides",
     "DESCRIPTION": {
       "Lists": "Create lists to get information about all materials, share them with your friends... everything starts here! Just search for an item, expand filters to get specific items, and start crafting things.",
       "Public_lists": "Clone lists created by the community that help you craft things, levekits, airships, BiS gear, everything can be found here.",
@@ -1394,7 +1400,8 @@
       "Gathering_location": "Find informations about any gathering item, create an alarm, get instant coordinates, closest aetheryte, required Folklore book, and more!",
       "Rotations": "Создавай ротации для крафта предметов, тестируй их в симуляторе, или проверь свои теории о крафте в специальном симуляторе!",
       "Levequests": "Find some levequests for a given job and/or level range, see instant benefits on them and create lists for them.",
-      "Macro_translation": "Got some macros but not in your language? Go to the macro translator and translate it back to your language so it works in your FFXIV game language!"
+      "Macro_translation": "Got some macros but not in your language? Go to the macro translator and translate it back to your language so it works in your FFXIV game language!",
+      "Island_sanctuary": "Optimize your planning and configure it in the island sanctuary workshop planner!"
     }
   },
   "UPDATE": {
@@ -1519,7 +1526,7 @@
     "Search": "Поиск",
     "Generate_list": "Создать быстрый список",
     "Intro": "Введите уровень и нажмите на поиск, чтобы начать",
-    "Loading_message": "Загрузка возможных доставок, это может занять до минуты"
+    "Loading_message": "Loading possible deliveries..."
   },
   "DESYNTH": {
     "Title": "Гид по дезинтезу",
@@ -1609,7 +1616,7 @@
     "Currencies": "Валюты",
     "Rowena_splendor": "Rowena's splendors",
     "Unlocks": "Разблокирует",
-    "Jump_to_page": "Быстрый переход на другую страницу",
+    "Jump_to_page": "Open item db page",
     "Ishgard_restoration": "Восстановление Ишгарда",
     "ITEM": {
       "Masterpiece_exp_tooltip": "% опыта необходимого до следующего уровня",
@@ -2711,7 +2718,7 @@
     "Starting_at_X": "Начиная с ${{monthly}} в месяц или ${{yearly}} в год",
     "Footer_text": "Всего 1 доллар в месяц оказывает существенное влияние на развитие Teamcraft и приближает меня к моей мечте стать полноправным разработчиком этого проекта и расширить его не только в качестве инструмента для FFXIV.",
     "Already_supporter": "Уже поддерживаете?",
-    "Disable_ads_explanation": "To disable ads, connect with your Patreon account to make Teamcraft able to verify your support and disable ads automatically"
+    "Disable_ads_explanation": "To disable ads, connect with your Patreon or Tipeee account to make Teamcraft able to verify your support and disable ads automatically"
   },
   "SUPPORT_US": {
     "Popup_introduction": "Привет, я Miu, разработчик инструмента, который вы сейчас используете.<br/> Teamcraft для меня последние года был хобби, и моя мечта состоит в том, чтобы сделать это основной работой. <br/><br/> С вашей помощью эта мечта может стать реальностью, вы можете поддержать проект на patreon, каждый доллар считается и поможет мне достичь этой цели. <br/><br/> Поддержка проекта на patreon также дает вам некоторые выгоды:",
@@ -2864,6 +2871,8 @@
     "Venture_placeholder": "Название venture",
     "Monster_placeholder": "Название монстра",
     "Voyage_placeholder": "Voyage name",
+    "Achievement_placeholder": "Achievement name",
+    "Quest_placeholder": "Quest name",
     "Voyage_type": "Voyage type",
     "Reported_by": "Отчет от",
     "Approved_by": "Утверждено",
@@ -2955,7 +2964,8 @@
       "FATE": "FATE",
       "MOGSTATION": "MOGSTATION",
       "DEPRECATED": "DEPRECATED",
-      "ISLAND_ANIMAL": "ISLAND_ANIMAL"
+      "ISLAND_ANIMAL": "ISLAND_ANIMAL",
+      "QUEST": "QUEST"
     },
     "STATUS": {
       "PROPOSAL": "PROPOSAL",
@@ -3015,19 +3025,16 @@
     "Requirement_items_count": "# of required items",
     "Switch_panel": "Switch panel"
   },
-  "MACHINA_ERRORS": {
-    "Default": "Machina Wrapper error",
-    "Wrapper_failed_to_start": "Machina Wrapper failed to start",
-    "DESCRIPTION": {
-      "Wrapper_failed_to_start": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.<br><br> Retrying in {{retryDelay}}s"
-    }
-  },
   "PCAP_ERRORS": {
     "Default": "Packet Capture error",
-    "ERR_GAME_NOT_RUNNING": "Packet capture failed to start",
+    "GAME_NOT_RUNNING": "Packet capture failed to start",
+    "RESTART_GAME": "Packet capture didn't shut down properly",
+    "GAME_RUNNING_AS_ADMIN": "Cannot access game process",
     "DESCRIPTION": {
-      "Default": "An unknown error happened while trying to start packet capture, please report in Discord's #troubleshooting channel.<br><br> Retrying in {{retryDelay}}s",
-      "ERR_GAME_NOT_RUNNING": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.<br><br> Retrying in {{retryDelay}}s"
+      "Default": "An unknown error happened while trying to start packet capture, please report in Discord's #troubleshooting channel.",
+      "GAME_NOT_RUNNING": "Please make sure the game is running and is not running as admin (or, in that case, start TC as admin).<br>If this issue persists, please report to discord's #troubleshooting channel with a screenshot of the above messages.",
+      "RESTART_GAME": "Please restart the game to be able to run packet capture properly.",
+      "GAME_RUNNING_AS_ADMIN": "Game is running as admin, please either restart it normally or restart Teamcraft as admin."
     }
   },
   "ISLAND_SANCTUARY": {
@@ -3175,6 +3182,12 @@
     "All_fish": "All fish",
     "Fish_breakdown": "Fish breakdown",
     "Bait_breakdown": "Bait usage breakdown",
-    "Fish_size_chart": "Fish sizes"
+    "Fish_size_chart": "Fish sizes",
+    "Delete_train": "Delete",
+    "Train_not_running": "Train not running",
+    "Outdated": "This train is outdated",
+    "Outdated_description": "This train is using an outdated data storage approach, please migrate to be able to see your stats again",
+    "Outdated_description_passenger": "This train is using an outdated data storage approach, please ask the conductor to migrate it to see the stats again.",
+    "Migrate": "Migrate"
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, shareReplay, switchMap } from 'rxjs';
+import { defer, map, Observable, shareReplay, switchMap } from 'rxjs';
 import { AuthFacade } from '../../../+state/auth.facade';
 import {
   BaitsPerFishPerSpotQuery,
@@ -15,6 +15,7 @@ import {
 import { QueryOptionsAlone } from 'apollo-angular/types';
 import gql from 'graphql-tag';
 import { Apollo } from 'apollo-angular';
+import { retry } from 'rxjs/operators';
 
 const qOpts: QueryOptionsAlone<any> = { fetchPolicy: 'network-only' };
 
@@ -151,8 +152,8 @@ export class FishDataService {
     });
   }
 
-  public getTrainStats(trainId: string): Observable<any> {
-    const reportsQuery = gql`subscription FishTrainReports($trainId: String!) {
+  public getTrainStatsSnapshot(trainId: string): Observable<any> {
+    const reportsQuery = gql`query FishTrainReportsSnapshot($trainId: String!) {
       fishingresults(where: {trainId: {_eq: $trainId}}) {
         itemId,
         date,
@@ -162,9 +163,8 @@ export class FishDataService {
         size
       }
     }`;
-    return this.apollo.subscribe<any>({
+    return this.apollo.query<any>({
       query: reportsQuery,
-      fetchPolicy: 'network-only',
       variables: {
         trainId: trainId
       }

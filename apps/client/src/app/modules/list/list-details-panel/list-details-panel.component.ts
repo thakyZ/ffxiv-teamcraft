@@ -12,9 +12,9 @@ import { NavigationMapComponent } from '../../map/navigation-map/navigation-map.
 import { NavigationObjective } from '../../map/navigation-objective';
 import { ListsFacade } from '../+state/lists.facade';
 import { PermissionLevel } from '../../../core/database/permissions/permission-level.enum';
-import { merge, Observable, of, ReplaySubject } from 'rxjs';
+import { combineLatest, merge, Observable, of, ReplaySubject } from 'rxjs';
 import { ItemPickerService } from '../../item-picker/item-picker.service';
-import { filter, first, map, switchMap, takeUntil } from 'rxjs/operators';
+import { debounceTime, filter, first, map, switchMap, takeUntil } from 'rxjs/operators';
 import { ListManagerService } from '../list-manager.service';
 import { ProgressPopupService } from '../../progress-popup/progress-popup.service';
 import { LayoutOrderService } from '../../../core/layout/layout-order.service';
@@ -37,6 +37,7 @@ import { observeInput } from '../../../core/rxjs/observe-input';
 import { AuthFacade } from '../../../+state/auth.facade';
 import { ProcessedListAggregate } from '../../list-aggregate/model/processed-list-aggregate';
 import { getTiers } from '../../../core/tools/get-tiers';
+import { LayoutRowFilter } from '../../../core/layout/layout-row-filter';
 
 @Component({
   selector: 'app-list-details-panel',
@@ -76,8 +77,6 @@ export class ListDetailsPanelComponent implements OnChanges, OnInit {
   collapsed = false;
 
   zoneBreakdown: ZoneBreakdown;
-
-  npcBreakdown: NpcBreakdown;
 
   hasTrades = false;
 
@@ -121,6 +120,35 @@ export class ListDetailsPanelComponent implements OnChanges, OnInit {
         })
       );
     })
+  );
+
+  canSkip$: Observable<Record<number, number>> = this.displayRow$.pipe(
+    map(({ rows, filterChain }) => {
+      if (!filterChain.includes(LayoutRowFilter.IS_CRAFT.name) && !this.finalItems) {
+        return rows
+          .filter(row => !row.finalItem)
+          .reduce((registry, row) => {
+            return {
+              ...registry,
+              [row.id]: rows
+                .filter(row => !row.finalItem)
+                .reduce((acc, r) => {
+                  const requirement = (r.requires || []).find(req => +req.id === +row.id);
+                  if (requirement) {
+                    return acc + requirement.amount * ((r.amount_needed || r.amount) - r.done);
+                  }
+                  return Math.max(acc, 0);
+                }, 0)
+            };
+          }, {});
+      }
+      return {};
+    })
+  );
+
+  npcBreakdown$: Observable<NpcBreakdown> = combineLatest([this.displayRow$, this.canSkip$]).pipe(
+    debounceTime(10),
+    map(([displayRow, canSkip]) => new NpcBreakdown(displayRow.rows, this.lazyData, this.settings.hasAccessToHousingVendors, canSkip))
   );
 
   constructor(private i18n: I18nToolsService, private message: NzMessageService, public translate: TranslateService,
@@ -209,7 +237,6 @@ export class ListDetailsPanelComponent implements OnChanges, OnInit {
       this.hasNavigationMap = this.getZoneBreakdownPathRows(this.zoneBreakdown).length > 0;
     }
     if (this.displayRow.npcBreakdown) {
-      this.npcBreakdown = new NpcBreakdown(this.displayRow.rows, this.lazyData, this.settings.hasAccessToHousingVendors);
       setTimeout(() => {
         this.cd.detectChanges();
       });
@@ -303,7 +330,14 @@ export class ListDetailsPanelComponent implements OnChanges, OnInit {
       }),
       takeUntil(ref.afterClose)
     ).subscribe(step => {
-      this.listsFacade.setItemDone(step.itemId, step.iconid, step.finalItem, step.item_amount, null, step.total_item_amount);
+      this.listsFacade.setItemDone({
+        itemId: step.itemId,
+        itemIcon: step.iconid,
+        finalItem: step.finalItem,
+        delta: step.item_amount,
+        recipeId: null,
+        totalNeeded: step.total_item_amount
+      });
     });
   }
 
@@ -312,7 +346,15 @@ export class ListDetailsPanelComponent implements OnChanges, OnInit {
       if (this.aggregate) {
         this.aggregate.generateSetItemDone(row, row.amount - row.done, this.finalItems || row.finalItem)(this.listsFacade);
       } else {
-        this.listsFacade.setItemDone(row.id, row.icon, this.finalItems || row.finalItem, row.amount - row.done, row.recipeId, row.amount, false);
+        this.listsFacade.setItemDone({
+          itemId: row.id,
+          itemIcon: row.icon,
+          finalItem: this.finalItems || row.finalItem,
+          delta: row.amount - row.done,
+          recipeId: row.recipeId,
+          totalNeeded: row.amount,
+          external: false
+        });
       }
       if (this.settings.autoMarkAsCompleted) {
         if (row.sources.some(s => s.type === DataType.GATHERED_BY)) {
@@ -334,7 +376,15 @@ export class ListDetailsPanelComponent implements OnChanges, OnInit {
       if (this.aggregate) {
         this.aggregate.generateSetItemDone(row, -row.done, this.finalItems || row.finalItem)(this.listsFacade);
       } else {
-        this.listsFacade.setItemDone(row.id, row.icon, this.finalItems || row.finalItem, -row.done, row.recipeId, row.amount, false);
+        this.listsFacade.setItemDone({
+          itemId: row.id,
+          itemIcon: row.icon,
+          finalItem: this.finalItems || row.finalItem,
+          delta: -row.done,
+          recipeId: row.recipeId,
+          totalNeeded: row.amount,
+          external: false
+        });
       }
     });
   }

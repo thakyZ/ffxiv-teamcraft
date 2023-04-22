@@ -1,5 +1,5 @@
 import { TeamcraftComponent } from '../../../core/component/teamcraft-component';
-import { BehaviorSubject, combineLatest, map, merge, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 import { StepByStepDisplayData } from './step-by-step-display-data';
 import { filter, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 import { DataType, getItemSource, Vector2 } from '@ffxiv-teamcraft/types';
@@ -46,6 +46,8 @@ export abstract class StepByStepComponent extends TeamcraftComponent implements 
 
   public currentPath$: Observable<StepByStepDisplayData>;
 
+  protected overlay = false;
+
   protected constructor(protected eorzeaFacade: EorzeaFacade, protected ipc: IpcService,
                         protected listsFacade: ListsFacade, protected layoutsFacade: LayoutsFacade,
                         protected settings: SettingsService, protected lazyData: LazyDataFacade,
@@ -82,10 +84,18 @@ export abstract class StepByStepComponent extends TeamcraftComponent implements 
     );
 
     // This resets position on map change
-    const position$ = merge(
-      this.selectedMap$.pipe(map(() => null)),
-      this.ipc.updatePositionHandlerPackets$
+    const position$ = combineLatest([
+        this.selectedMap$,
+        this.ipc.updatePositionHandlerPackets$,
+        this.eorzeaFacade.mapId$
+      ]
     ).pipe(
+      map(([selectedMap, position, currentMapId]) => {
+        if (selectedMap === currentMapId || this.overlay) {
+          return position;
+        }
+        return null;
+      }),
       startWith(null)
     );
 

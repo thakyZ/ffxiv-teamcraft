@@ -33,7 +33,11 @@ export class TeamcraftUser extends DataModel {
 
   allaganChecker = false;
 
-  patron = false;
+  supporter = false;
+
+  supporterUntil?: number = 0;
+
+  trustedMJI = false;
 
   // For shared benefits or one-time donations benefits.
   patreonBenefitsUntil: Timestamp;
@@ -47,6 +51,12 @@ export class TeamcraftUser extends DataModel {
   patreonRefreshToken?: string;
 
   lastPatreonRefresh?: number;
+
+  tipeeeToken?: string;
+
+  tipeeeRefreshToken?: string;
+
+  lastTipeeeRefresh?: number;
 
   nickname: string;
 

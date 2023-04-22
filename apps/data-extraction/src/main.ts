@@ -61,6 +61,7 @@ import { ItemSeriesExtractor } from './extractors/item-series.extractor';
 import { ShopsExtractor } from './extractors/shops.extractor';
 import { SeedsExtractor } from './extractors/seeds.extractor';
 import { ItemDetailsExtractExtractor } from './extractors/extracts/item-details-extract.extractor';
+import { GcSupplyExtractor } from './extractors/gc-supply.extractor';
 
 const argv = yargs(hideBin(process.argv)).argv;
 
@@ -97,6 +98,7 @@ const extractors: AbstractExtractor[] = [
   new I18nExtractor('AirshipExplorationPoint', 'airship-voyages', 'NameShort_', { index: 'id' }, true),
   new I18nExtractor('SubmarineExploration', 'submarine-voyages', 'Destination_', { index: 'id', Location_ja: 'location' }),
   new I18nExtractor('MJICraftworksObjectTheme', 'island-craftworks-theme'),
+  new I18nExtractor('ContentType', 'content-type'),
   new ItemSeriesExtractor(),
   new TraitsExtractor(),
   new WorldsExtractor(),
@@ -150,7 +152,8 @@ const extractors: AbstractExtractor[] = [
   new LgbExtractor(),
   new GubalExtractor(),
   new AllaganReportsExtractor(),
-  new GatheringSearchIndexExtractor()
+  new GatheringSearchIndexExtractor(),
+  new GcSupplyExtractor()
 ];
 
 (async () => {

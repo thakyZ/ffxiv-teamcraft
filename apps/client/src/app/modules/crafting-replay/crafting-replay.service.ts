@@ -7,7 +7,7 @@ import { CraftingReplay } from './model/crafting-replay';
 import { CrafterStats } from '@ffxiv-teamcraft/simulator';
 import { CraftingReplayFacade } from './+state/crafting-replay.facade';
 import { ofMessageType } from '../../core/rxjs/of-message-type';
-import { EventPlay32 } from '@ffxiv-teamcraft/pcap-ffxiv';
+import type { EventPlay32 } from '@ffxiv-teamcraft/pcap-ffxiv/models';
 import { LazyDataFacade } from '../../lazy-data/+state/lazy-data.facade';
 import { EnvironmentService } from '../../core/environment.service';
 import { collection, doc, Firestore, Timestamp } from '@angular/fire/firestore';
@@ -24,6 +24,7 @@ export class CraftingReplayService {
         playerStats.craftsmanship,
         playerStats.control,
         playerStats.cp,
+        false,
         false,
         updateClassInfo.level,
         [this.env.maxLevel, this.env.maxLevel, this.env.maxLevel, this.env.maxLevel, this.env.maxLevel, this.env.maxLevel, this.env.maxLevel, this.env.maxLevel]

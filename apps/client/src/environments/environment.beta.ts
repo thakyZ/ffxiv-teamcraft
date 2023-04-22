@@ -1,13 +1,13 @@
 import { version } from './version';
 import { gameEnv } from './game-env';
-import { patchNotes } from './patch-notes';
+import patchNotes from './patch-notes.json';
 
 export const environment = {
   production: false,
   beta: true,
   useLocalAPI: false, // Should we use localhost:333 as API for search?
   version: version,
-  patchNotes: patchNotes,
+  patchNotes: patchNotes as unknown as {version: string, content: string}[],
   ssrHost: 'https://beta.ffxivteamcraft.com',
   startTimestamp: Date.now(),
   noAnimations: false,
@@ -15,12 +15,12 @@ export const environment = {
   breakpointDebug: false,
   ...gameEnv,
   firebase: {
-    apiKey: 'AIzaSyCkrNPf7XlyuxQeqNtynvDFDnQ-XigG3WA',
-    authDomain: 'ffxiv-teamcraft-beta.firebaseapp.com',
-    databaseURL: 'https://ffxiv-teamcraft-beta.firebaseio.com',
-    projectId: 'ffxiv-teamcraft-beta',
-    storageBucket: 'ffxiv-teamcraft-beta.appspot.com',
-    messagingSenderId: '716469847404',
-    appId: '1:716469847404:web:d1716789557f9cca5e1f49'
+    apiKey: 'AIzaSyDZPSJj-nXHLIATOz3IBESUTFk8zvFaUc0',
+    authDomain: 'ffxivteamcraft.firebaseapp.com',
+    databaseURL: 'https://ffxivteamcraft.firebaseio.com',
+    projectId: 'ffxivteamcraft',
+    storageBucket: 'ffxivteamcraft.appspot.com',
+    messagingSenderId: '1082504004791',
+    appId: '1:1082504004791:web:78e7872c937b2ce56df932'
   }
 };
